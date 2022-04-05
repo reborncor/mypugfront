@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class AssetThumbnail extends StatelessWidget {
@@ -29,7 +30,9 @@ class AssetThumbnail extends StatelessWidget {
           onTap: () {
             if(asset.type == AssetType.image ){
               callback(asset.file);
-
+            }
+            else{
+              showSnackBar(context, 'Veuillez choisir une photo');
             }
           },
           child: Stack(

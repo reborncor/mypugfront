@@ -9,3 +9,9 @@ navigateTo(context,view){
 navigateWithName(context, String name){
   Navigator.pushNamed(context, name);
 }
+
+showSnackBar(context, message){
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}

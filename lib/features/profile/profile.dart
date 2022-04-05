@@ -2,6 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/models/pugdetailmodel.dart';
+import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
 
 class Profile extends StatefulWidget {
@@ -16,9 +18,26 @@ class Profile extends StatefulWidget {
 
 class ProfileState extends State<Profile> {
 
+  List<PugDetailModel> details = [];
+  List<PugModel> list = [];
+
+  PugDetailModel  detailModel= PugDetailModel(text: 'mon texte',id: '',positionX: 50.0, positionY: 70.0);
+  PugModel model1 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=1', imageTitle: 'MY PUG 1', imageDescription: 'imageDescription', details: [], like: 15);
+  PugModel model2 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=2', imageTitle: 'MY PUG 2', imageDescription: 'imageDescription', details: [], like: 15);
+  PugModel model3 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=3', imageTitle: 'MY PUG 3', imageDescription: 'imageDescription', details: [], like: 15);
 
   @override
   void initState() {
+
+    model1.details.add(detailModel);
+    model2.details.add(detailModel);
+    model3.details.add(detailModel);
+
+    list.clear();
+    list.add(model1);
+    list.add(model2);
+    list.add(model3);
+
     super.initState();
 
   }
@@ -27,11 +46,11 @@ class ProfileState extends State<Profile> {
     return const Center( child: Text('Test'),);
   }
 
-  Widget imageItem(String url, String title, String description){
+  Widget imageItem(PugModel model){
     return GestureDetector(
-      child: Image.network(url),
+      child: Image.network(model.imageURL),
       onTap: (){
-          navigateTo(context, Pug(imageUrl: url,imageTitle: title, imageDescription:description,imageLike: 15,));
+          navigateTo(context, Pug(model: model,));
       },
     );
   }
@@ -41,10 +60,10 @@ class ProfileState extends State<Profile> {
       crossAxisCount: 3,
     ),
       children: [
-        imageItem('https://picsum.photos/250?image=1','MY PUG 1', 'Lorem ipsum...'),
-        imageItem('https://picsum.photos/250?image=2','MY PUG 2', 'Lorem ipsum...'),
-        imageItem('https://picsum.photos/250?image=3','MY PUG 3', 'Lorem ipsum...'),
-        imageItem('https://picsum.photos/250?image=4','MY PUG 4', 'Lorem ipsum...'),
+        imageItem(model1),
+        imageItem(model2),
+        imageItem(model3),
+        imageItem(model1),
 
       ],
     );

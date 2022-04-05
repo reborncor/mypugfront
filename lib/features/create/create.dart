@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/assetthumbnail/assetthumbnail.dart';
+import 'package:mypug/components/editpug/editpug.dart';
+import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class Create extends StatefulWidget {
@@ -43,8 +46,6 @@ class CreateState extends State<Create> {
       start: 0, // start at index 0
       end: 500, // end at a very big index (to get all the assets)
     );
-
-    print('test');
 
 
     // Update the state and notify UI
@@ -112,8 +113,6 @@ class CreateState extends State<Create> {
 
 
 callBack(Future<File?> file) async {
-
-    print(file);
     imageFile = await file;
     file.then((value) => {
     setState(() {
@@ -126,57 +125,76 @@ callBack(Future<File?> file) async {
 
 }
 
+  Widget imageView(){
+    return  Container(
+      color: Colors.black,
+      alignment: Alignment.center,
+      child: StreamBuilder<dynamic>(
+        stream: imageStreamController.stream,
+        builder: (_, snapshot) {
+          if (imageFile == null) {
+            return Container();
+          } else{
+            return Image.file(imageFile!,height: 400,);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget imageButtonOption(){
+    return   Row(children: [
+      // ElevatedButton(
+      //   onPressed: () {
+      //     _showPicker(context);
+      //   },
+      //   child: Text('Open Gallery'),
+      // ),
+      ElevatedButton(
+        onPressed: () {
+          _imgFromGallery();
+        },
+        child: Text('Galery'),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          _imgFromCamera();
+        },
+        child: Text('Photo'),
+      ),
+      ElevatedButton(onPressed: () {
+        navigateTo(context, EditPug.withFile(file: imageFile));
+
+      }, child: const Text('Valider'))
+    ],);
+  }
+
+  Widget imagesGallery(){
+    return Expanded(child:
+    GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        // A grid view with 3 items per row
+        crossAxisCount: 3,
+      ),
+      itemCount: assets.length,
+      itemBuilder: (_, index) {
+        return AssetThumbnail(asset: assets[index],callback: callBack,);
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: <Widget>[
-        Container(
-    color: Colors.black,
-    alignment: Alignment.center,
-    child: StreamBuilder<dynamic>(
-    stream: imageStreamController.stream,
-    builder: (_, snapshot) {
-      if (imageFile == null) {
-        return Container();
-      } else{
-        return Image.file(imageFile!,height: 400,);
-      }
-    },
-    ),
-    ),
+        imageView(),
           // Text('There are ${assets.length} assets'),
-          Row(children: [
-            ElevatedButton(
-            onPressed: () {
-              _showPicker(context);
-            },
-            child: Text('Open Gallery'),
-          ),
-            ElevatedButton(
-              onPressed: () {
-                _imgFromGallery();
-              },
-              child: Text('Galery'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _imgFromCamera();
-              },
-              child: Text('Photo'),
-            )],),
-          Expanded(child:
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              // A grid view with 3 items per row
-              crossAxisCount: 3,
-            ),
-            itemCount: assets.length,
-            itemBuilder: (_, index) {
-              return AssetThumbnail(asset: assets[index],callback: callBack,);
-            },
-          )),
+        imageButtonOption(),
+          imagesGallery(),
+
+
         ],
       ),
     );

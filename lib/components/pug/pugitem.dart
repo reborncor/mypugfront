@@ -1,5 +1,4 @@
 
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -7,33 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:mypug/models/pugmodel.dart';
 
 
-class Pug extends StatefulWidget {
+class PugItem extends StatefulWidget {
 
-  final routeName = '/pug';
-  final PugModel? model;
+  final routeName = '/pugitem';
+  final PugModel pugModel;
 
 
-  const Pug({Key? key, this.model}) : super(key: key);
-
-  const Pug.withPugModel({Key? key, required this.model }) : super(key: key);
-
+  const PugItem({Key? key, required this.pugModel}) : super(key: key);
   @override
-  PugState createState() => PugState();
+  PugItemState createState() => PugItemState();
 }
 
-class PugState extends State<Pug> {
-
-
+class PugItemState extends State<PugItem> {
 
   late String imageURL;
   late String imageTitle;
   late String imageDescription;
   late int imageLike;
-  List<Offset> points = [Offset(50, 50),
-    Offset(80, 70),
-    Offset(200, 175),
-    Offset(150, 105),
-    Offset(89, 125)];
+  late List<Offset>points = [];
 
   bool isExpanded = false;
   bool isVisible = false;
@@ -41,10 +31,14 @@ class PugState extends State<Pug> {
   void initState() {
 
     super.initState();
-    imageURL = widget.model!.imageURL;
-    imageTitle = widget.model!.imageTitle;
-    imageDescription = widget.model!.imageDescription;
-    imageLike = widget.model!.like;
+    imageURL = widget.pugModel.imageURL;
+    imageTitle = widget.pugModel.imageTitle;
+    imageDescription = widget.pugModel.imageDescription;
+    imageLike = widget.pugModel.like;
+    points.clear();
+    for (var element in widget.pugModel.details) {
+      points.add(Offset(element.positionX, element.positionY));
+    }
 
   }
 
@@ -55,7 +49,7 @@ class PugState extends State<Pug> {
   Widget imageContent(String imageUrl ){
     return GestureDetector(
       child: Container(
-      child:
+        child:
         Container(
           height: 300,
           child: Visibility(
@@ -66,14 +60,14 @@ class PugState extends State<Pug> {
                 Stack(children: points.map((e) => Positioned(child: Text('message', style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),).toList()
                 )],),) ,
         ),
-      height: 300,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.fitWidth,
-          )
-      ),
-    ),onTap: () {
+        height: 300,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.fitWidth,
+            )
+        ),
+      ),onTap: () {
       setState(() {
         isVisible = !isVisible;
       });
@@ -85,8 +79,8 @@ class PugState extends State<Pug> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-        Text(title),
-        Row(
+          Text(title),
+          Row(
             children: [
               TextButton.icon(onPressed: () {
               }, icon: const Icon(Icons.favorite), label: Text(like.toString(), style: const TextStyle(color: Colors.black),),),
@@ -94,49 +88,42 @@ class PugState extends State<Pug> {
               IconButton(onPressed: () {
               }, icon: const Icon(Icons.share)),
             ],
-        )
-       
-      ],) ,
+          )
+
+        ],) ,
     );
   }
 
   Widget imageDetail(String detail){
     return ExpansionPanelList(
 
-        children: [
-          ExpansionPanel(
-            canTapOnHeader: true,
-            headerBuilder: (context, isExpanded) {
-              return const Text('Detail');
-    },
-              body: Text(detail),
+      children: [
+        ExpansionPanel(
+          canTapOnHeader: true,
+          headerBuilder: (context, isExpanded) {
+            return const Text('Detail');
+          },
+          body: Text(detail),
           isExpanded: isExpanded,)
-        ],
-    expansionCallback: (panelIndex, isExpanded) {
-      this.isExpanded = !isExpanded;
-      setState(() {
+      ],
+      expansionCallback: (panelIndex, isExpanded) {
+        this.isExpanded = !isExpanded;
+        setState(() {
 
-      });
+        });
 
-    },);
+      },);
 
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-        backgroundColor: Colors.white,
-
-        body:  Column(
+    return Column(
           children: [
             SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
             imageInformation(imageTitle,imageLike),
             imageDetail(imageDescription)
-
           ],
-        )
-
-    );
+        );
   }
 }
 
