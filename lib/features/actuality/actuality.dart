@@ -20,7 +20,7 @@ class ActualityState extends State<Actuality> {
 
 
   List<PugDetailModel> details = [];
-  PugDetailModel  detailModel= PugDetailModel(text: 'mon texte',id: '',positionX: 50.0, positionY: 70.0);
+  PugDetailModel  detailModel= PugDetailModel(text: 'mon texte',positionX: 50, positionY: 70);
   PugModel model1 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=1', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);
   PugModel model2 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=2', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);
   PugModel model3 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=3', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);

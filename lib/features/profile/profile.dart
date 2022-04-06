@@ -9,6 +9,7 @@ import 'package:mypug/features/profile/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/userpugresponse.dart';
+import 'package:mypug/response/userresponse.dart';
 import 'package:mypug/util/util.dart';
 
 class Profile extends StatefulWidget {
@@ -26,29 +27,45 @@ class ProfileState extends State<Profile> {
   List<PugDetailModel> details = [];
   List<PugModel> list = [];
   late Future<UserPugResponse> _response;
-  PugDetailModel  detailModel= PugDetailModel(text: 'mon texte',id: '',positionX: 50.0, positionY: 70.0);
-  PugModel model1 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=1', imageTitle: 'MY PUG 1', imageDescription: 'imageDescription', details: [], like: 15);
-  PugModel model2 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=2', imageTitle: 'MY PUG 2', imageDescription: 'imageDescription', details: [], like: 15);
-  PugModel model3 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=3', imageTitle: 'MY PUG 3', imageDescription: 'imageDescription', details: [], like: 15);
-  @override
+  late Future<UserResponse> _userResponse;
+   @override
   void initState() {
 
-    model1.details!.add(detailModel);
-    model2.details!.add(detailModel);
-    model3.details!.add(detailModel);
 
-    list.clear();
-    list.add(model1);
-    list.add(model2);
-    list.add(model3);
-
+    _userResponse = getUserInfo();
     _response = getAllPugsFromUser();
     super.initState();
 
   }
-  
+
+
+  Widget itemProfile(int data, String text){
+    return Column(children: [
+      Text(data.toString()),
+      Text(text),
+    ],);
+  }
   Widget profileHeader() {
-    return const Center( child: Text('Test'),);
+    return FutureBuilder(future: _userResponse,builder: (context, AsyncSnapshot<UserResponse>snapshot) {
+      if(snapshot.hasData) {
+        return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CircleAvatar(),
+            itemProfile(snapshot.data!.pugs,'Publication'),
+            itemProfile(snapshot.data!.followers,'Abonnés'),
+            itemProfile(snapshot.data!.following,'Abonnement'),
+
+          ],);
+      }
+      if(snapshot.connectionState == ConnectionState.done){
+        return  const Center( child: Text("Aucune donnée"),);
+      }
+      else{
+        return const Center(child : CircularProgressIndicator());
+      }
+
+
+    },);
   }
 
   Widget imageItem(PugModel model){
@@ -92,20 +109,7 @@ class ProfileState extends State<Profile> {
 
     },);
   }
-  Widget profileContent() {
 
-    return GridView(gridDelegate:  const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3,
-    ),
-      children: [
-        imageItem(model1),
-        imageItem(model2),
-        imageItem(model3),
-        imageItem(model1),
-
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +120,7 @@ class ProfileState extends State<Profile> {
         body:  Center(child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            profileHeader(),
+            Container(child : profileHeader(), width : getPhoneHeight(context), height: 200,),
             Expanded(child: newProfileContent())
           ],
         ))

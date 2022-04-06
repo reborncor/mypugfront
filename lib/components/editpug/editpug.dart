@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/create/api.dart';
+import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/util/util.dart';
 
 
@@ -26,6 +27,7 @@ class EditPugState extends State<EditPug> {
   late File file;
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textTitleController = TextEditingController();
+  List<PugDetailModel> details = [];
 
   String imageTitle ="";
   String imageDescription ="";
@@ -41,12 +43,19 @@ class EditPugState extends State<EditPug> {
   @override
   void initState() {
 
+    details.clear();
     file = widget.file!;
     super.initState();
 
   }
 
+  addNewPugDetails(double positionX, double positionY,String text){
+    PugDetailModel model = PugDetailModel(positionX: positionX.toInt(), positionY: positionY.toInt(), text: text);
+    details.add(model);
+    setState(() {
 
+    });
+  }
 
 
   Widget textsOnImage(){
@@ -86,13 +95,14 @@ class EditPugState extends State<EditPug> {
 
   }
 
-  addNewTextOnImage(double x, double y){
+  addNewTextOnImage(double x, double y,String text){
     if(points.length >= 10){
       showSnackBar(context, 'Vous ne pouvez plus ajouter de détail');
     }
     else{
       if(x != 0.0 && y != 0.0){
         points.add(Offset(x,y));
+        addNewPugDetails(x, y, text);
         setState(() {
 
         });
@@ -105,6 +115,9 @@ class EditPugState extends State<EditPug> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(child: TextField(
+            decoration: const InputDecoration(
+              hintText: 'titre'
+            ),
             controller: textTitleController,
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.text,
@@ -128,10 +141,11 @@ class EditPugState extends State<EditPug> {
     ),
       ElevatedButton(onPressed: () {
         log(textEditingController.text);
-        addNewTextOnImage(x, y);
+        addNewTextOnImage(x, y,textEditingController.text);
       }, child: Text("Valider")),
       ElevatedButton(onPressed: () async {
-        var result = await createPug(file);
+        var result = await createPug(file,textTitleController.text,"My Description",details);
+        showSnackBar(context, result.message);
 
 
       }, child: Text("Envoyer"))],

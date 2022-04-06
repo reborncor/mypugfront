@@ -4,74 +4,50 @@ import 'dart:io';
 
 
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart'as http;
-import 'package:mypug/response/userpugresponse.dart';
+import 'package:mypug/models/pugdetailmodel.dart';
+import 'package:mypug/response/baseresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
-import 'dart:async';
-import 'package:async/async.dart';
 
-Future<dynamic> createPug(File file) async{
+import 'dart:async';
+
+Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details ) async{
 
   String token = await getCurrentUserToken();
   var response;
   const String path = "/pug/add";
 
   try {
-    var url = Uri.parse(URL+path);
-    // response = await http.get(url,
-    //     headers: {"Content-type": "application/json",'Authorization': 'Bearer '+ token});
 
-    // open a bytestream
-    // var stream = http.ByteStream(file.openRead());
-    // stream.cast();
-    // // get file length
-    // var length = await file.length();
-    //
-    // // string to uri
-    // // var uri = Uri.parse("http://192.168.0.8:3000/upload");
-    //
-    // // create multipart request
     Map<String, String> headers = { "Content-type": "application/json",'Authorization': 'Bearer '+ token};
-    //
-    // var request = http.MultipartRequest("POST", url);
-    // request.headers.addAll(headers);
-    //
-    // // multipart that takes file
-    // var multipartFile = http.MultipartFile('newimage', stream, length,
-    //     filename:file.path);
-    //
-    // // add file to multipart
-    // request.files.add(multipartFile);
-    // var response = await request.send();
-    // print(response.statusCode);
-
-    print("PATH : "+ file.path);
-    String fileName = file.path.split('/').last;
-    // print("NAME : "+ fileName);
+    print(details.length);
+    print(json.encode(details.map((e) => e.toJson()).toList()));
     var formData = FormData.fromMap({
-      "newimage": await MultipartFile.fromFile(file.path, filename: "new_file")
+      "newimage": await MultipartFile.fromFile(file.path, filename: "new_file"),
+      "details": details.map((e) => e.toJson()).toList(),
+      "imageDescription" : imageDescription,
+      "imageTitle" : title,
     });
+
 
     Dio dio = Dio();
     dio.options.headers.addAll(headers);
-    var response = await dio.post(URL+path, data: formData);
+    response = await dio.post(URL+path, data: formData);
+    // print(response.statusCode);
+    // print(response.data['message']);
   }
   catch (e) {
     print(e.toString());
-    return json.decode(response.body);
+    return  BasicResponse(code: 1, message: "Erreur", payload: null);
   }
 
-  if(response.statusCode == 200) {
-    var data = UserPugResponse.fromJsonData(json.decode(response.body));
+  if(response.statusCode == 201) {
+    var data = BasicResponse(code: response.data['code'], message: response.data['message'], payload: null);
     return data ;
   }
   else{
-    return UserPugResponse(code: json.decode(response.body)['code'], message: json.decode(response.body)['message']);
+    return BasicResponse(code: response.data['code'], message: response.data['message'], payload: null);
   }
 
 

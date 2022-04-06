@@ -36,3 +36,10 @@ Future<String> getCurrentUserToken()async{
   Object? token = sharedPreferences.get("token");
   return token.toString();
 }
+
+getPhoneWidth(context){
+  return MediaQuery.of(context).size.width;
+}
+getPhoneHeight(context){
+  return MediaQuery.of(context).size.height;
+}

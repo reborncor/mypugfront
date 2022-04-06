@@ -30,11 +30,7 @@ class PugState extends State<Pug> {
   late String imageTitle;
   late String imageDescription;
   late int imageLike;
-  List<Offset> points = [Offset(50, 50),
-    Offset(80, 70),
-    Offset(200, 175),
-    Offset(150, 105),
-    Offset(89, 125)];
+  List<Offset> points = [];
 
   bool isExpanded = false;
   bool isVisible = false;
@@ -46,8 +42,9 @@ class PugState extends State<Pug> {
     imageTitle = widget.model!.imageTitle!;
     imageDescription = widget.model!.imageDescription!;
     imageLike = widget.model!.like;
-
-  }
+    points.clear();
+    for (var element in widget.model!.details!) {points.add(Offset(element.positionX!.toDouble(),element.positionY!.toDouble()));};
+     }
 
 
 
@@ -64,7 +61,7 @@ class PugState extends State<Pug> {
             child: Stack(
               children: [
                 CustomPaint(painter: OpenPainter(points: points)),
-                Stack(children: points.map((e) => Positioned(child: Text('message', style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),).toList()
+                Stack(children: points.asMap().map((i,e) => MapEntry(i, Positioned(child: Text((widget.model!.details![i].text ?? "") , style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),)).values.toList()
                 )],),) ,
         ),
       height: 300,

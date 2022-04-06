@@ -37,7 +37,7 @@ class PugItemState extends State<PugItem> {
     imageLike = widget.pugModel.like;
     points.clear();
     for (var element in widget.pugModel.details!) {
-      points.add(Offset(element.positionX!, element.positionY!));
+      points.add(Offset(element.positionX!.toDouble(), element.positionY!.toDouble()));
     }
 
   }
