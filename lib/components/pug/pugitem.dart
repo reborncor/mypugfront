@@ -32,12 +32,12 @@ class PugItemState extends State<PugItem> {
 
     super.initState();
     imageURL = widget.pugModel.imageURL;
-    imageTitle = widget.pugModel.imageTitle;
-    imageDescription = widget.pugModel.imageDescription;
+    imageTitle = widget.pugModel.imageTitle!;
+    imageDescription = widget.pugModel.imageDescription!;
     imageLike = widget.pugModel.like;
     points.clear();
-    for (var element in widget.pugModel.details) {
-      points.add(Offset(element.positionX, element.positionY));
+    for (var element in widget.pugModel.details!) {
+      points.add(Offset(element.positionX!, element.positionY!));
     }
 
   }

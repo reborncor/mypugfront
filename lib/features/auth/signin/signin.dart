@@ -7,6 +7,8 @@ import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
 import 'package:mypug/util/util.dart';
 
+import '../api.dart';
+
 class SignIn extends StatefulWidget {
 
   final routeName = '/signin';
@@ -82,8 +84,14 @@ class SignInState extends State<SignIn> {
             onPressed: () async {
 
               if(_formkey.currentState!.validate()){
-                log("Valide");
-                navigateWithName(context, const TabView().routeName);
+
+                var result =  await signinUser(usernameController.text, passwordController.text);
+                print(result);
+                if(result.code == SUCCESS_CODE) {
+                  navigateWithName(context, const TabView().routeName);
+                }else{
+                  showSnackBar(context, result.message);
+                }
               }
               else{
                 log("invalide");

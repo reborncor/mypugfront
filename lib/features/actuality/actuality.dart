@@ -28,9 +28,9 @@ class ActualityState extends State<Actuality> {
   List<PugModel> list = [];
   @override
   void initState() {
-    model1.details.add(detailModel);
-    model2.details.add(detailModel);
-    model3.details.add(detailModel);
+    model1.details!.add(detailModel);
+    model2.details!.add(detailModel);
+    model3.details!.add(detailModel);
 
     list.clear();
     list.add(model1);

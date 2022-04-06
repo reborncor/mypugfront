@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/features/create/api.dart';
 import 'package:mypug/util/util.dart';
 
 
@@ -129,7 +130,9 @@ class EditPugState extends State<EditPug> {
         log(textEditingController.text);
         addNewTextOnImage(x, y);
       }, child: Text("Valider")),
-      ElevatedButton(onPressed: () {
+      ElevatedButton(onPressed: () async {
+        var result = await createPug(file);
+
 
       }, child: Text("Envoyer"))],
 

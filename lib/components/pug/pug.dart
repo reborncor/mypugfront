@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
@@ -42,8 +43,8 @@ class PugState extends State<Pug> {
 
     super.initState();
     imageURL = widget.model!.imageURL;
-    imageTitle = widget.model!.imageTitle;
-    imageDescription = widget.model!.imageDescription;
+    imageTitle = widget.model!.imageTitle!;
+    imageDescription = widget.model!.imageDescription!;
     imageLike = widget.model!.like;
 
   }
@@ -69,7 +70,7 @@ class PugState extends State<Pug> {
       height: 300,
       decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(imageUrl),
+            image: MemoryImage(base64Decode(widget.model!.imageData)),
             fit: BoxFit.fitWidth,
           )
       ),

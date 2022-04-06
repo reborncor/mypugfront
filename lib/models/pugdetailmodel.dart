@@ -5,10 +5,10 @@ import 'dart:core';
 
 class PugDetailModel{
 
-  String id;
-  double positionX;
-  double positionY;
-  String text;
+  late String? id;
+  late double? positionX;
+  late double? positionY;
+  late String? text;
 
   PugDetailModel({ required this.id,  required this.positionX,  required this.positionY,
     required this.text});
