@@ -1,18 +1,20 @@
 
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/models/pugmodel.dart';
 
 
 class PugItem extends StatefulWidget {
 
   final routeName = '/pugitem';
-  final PugModel pugModel;
+  final PugModel model;
 
 
-  const PugItem({Key? key, required this.pugModel}) : super(key: key);
+  const PugItem({Key? key, required this.model}) : super(key: key);
   @override
   PugItemState createState() => PugItemState();
 }
@@ -31,12 +33,12 @@ class PugItemState extends State<PugItem> {
   void initState() {
 
     super.initState();
-    imageURL = widget.pugModel.imageURL;
-    imageTitle = widget.pugModel.imageTitle!;
-    imageDescription = widget.pugModel.imageDescription!;
-    imageLike = widget.pugModel.like;
+    imageURL = widget.model.imageURL;
+    imageTitle = widget.model.imageTitle!;
+    imageDescription = widget.model.imageDescription!;
+    imageLike = widget.model.like;
     points.clear();
-    for (var element in widget.pugModel.details!) {
+    for (var element in widget.model.details!) {
       points.add(Offset(element.positionX!.toDouble(), element.positionY!.toDouble()));
     }
 
@@ -46,30 +48,28 @@ class PugItemState extends State<PugItem> {
 
 
 
-  Widget imageContent(String imageUrl ){
+  Widget imageContent(){
     return GestureDetector(
       child: Container(
         child:
-        Container(
-          height: 300,
-          child: Visibility(
-            visible: isVisible,
-            child: Stack(
-              children: [
-                CustomPaint(painter: OpenPainter(points: points)),
-                Stack(children: points.map((e) => Positioned(child: Text('message', style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),).toList()
-                )],),) ,
-        ),
+        Visibility(
+          visible: isVisible,
+          child: Stack(
+            children: [
+              CustomPaint(painter: OpenPainter(points: points)),
+              Stack(children: points.asMap().map((i,e) => MapEntry(i, Positioned(child: Text((widget.model.details![i].text ?? "") , style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),)).values.toList()
+              )],),),
         height: 300,
         decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(imageUrl),
+              image: MemoryImage(base64Decode(widget.model.imageData)),
               fit: BoxFit.fitWidth,
             )
         ),
       ),onTap: () {
+      isVisible = !isVisible;
       setState(() {
-        isVisible = !isVisible;
+
       });
     },);
 
@@ -82,7 +82,8 @@ class PugItemState extends State<PugItem> {
           Text(title),
           Row(
             children: [
-              TextButton.icon(onPressed: () {
+              TextButton.icon(onPressed: () async {
+                var result = await likePug("test","test");
               }, icon: const Icon(Icons.favorite), label: Text(like.toString(), style: const TextStyle(color: Colors.black),),),
 
               IconButton(onPressed: () {
@@ -119,7 +120,7 @@ class PugItemState extends State<PugItem> {
   Widget build(BuildContext context) {
     return Column(
           children: [
-            SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
+            SizedBox( width: 500, height : 500,child :imageContent(),),
             imageInformation(imageTitle,imageLike),
             imageDetail(imageDescription)
           ],
