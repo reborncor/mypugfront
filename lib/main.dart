@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
+import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/create/create.dart';
+import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
 
@@ -25,13 +27,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/actuality': (context) => const Actuality(),
         '/create': (context) => const Create(),
-        '/profile': (context) => const Profile(),
+        '/profile': (context) => Profile(),
         '/setting': (context) => const Setting(),
         '/tabview': (context) => const TabView(),
         '/signin': (context) => const SignIn(),
         '/signup': (context) => const SignUp(),
         '/pug': (context) => const Pug(),
-
+        '/search': (context) => const Search(),
+        '/chatlist': (context) => const ChatList(),
 
 
 

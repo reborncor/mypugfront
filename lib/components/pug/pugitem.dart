@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/models/pugmodel.dart';
 
+import '../../models/CommentModel.dart';
+
 
 class PugItem extends StatefulWidget {
 
@@ -95,6 +97,10 @@ class PugItemState extends State<PugItem> {
     );
   }
 
+  Widget imageCommentaire(List<CommentModel> list){
+    return Text(list.isEmpty ? "test": list.first.content);
+  }
+
   Widget imageDetail(String detail){
     return ExpansionPanelList(
 
@@ -120,9 +126,12 @@ class PugItemState extends State<PugItem> {
   Widget build(BuildContext context) {
     return Column(
           children: [
+            Text(widget.model.author),
             SizedBox( width: 500, height : 500,child :imageContent(),),
             imageInformation(imageTitle,imageLike),
-            imageDetail(imageDescription)
+            imageDetail(imageDescription),
+            imageCommentaire(widget.model.comments)
+
           ],
         );
   }

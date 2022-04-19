@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
@@ -20,6 +21,8 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+
     navigateToApp(true);
 
   }

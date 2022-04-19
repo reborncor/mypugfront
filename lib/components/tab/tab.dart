@@ -23,7 +23,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   static final List<Widget> _widgetOptions = <Widget>[
     const Actuality(),
     const Create(),
-    const Profile(),
+    Profile(),
   ];
   void _onItemTapped(int index) {
     setState(() {

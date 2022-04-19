@@ -17,12 +17,12 @@ Future<BasicResponse> likePug(String pugId, String userPug) async{
 
   String token = await getCurrentUserToken();
   late http.Response response;
-  const String path = "/pug/getall";
+  const String path = "/pug/like";
 
 
   Map data = {
     "pugId":pugId,
-    "userPug":userPug
+    "username":userPug
   };
 
   try {

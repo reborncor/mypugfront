@@ -1,11 +1,16 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/components/pug/pugitem.dart';
+import 'package:mypug/features/chat/chatlist.dart';
+import 'package:mypug/features/search/search.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/actualityresponse.dart';
+import 'package:mypug/util/util.dart';
 
 import 'api.dart';
 
@@ -80,7 +85,20 @@ class ActualityState extends State<Actuality> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: [
+            IconButton(onPressed: () {
+              navigateWithName(context, const Search().routeName);
+
+            }, icon: const Icon(Icons.search)),
+            IconButton(onPressed: () {
+              navigateWithName(context, const ChatList().routeName);
+
+            }, icon: const Icon(Icons.send))
+
+
+          ],
+        ),
         backgroundColor: Colors.white,
 
         body: newFriendsPug(),

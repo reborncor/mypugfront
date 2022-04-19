@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,10 @@ import 'package:mypug/util/util.dart';
 class Profile extends StatefulWidget {
 
   final routeName = '/profile';
+  String username ="";
 
-  const Profile({Key? key}) : super(key: key);
-
+  Profile({Key? key}) : super(key: key);
+  Profile.fromUsername({Key? key, required this.username}) : super(key: key);
   @override
   ProfileState createState() => ProfileState();
 }
@@ -31,9 +33,15 @@ class ProfileState extends State<Profile> {
    @override
   void initState() {
 
+     if(widget.username == ""){
+       _userResponse = getUserInfo();
+       _response = getAllPugsFromUser();
+     }
+     else{
+       _userResponse = getUserInfoFromUsername(widget.username);
+       _response = getAllPugsFromUsername(widget.username);
+     }
 
-    _userResponse = getUserInfo();
-    _response = getAllPugsFromUser();
     super.initState();
 
   }
