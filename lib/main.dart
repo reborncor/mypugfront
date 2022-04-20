@@ -5,6 +5,8 @@ import 'package:mypug/features/auth/signup/signup.dart';
 import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
 import 'package:mypug/features/create/create.dart';
+import 'package:mypug/features/follower/follower.dart';
+import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
@@ -39,6 +41,8 @@ class MyApp extends StatelessWidget {
         '/chatlist': (context) => const ChatList(),
         '/chat': (context) => Chat(),
         '/pugscomments': (context) => const PugComments(),
+        '/follower': (context) => const FollowersView(),
+        '/following': (context) => const FollowingView(),
 
 
 

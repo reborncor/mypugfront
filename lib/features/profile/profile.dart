@@ -6,6 +6,8 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/features/follower/follower.dart';
+import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/profile/api.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
@@ -61,8 +63,11 @@ class ProfileState extends State<Profile> {
           children: [
             CircleAvatar(),
             itemProfile(snapshot.data!.pugs,'Publication'),
-            itemProfile(snapshot.data!.followers,'Abonnés'),
-            itemProfile(snapshot.data!.following,'Abonnement'),
+
+
+            InkWell(child : itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
+            InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
+
 
           ],);
       }
@@ -100,6 +105,7 @@ class ProfileState extends State<Profile> {
       future: _response ,
       builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
         if(snapshot.hasData){
+
             list = snapshot.data!.pugs;
             return GridView.builder(
                 itemCount: list.length,
@@ -110,6 +116,10 @@ class ProfileState extends State<Profile> {
             );
         }
         if(snapshot.connectionState == ConnectionState.done){
+
+          return  const Center( child: Text("Aucune donnée"),);
+        }
+        if(snapshot.connectionState == ConnectionState.waiting){
           return  const Center( child: Text("Aucune donnée"),);
         }
         else{
