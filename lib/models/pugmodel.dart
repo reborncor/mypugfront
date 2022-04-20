@@ -9,7 +9,7 @@ import 'package:mypug/models/pugdetailmodel.dart';
 
 class PugModel{
 
-  String? id;
+  String id;
   String imageURL;
   String? imageTitle;
   String? imageDescription ;

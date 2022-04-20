@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/features/profile/api.dart';
+import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/userpugresponse.dart';
@@ -122,7 +123,11 @@ class ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
+        ],
+      ),
         backgroundColor: Colors.white,
 
         body:  Center(child: Column(

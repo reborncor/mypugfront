@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/components/pug/pugitem.dart';
 import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/search/search.dart';
@@ -28,29 +27,23 @@ class ActualityState extends State<Actuality> {
 
 
   List<PugDetailModel> details = [];
-  PugDetailModel  detailModel= PugDetailModel(text: 'mon texte',positionX: 50, positionY: 70);
-  PugModel model1 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=1', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);
-  PugModel model2 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=2', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);
-  PugModel model3 = PugModel(id: '1', imageURL: 'https://picsum.photos/250?image=3', imageTitle: 'imageTitle', imageDescription: 'imageDescription', details: [], like: 15);
-
   List<PugModel> list = [];
   late Future<ActualityResponse> _response;
+  late String _username;
   @override
   void initState() {
-    model1.details!.add(detailModel);
-    model2.details!.add(detailModel);
-    model3.details!.add(detailModel);
 
-    list.clear();
-    list.add(model1);
-    list.add(model2);
-    list.add(model3);
 
+    fetchData();
     _response = getActuality() as Future<ActualityResponse>;
+
     super.initState();
 
   }
-
+  fetchData() async {
+     _username = await getCurrentUsername();
+    socketService.initialise(_username);
+  }
 
   Widget friendsStory(){
     return Container(height: 50,);
@@ -65,6 +58,7 @@ class ActualityState extends State<Actuality> {
         if(snapshot.hasData){
           list = snapshot.data!.pugs;
           return ListView.builder(
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             scrollDirection: Axis.vertical,
             itemCount : list.length,
             itemBuilder: (context, index) {
@@ -80,7 +74,7 @@ class ActualityState extends State<Actuality> {
     },);
   }
   Widget pugItem(PugModel model){
-    return Container( width : 400 , height : 650,child : PugItem(model: model,)
+    return Container( width : 400 , height : 700,child : PugItem(model: model,currentUsername: _username,)
     );}
   @override
   Widget build(BuildContext context) {

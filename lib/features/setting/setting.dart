@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/util/util.dart';
 
 class Setting extends StatefulWidget {
 
@@ -21,13 +22,20 @@ class SettingState extends State<Setting> {
 
   }
 
+  disconnectUser() async {
+    await deleteData();
+    Navigator.pushReplacementNamed(context, '/signin' );  }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        backgroundColor: Colors.black,
+    return Scaffold(
+        appBar: AppBar(),
 
-        body:  Text('SplashScreen')
+        body:  Column(children: [
+          ElevatedButton(onPressed: () => disconnectUser(), child: Text("Deconnexion"))
+        ],)
 
     );
   }
 }
+
