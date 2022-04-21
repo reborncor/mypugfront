@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/create/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/util/util.dart';
@@ -27,13 +28,16 @@ class EditPugState extends State<EditPug> {
   late File file;
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textTitleController = TextEditingController();
+  TextEditingController textDescriptionController = TextEditingController();
+
   List<PugDetailModel> details = [];
 
   String imageTitle ="";
   String imageDescription ="";
   double x = 0.0;
   double y = 0.0;
-  List<Offset> points = [Offset(50, 50),
+  List<Offset> points = [
+    Offset(50, 50),
     Offset(80, 70),
     Offset(200, 175),
    ];
@@ -68,7 +72,7 @@ class EditPugState extends State<EditPug> {
       child: Container(
         child:
         Container(
-          height: 300,
+          height: 600,
           child: Visibility(
             visible: isVisible,
             child: Stack(
@@ -77,11 +81,11 @@ class EditPugState extends State<EditPug> {
                 textsOnImage()
               ],),) ,
         ),
-        height: 300,
+        height: 600,
         decoration: BoxDecoration(
             image: DecorationImage(
               image: FileImage(image),
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.contain,
             )
         ),
       ),onTap: () {},
@@ -122,11 +126,13 @@ class EditPugState extends State<EditPug> {
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.text,
           )),
-          ElevatedButton(onPressed: () {
+          ElevatedButton(
+              style: BaseButtonRoundedColor(40, 60, APPCOLOR),
+              onPressed: () {
             setState(() {
               isVisible = !isVisible;
             });
-          }, child: Text('Show/Hide'))
+          }, child: Text('Afficher/Masquer'))
 
         ],) ,
     );
@@ -134,17 +140,32 @@ class EditPugState extends State<EditPug> {
 
   Widget imageDetail(String detail){
     return Column(
-      children: [TextField(
+      children: [
+        TextField(
+          controller: textDescriptionController,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
+          minLines:1,
+          maxLines: 4,
+          decoration: InputDecoration(hintText: "Description"),
+        ),
+        TextField(
       controller: textEditingController,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
+          decoration: InputDecoration(hintText: "pug information"),
     ),
-      ElevatedButton(onPressed: () {
+      ElevatedButton(
+          style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+
+          onPressed: () {
         log(textEditingController.text);
         addNewTextOnImage(x, y,textEditingController.text);
-      }, child: Text("Valider")),
-      ElevatedButton(onPressed: () async {
-        var result = await createPug(file,textTitleController.text,"My Description",details);
+      }, child: Text("Ajouter une information")),
+      ElevatedButton(
+          style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+          onPressed: () async {
+        var result = await createPug(file,textTitleController.text,textDescriptionController.text,details);
         showSnackBar(context, result.message);
 
 
@@ -159,8 +180,7 @@ class EditPugState extends State<EditPug> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        backgroundColor: Colors.white,
+        appBar: AppBar(backgroundColor: APPCOLOR,),
 
         body:  ListView(
           children: [
@@ -184,9 +204,9 @@ class OpenPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint1 = Paint()
-      ..color = Colors.white
+      ..color = APPCOLOR
       ..strokeCap = StrokeCap.round //rounded points
-      ..strokeWidth = 10;
+      ..strokeWidth = 15;
     //list of points
     var points = this.points;
     //draw points on canvas

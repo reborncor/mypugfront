@@ -19,7 +19,7 @@ class SignInResponse extends BasicResponse{
 
 
   SignInResponse.jsonData({ code,  message, payload, required this.username, required this.phoneNumber, required this.admin,
-    required this.followers, required this.following, required this.pugs,required this.token}) :super(code: code, message: message, payload: payload);
+    required this.followers, required this.following, required this.pugs,required this.token,required this.email}) :super(code: code, message: message, payload: payload);
 
   factory SignInResponse.fromJsonData(Map<String,  dynamic> json){
     return SignInResponse.jsonData(
@@ -29,9 +29,12 @@ class SignInResponse extends BasicResponse{
       username: json['payload']['username'],
       phoneNumber: json['payload']['phoneNumber'],
       admin: json['payload']['admin'],
+      email: json['payload']['email'],
+
       followers: json['payload']['followers'],
       following: json['payload']['following'],
       token: json['token'],
+
     );
   }
 }

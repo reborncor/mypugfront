@@ -2,7 +2,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
+import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/create/create.dart';
 import 'package:mypug/features/profile/profile.dart';
 
@@ -22,7 +24,8 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     const Actuality(),
-    const Create(),
+    const CreatePug(),
+    const ChatList(),
     Profile(),
   ];
   void _onItemTapped(int index) {
@@ -43,27 +46,34 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
             label: 'Accueil',
 
             icon: const Icon(Icons.home),
-            backgroundColor: Colors.red[700],
+            backgroundColor: APPCOLOR,
 
           ),
           BottomNavigationBarItem(
             label: 'Creer',
 
             icon: const Icon(Icons.add),
-            backgroundColor: Colors.red[700],
+            backgroundColor: APPCOLOR,
+
+          ),
+          BottomNavigationBarItem(
+            label: 'Message',
+
+            icon: const Icon(Icons.messenger),
+            backgroundColor: APPCOLOR,
 
           ),
           BottomNavigationBarItem(
             label: 'Profile',
             icon: const Icon(Icons.account_circle),
-            backgroundColor: Colors.red[700],
+            backgroundColor: APPCOLOR,
 
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black87,
-        backgroundColor: Colors.red[700],
-        unselectedItemColor: Colors.red[50],
+        selectedItemColor: Colors.black54,
+        backgroundColor: APPCOLOR,
+        unselectedItemColor: Colors.white70,
         onTap: _onItemTapped,
       ),
     );

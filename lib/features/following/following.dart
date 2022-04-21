@@ -6,7 +6,10 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
+import 'package:mypug/components/followeritem/followeritem.dart';
 import 'package:mypug/features/chat/chat.dart';
+import 'package:mypug/features/follower/api.dart';
 import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/ConversationModel.dart';
@@ -34,6 +37,7 @@ class FollowingViewState extends State<FollowingView> {
   StreamController streamController = StreamController();
   late FollowerResponse _response;
   late String _username;
+  late List<UserSearchModel> listFollowing;
 
   @override
   void initState() {
@@ -49,14 +53,11 @@ class FollowingViewState extends State<FollowingView> {
 
   }
 
-  Widget itemChat(UserSearchModel model){
+  Widget itemFollowing(UserSearchModel model,index){
 
 
 
-    return  InkWell(
-      onTap:() => navigateTo(context, Profile.fromUsername(username: model.username)),
-
-        child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username)),);
+    return FollowerItem(username: model.username);
   }
 
   Widget content(){
@@ -65,11 +66,11 @@ class FollowingViewState extends State<FollowingView> {
 
       future: getUserFollowings(),builder: (context, AsyncSnapshot<FollowerResponse>snapshot) {
       if(snapshot.hasData) {
-        log(snapshot.data!.usernames.length.toString());
+        listFollowing = snapshot.data!.usernames;
         return ListView.builder(
           itemCount: snapshot.data!.usernames.length,
           itemBuilder: (context, index) {
-            return itemChat(snapshot.data!.usernames[index]);
+            return itemFollowing(listFollowing[index], index);
           },);
       }
       if(snapshot.connectionState == ConnectionState.done){
@@ -86,7 +87,7 @@ class FollowingViewState extends State<FollowingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(backgroundColor: APPCOLOR),
       body: content(),
     );
   }

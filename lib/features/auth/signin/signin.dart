@@ -7,6 +7,7 @@ import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
 import 'package:mypug/util/util.dart';
 
+import '../../../components/design/design.dart';
 import '../api.dart';
 
 class SignIn extends StatefulWidget {
@@ -53,14 +54,17 @@ class SignInState extends State<SignIn> {
                 }
                 return null;
               },
-              decoration: const InputDecoration(
-
+              decoration:  InputDecoration(
+                focusedBorder: setOutlineBorder(1.5, 20.0),
+                enabledBorder: setOutlineBorder(1.5, 20.0),
+                border:setOutlineBorder(1.5, 20.0),
                 hintText: "Nom d'utilisateur",
-              ),
+              )
             )),
         Padding(
           padding: const EdgeInsets.all(16),
           child: TextFormField(
+
             autofillHints: const <String>[AutofillHints.password],
             textAlign: TextAlign.center,
             validator: (value) {
@@ -73,14 +77,18 @@ class SignInState extends State<SignIn> {
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration: const InputDecoration(
-
+            decoration: InputDecoration(
+              focusedBorder: setOutlineBorder(1.5, 20.0),
+              enabledBorder: setOutlineBorder(1.5, 20.0),
+              border:setOutlineBorder(1.5, 25.0),
               hintText: 'Mot de passe',
             ),
           ),)
         ,
-        Padding(padding: EdgeInsets.all(12),
+        Padding(padding: EdgeInsets.only(top: 4),
           child: ElevatedButton(
+
+            style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
             onPressed: () async {
 
               if(_formkey.currentState!.validate()){
@@ -98,11 +106,11 @@ class SignInState extends State<SignIn> {
             },
             child: const Text('Se connecter'),
           ),),
-        ElevatedButton(
+        TextButton(
           onPressed: ()  {
             Navigator.pushNamed(context, const SignUp().routeName);
           },
-          child: const Text("S'inscrire"),
+          child: Text("Pas encore inscrit ? crééz vous un compte", style: TextStyle(color: Colors.indigo.shade300),),
         )
       ],
     )
@@ -112,7 +120,6 @@ class SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
 
         body:  Center(
             child :userForm()

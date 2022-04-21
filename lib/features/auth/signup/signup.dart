@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
 
+import '../../../components/design/design.dart';
 import '../../../components/tab/tab.dart';
 import '../../../util/util.dart';
 
@@ -53,8 +54,10 @@ class SignUpState extends State<SignUp> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-
+                  decoration: InputDecoration(
+                    focusedBorder: setOutlineBorder(1.5, 20.0),
+                    enabledBorder: setOutlineBorder(1.5, 20.0),
+                    border:setOutlineBorder(1.5, 20.0),
                     hintText: "Nom d'utilisateur",
                   ),
                 )),
@@ -70,8 +73,10 @@ class SignUpState extends State<SignUp> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-
+                  decoration: InputDecoration(
+                    focusedBorder: setOutlineBorder(1.5, 20.0),
+                    enabledBorder: setOutlineBorder(1.5, 20.0),
+                    border:setOutlineBorder(1.5, 20.0),
                     hintText: "Numéro de téléphone",
                   ),
                 )),
@@ -87,8 +92,10 @@ class SignUpState extends State<SignUp> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-
+                  decoration: InputDecoration(
+                    focusedBorder: setOutlineBorder(1.5, 20.0),
+                    enabledBorder: setOutlineBorder(1.5, 20.0),
+                    border:setOutlineBorder(1.5, 20.0),
                     hintText: "Adresse email",
                   ),
                 )),
@@ -107,14 +114,17 @@ class SignUpState extends State<SignUp> {
                 obscureText: true,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-
+                decoration: InputDecoration(
+                  focusedBorder: setOutlineBorder(1.5, 20.0),
+                  enabledBorder: setOutlineBorder(1.5, 20.0),
+                  border:setOutlineBorder(1.5, 20.0),
                   hintText: 'Mot de passe',
                 ),
               ),)
             ,
             Padding(padding: EdgeInsets.all(12),
               child: ElevatedButton(
+                style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
                 onPressed: () async {
 
                   if(_formkey.currentState!.validate()){
@@ -141,8 +151,7 @@ class SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(),
+        appBar: AppBar(backgroundColor: APPCOLOR),
 
         body:  userForm()
 

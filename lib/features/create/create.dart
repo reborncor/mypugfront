@@ -6,22 +6,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/assetthumbnail/assetthumbnail.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/editpug/editpug.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-class Create extends StatefulWidget {
+class CreatePug extends StatefulWidget {
 
   final routeName = '/create';
 
-  const Create({Key? key}) : super(key: key);
+  const CreatePug({Key? key}) : super(key: key);
 
   @override
-  CreateState createState() => CreateState();
+  CreatePugState createState() => CreatePugState();
 }
 
-class CreateState extends State<Create> {
+class CreatePugState extends State<CreatePug> {
 
   final ImagePicker _picker = ImagePicker();
   File? imageFile;
@@ -143,26 +144,32 @@ callBack(Future<File?> file) async {
   }
 
   Widget imageButtonOption(){
-    return   Row(children: [
+    return   Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
       // ElevatedButton(
       //   onPressed: () {
       //     _showPicker(context);
       //   },
       //   child: Text('Open Gallery'),
       // ),
+        Row(children: [ ElevatedButton(
+          style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
+          onPressed: () {
+            _imgFromGallery();
+          },
+          child: Text('Galerie'),
+        ),
+          ElevatedButton(
+            style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
+            onPressed: () {
+              _imgFromCamera();
+            },
+            child: Text('Photo'),
+          ),],),
       ElevatedButton(
-        onPressed: () {
-          _imgFromGallery();
-        },
-        child: Text('Galery'),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          _imgFromCamera();
-        },
-        child: Text('Photo'),
-      ),
-      ElevatedButton(onPressed: () {
+          style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
+          onPressed: () {
         navigateTo(context, EditPug.withFile(file: imageFile));
 
       }, child: const Text('Valider'))
@@ -186,7 +193,9 @@ callBack(Future<File?> file) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: APPCOLOR,
+      ),
       body: Column(
         children: <Widget>[
         imageView(),

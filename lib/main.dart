@@ -10,6 +10,8 @@ import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
+import 'package:mypug/service/themenotifier.dart';
+import 'package:provider/provider.dart';
 
 import 'components/pug/pug.dart';
 import 'components/tab/tab.dart';
@@ -17,7 +19,7 @@ import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,32 +28,42 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
+    return ChangeNotifierProvider(
+      create: (_) => ThemeModel(),
+      child: Consumer<ThemeModel>(
+        builder:(context, ThemeModel themeNotifier, child) {
+        return MaterialApp(
 
-      routes: {
-        '/actuality': (context) => const Actuality(),
-        '/create': (context) => const Create(),
-        '/profile': (context) => Profile(),
-        '/setting': (context) => const Setting(),
-        '/tabview': (context) => const TabView(),
-        '/signin': (context) => const SignIn(),
-        '/signup': (context) => const SignUp(),
-        '/pug': (context) => const Pug(),
-        '/search': (context) => const Search(),
-        '/chatlist': (context) => const ChatList(),
-        '/chat': (context) => Chat(),
-        '/pugscomments': (context) => const PugComments(),
-        '/follower': (context) => const FollowersView(),
-        '/following': (context) => const FollowingView(),
+          routes: {
+            '/actuality': (context) =>  Actuality(),
+            '/create': (context) =>  CreatePug(),
+            '/profile': (context) => Profile(),
+            '/setting': (context) =>  Setting(),
+            '/tabview': (context) =>  TabView(),
+            '/signin': (context) =>  SignIn(),
+            '/signup': (context) =>  SignUp(),
+            '/pug': (context) =>  Pug(),
+            '/search': (context) =>  Search(),
+            '/chatlist': (context) =>  ChatList(),
+            '/chat': (context) => Chat(),
+            '/pugscomments': (context) =>  PugComments(),
+            '/follower': (context) =>  FollowersView(),
+            '/following': (context) =>  FollowingView(),
+
+
+          },
+
+          themeMode: ThemeMode.system,
+          theme: themeNotifier.isDark ? ThemeData.dark(): ThemeData.light(),
 
 
 
 
-
-
+          title: 'MyPUG',
+          home: const SplashScreen(),
+        );
       },
-      title: 'MyPUG',
-    home: const SplashScreen(),
+      ),
     );
   }
 }

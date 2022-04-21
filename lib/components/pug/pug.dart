@@ -68,7 +68,7 @@ class PugState extends State<Pug> {
       decoration: BoxDecoration(
           image: DecorationImage(
             image: MemoryImage(base64Decode(widget.model!.imageData)),
-            fit: BoxFit.fitWidth,
+            fit: BoxFit.contain,
           )
       ),
     ),onTap: () {
@@ -98,27 +98,6 @@ class PugState extends State<Pug> {
     );
   }
 
-  Widget imageDetail(String detail){
-    return ExpansionPanelList(
-
-        children: [
-          ExpansionPanel(
-            canTapOnHeader: true,
-            headerBuilder: (context, isExpanded) {
-              return const Text('Detail');
-    },
-              body: Text(detail),
-          isExpanded: isExpanded,)
-        ],
-    expansionCallback: (panelIndex, isExpanded) {
-      this.isExpanded = !isExpanded;
-      setState(() {
-
-      });
-
-    },);
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +108,6 @@ class PugState extends State<Pug> {
           children: [
             SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
             imageInformation(imageTitle,imageLike),
-            imageDetail(imageDescription)
 
           ],
         )

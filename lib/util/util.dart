@@ -30,8 +30,12 @@ Future<void> saveUserData(SignInResponse data) async {
 
   sharedPreferences.setString("token", data.token);
   sharedPreferences.setString("username", data.username);
+  sharedPreferences.setString("email", data.email);
+  sharedPreferences.setString("phoneNumber", data.phoneNumber);
+
 
 }
+
 
 deleteData() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -41,6 +45,20 @@ Future<String> getCurrentUserToken()async{
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   Object? token = sharedPreferences.get("token");
   return token.toString();
+}
+
+
+Future<dynamic> getUserData()async{
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Object? username = sharedPreferences.get("username");
+  Object? phoneNumber = sharedPreferences.get("phoneNumber");
+  Object? email = sharedPreferences.get("email");
+
+  return {
+    "username" : username.toString(),
+    "phoneNumber" : phoneNumber.toString(),
+    "email" : email.toString(),
+  };
 }
 
 Future<String> getCurrentUsername()async{

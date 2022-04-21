@@ -14,6 +14,8 @@ import 'package:mypug/response/commentresponse.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
 
+import '../../components/design/design.dart';
+import '../../components/pug/api.dart';
 import 'api.dart';
 
 
@@ -36,7 +38,9 @@ class PugCommentsState extends State<PugComments> {
   StreamController streamController = StreamController();
   late CommentResponse _response;
   late String _username;
-
+  late CommentModel comment;
+  TextEditingController textEditingController = TextEditingController();
+  late List<CommentModel> comments;
 
   @override
   void initState() {
@@ -74,28 +78,57 @@ class PugCommentsState extends State<PugComments> {
       builder: (context, AsyncSnapshot<CommentResponse>snapshot) {
       if(snapshot.hasData) {
         log(snapshot.data!.comments.length.toString());
+        comments = snapshot.data!.comments;
         return ListView.builder(
-          itemCount: snapshot.data!.comments.length,
+          itemCount: comments.length,
           itemBuilder: (context, index) {
-            return itemComment(snapshot.data!.comments[index]);
+            return itemComment(comments[index]);
           },);
       }
       if(snapshot.connectionState == ConnectionState.done){
         return  const Center( child: Text("Aucune donnée"),);
       }
       else{
-        return const Center(child : CircularProgressIndicator());
+        return Center(child : CircularProgressIndicator(color: APPCOLOR,));
       }
 
 
     },);
   }
 
+  Widget imageAddComment(String author, String pugId){
+
+    return Padding(padding: EdgeInsets.all(0), child:  Row( children: [
+      Expanded(
+        child: TextField(
+            controller:  textEditingController,
+            decoration: InputDecoration(
+              suffixIcon:  IconButton(onPressed: () async {
+                final result = await sendComment(pugId, author, textEditingController.text);
+                if(result.code == SUCCESS_CODE){
+                  // showSnackBar(context, "Nouveau commentaire ajouté");
+                  comment = CommentModel(id: "", author: _username, content: textEditingController.text, date: "");
+                  comments.add(comment);
+                  setState(() {
+                  });
+                  textEditingController.clear();
+                }
+              } , icon: Icon(Icons.send, color: APPCOLOR,)),
+              hintText: "Ajouter un commentaire",
+              focusedBorder: setOutlineBorder(1.5, 20.0),
+              enabledBorder: setOutlineBorder(1.5, 20.0),
+              border:setOutlineBorder(1.5, 20.0),)),),
+
+    ],
+    ),);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: content(),
+      appBar: AppBar(backgroundColor: APPCOLOR, title: Text("Commentaires"),),
+      body: Column(children: [Expanded(child: content()), imageAddComment(widget.username, widget.pugId)], ),
     );
   }
 }

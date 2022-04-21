@@ -15,6 +15,7 @@ import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/response/followerresponse.dart';
 import 'package:mypug/util/util.dart';
 
+import '../../components/design/design.dart';
 import 'api.dart';
 
 
@@ -55,7 +56,8 @@ class FollowersViewState extends State<FollowersView> {
 
     return  InkWell(
       onTap:() => navigateTo(context, Profile.fromUsername(username: model.username)),
-      child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username)),);
+      child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username), trailing: OutlinedButton(onPressed: () {  },
+      child: const Text("Consulter")),),);
   }
 
   Widget content(){
@@ -75,7 +77,7 @@ class FollowersViewState extends State<FollowersView> {
         return  const Center( child: Text("Aucune donnée"),);
       }
       else{
-        return const Center(child : CircularProgressIndicator());
+        return Center(child : CircularProgressIndicator(color: APPCOLOR,));
       }
 
 
@@ -85,7 +87,7 @@ class FollowersViewState extends State<FollowersView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(backgroundColor: APPCOLOR,),
       body: content(),
     );
   }

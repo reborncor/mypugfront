@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
@@ -14,7 +15,9 @@ import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
+import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
 
@@ -33,12 +36,14 @@ class ProfileState extends State<Profile> {
   List<PugModel> list = [];
   late Future<UserPugResponse> _response;
   late Future<UserResponse> _userResponse;
+  late String username;
    @override
   void initState() {
 
      if(widget.username == ""){
        _userResponse = getUserInfo();
        _response = getAllPugsFromUser();
+
      }
      else{
        _userResponse = getUserInfoFromUsername(widget.username);
@@ -51,21 +56,29 @@ class ProfileState extends State<Profile> {
 
 
   Widget itemProfile(int data, String text){
-    return Column(children: [
-      Text(data.toString()),
+    return Container( height : 50,child : Column(children: [
+      Text(data.toString(), style: const TextStyle(fontSize: 20),),
       Text(text),
-    ],);
+    ],));
   }
   Widget profileHeader() {
     return FutureBuilder(future: _userResponse,builder: (context, AsyncSnapshot<UserResponse>snapshot) {
       if(snapshot.hasData) {
-        return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        username = snapshot.data!.username;
+        return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
+
           children: [
-            CircleAvatar(),
+            Column(children: [
+            const SizedBox(height : 150, width : 120,child: CircleAvatar(backgroundColor: Colors.transparent,    maxRadius: 100,
+                minRadius: 100,
+                child:
+                  Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
+                ),),
+              Text(username, style: TextStyle(fontSize: 18),),
+            ]),
             itemProfile(snapshot.data!.pugs,'Publication'),
 
-
-            InkWell(child : itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
+            InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
             InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
 
 
@@ -75,7 +88,7 @@ class ProfileState extends State<Profile> {
         return  const Center( child: Text("Aucune donnée"),);
       }
       else{
-        return const Center(child : CircularProgressIndicator());
+        return Center(child : CircularProgressIndicator(color: APPCOLOR,));
       }
 
 
@@ -92,8 +105,8 @@ class ProfileState extends State<Profile> {
   }
   Widget imageItemBuffer(PugModel model){
     
-    return GestureDetector(
-      child: Image.memory(base64Decode(model.imageData)),
+    return InkWell(
+      child: Container( decoration : BoxDecoration(border: Border.all(color : Colors.black)),child :Image.memory(base64Decode(model.imageData), fit: BoxFit.fitWidth)),
       onTap: (){
         navigateTo(context, Pug(model: model,));
       },
@@ -107,23 +120,28 @@ class ProfileState extends State<Profile> {
         if(snapshot.hasData){
 
             list = snapshot.data!.pugs;
-            return GridView.builder(
+            return Container(
+              child: GridView.builder(
+
                 itemCount: list.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
                 ), itemBuilder: (context, index){
-                return imageItemBuffer(list[index]);
+              return imageItemBuffer(list[index]);
             }
-            );
+            ),);
         }
         if(snapshot.connectionState == ConnectionState.done){
 
-          return  const Center( child: Text("Aucune donnée"),);
+          return  const Center( child: Text(""),);
         }
         if(snapshot.connectionState == ConnectionState.waiting){
-          return  const Center( child: Text("Aucune donnée"),);
+          return  const Center( child: Text(""),);
         }
         else{
-          return const Center(child : CircularProgressIndicator());
+          return Center(child : CircularProgressIndicator(color: APPCOLOR,));
         }
 
     },);
@@ -132,22 +150,24 @@ class ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
-        ],
-      ),
-        backgroundColor: Colors.white,
+    return Consumer<ThemeModel>(builder: (context, value, child) {
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: APPCOLOR,
+            actions: [
+              IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
+            ],
+          ),
 
-        body:  Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(child : profileHeader(), width : getPhoneHeight(context), height: 200,),
-            Expanded(child: newProfileContent())
-          ],
-        ))
+          body:  Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(child : profileHeader(), width : getPhoneHeight(context), height: 200,),
+              Expanded(child: newProfileContent())
+            ],
+          ))
 
-    );
+      );
+    },);
   }
 }

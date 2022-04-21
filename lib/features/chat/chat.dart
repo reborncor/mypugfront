@@ -3,8 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/service/themenotifier.dart';
+import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../components/design/design.dart';
 import '../../models/MessageModel.dart';
 import '../../response/conversationresponse.dart';
 import '../../response/oldmessageresponse.dart';
@@ -36,7 +39,7 @@ class _ChatState extends State<Chat> {
   late MessageModel newMessage;
   late int startInd;
   late int endInd;
-  // ThemeModel themeNotifier;
+  late ThemeModel themeNotifier;
 
 
   scrollListener(){
@@ -163,20 +166,21 @@ class _ChatState extends State<Chat> {
             child: TextField(
               // style: TextStyle(color: themeNotifier.isDark ? Colors.white : Colors.black),
               controller: messageToSend,
-              decoration: const InputDecoration(
-                // enabledBorder: setOutlineBorder(5.0, 25.0, ),
-                // focusedBorder: setOutlineBorder(5.0, 25.0, ),
-                // border: setOutlineBorder(5.0, 25.0, ),
+              decoration: InputDecoration(
+                suffixIcon: IconButton(onPressed: () {
+                  sendMessage(messageToSend.text);
+                  messageToSend.clear();
+                }, icon: Icon(Icons.send, color : APPCOLOR)),
+                enabledBorder: setOutlineBorder(1.5, 20.0, ),
+                focusedBorder: setOutlineBorder(1.5, 20.0, ),
+                border: setOutlineBorder(1.5, 20.0, ),
               ),
 
               onTap: (){
                 goDown();
               },
             )),
-        IconButton(onPressed: () {
-          sendMessage(messageToSend.text);
-          messageToSend.clear();
-        }, icon: Icon(Icons.send, color : Colors.red[700]))
+
       ],
     );
   }
@@ -194,17 +198,17 @@ class _ChatState extends State<Chat> {
                 children: <Widget>[
                   const Image( image : AssetImage('asset/images/user.png',), width: 30, height: 30,),
                   Flexible(child: Card(
-                    color: (messageModel.senderUsername == username) ? Colors.red[50] : Colors.white70 ,
-                    child: Padding(child : Text(messageModel.content), padding: const EdgeInsets.all(8),),),)
+                    color: (messageModel.senderUsername == username) ? Colors.indigo[50] : Colors.white70 ,
+                    child: Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.white70),), padding: const EdgeInsets.all(8),),),)
                 ],
               ) :Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
 
                   Flexible(child: Card(
-                    color: (messageModel.senderUsername == username) ? Colors.red[50] : Colors.white70 ,
+                    color: (messageModel.senderUsername == username) ? Colors.indigo[50] : Colors.white70 ,
                     child: Container(
-                      child:Padding(child : Text(messageModel.content), padding: EdgeInsets.all(8),) ,
+                      child:Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.white70)), padding: EdgeInsets.all(8),) ,
                     ),),)
                   ,
                   Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
@@ -219,9 +223,11 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
 
+        return Consumer<ThemeModel>(builder: (context,ThemeModel themeNotifier, child) {
+          this.themeNotifier = themeNotifier;
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.red[700] ,
+              backgroundColor: APPCOLOR ,
 
               title: Text(widget.receiverUsername),
 
@@ -254,9 +260,7 @@ class _ChatState extends State<Chat> {
                 else{
                   return Center(
 
-                      child: CircularProgressIndicator(
-                        color: Colors.red[700],
-                      )
+                      child: CircularProgressIndicator(color: APPCOLOR,)
                   );
                 }
               },
@@ -265,6 +269,7 @@ class _ChatState extends State<Chat> {
             ),
 
           );
+        },);
 
 
   }

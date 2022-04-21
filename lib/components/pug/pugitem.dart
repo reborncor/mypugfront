@@ -5,13 +5,16 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 import '../../models/CommentModel.dart';
+import '../../service/themenotifier.dart';
 
 
 class PugItem extends StatefulWidget {
@@ -40,6 +43,7 @@ class PugItemState extends State<PugItem> {
 
   bool isExpanded = false;
   bool isVisible = false;
+  late bool isDarkMode;
   @override
   void initState() {
 
@@ -82,7 +86,7 @@ class PugItemState extends State<PugItem> {
         decoration: BoxDecoration(
             image: DecorationImage(
               image: MemoryImage(base64Decode(widget.model.imageData)),
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.contain,
             )
         ),
       ),onTap: () {
@@ -125,7 +129,7 @@ class PugItemState extends State<PugItem> {
 
 
 
-                }, icon: (isLiked) ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border)  , label: Text(imageLike.toString(), style: const TextStyle(color: Colors.black),),),
+                }, icon: (isLiked) ?  Icon(Icons.favorite, color: APPCOLOR,) :  Icon(Icons.favorite_border, color: APPCOLOR,)  , label: Text(imageLike.toString(), style: TextStyle(color: APPCOLOR),),),
             ],
           )
 
@@ -147,49 +151,39 @@ class PugItemState extends State<PugItem> {
               children: [ Text(comment.author),
               Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1,      overflow: TextOverflow.ellipsis,)),],),
 
-            Expanded(flex : 0,child: TextButton(onPressed: (){navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));}, child: const Text("commentaires")))
+            Expanded(flex : 0,child: TextButton(
+              
+                onPressed: (){
+                  navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
+                  }, child: Text("commentaires", style: TextStyle(color: APPCOLOR),)))
 
       ],));
   }
 
   Widget imageDetail(String detail){
-    return ReadMoreText(detail, trimLines : 3,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",);
-
-
+    return ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
+      trimMode: TrimMode.Line, );
   }
 
-  Widget imageAddComment(String author, String pugId){
 
-    return Padding(padding: EdgeInsets.all(0), child:  Row( children: [
-      Expanded(child: TextField(controller:  textEditingController, decoration: const InputDecoration(hintText: "Ajouter un commentaire")),),
-      IconButton(onPressed: () async {
-        final result = await sendComment(pugId, author, textEditingController.text);
-        if(result.code == SUCCESS_CODE){
-          showSnackBar(context, "Nouveau commentaire ajouté");
-          comment.author = widget.currentUsername;
-          comment.content = textEditingController.text;
-          setState(() {
-          });
-          textEditingController.clear();
-        }
-        } , icon: const Icon(Icons.send))
-    ],
-    ),);
-  }
   @override
   Widget build(BuildContext context) {
-    return Column(
-          children: [
-            Text(widget.model.author),
-            SizedBox( width: 500, height : 500,child :imageContent(),),
-            imageInformation(imageTitle),
-            imageDetail(imageDescription),
-            imageCommentaire(widget.model.comments),
-            imageAddComment(widget.model.author, widget.model.id),
+    return Consumer<ThemeModel>(builder: (context, ThemeModel  notifier, child) {
+      isDarkMode = notifier.isDark;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  Text(widget.model.author),],),
+          SizedBox( width: 500, height : 500,child :imageContent(),),
+          imageInformation(imageTitle),
+          imageDetail(imageDescription),
+          imageCommentaire(widget.model.comments),
+          // imageAddComment(widget.model.author, widget.model.id),
 
 
-          ],
-        );
+        ],
+      );
+    },);
   }
 
   max(int i, maxHeight) {}

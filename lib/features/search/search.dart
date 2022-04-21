@@ -6,6 +6,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/usersearchmodel.dart';
@@ -91,7 +92,7 @@ class SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(backgroundColor: APPCOLOR,),
       body: Column(
         children: [
           searchBar(),

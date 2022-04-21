@@ -14,6 +14,7 @@ import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
 
+import '../../components/design/design.dart';
 import 'api.dart';
 
 
@@ -81,7 +82,7 @@ class ChatListState extends State<ChatList> {
         return  const Center( child: Text("Aucune donnée"),);
       }
       else{
-        return const Center(child : CircularProgressIndicator());
+        return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
       }
 
 
@@ -91,7 +92,7 @@ class ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(backgroundColor: APPCOLOR),
         body: content(),
     );
   }
