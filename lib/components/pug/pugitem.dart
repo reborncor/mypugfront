@@ -173,7 +173,7 @@ class PugItemState extends State<PugItem> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  Text(widget.model.author),],),
+          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold),),],),
           SizedBox( width: 500, height : 500,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),

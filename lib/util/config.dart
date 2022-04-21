@@ -1,1 +1,1 @@
-String URL = "https://e733-2001-861-5e45-dcd0-c4a9-d931-58f3-7adb.ngrok.io";
+String URL = "https://myplugapi.herokuapp.com";

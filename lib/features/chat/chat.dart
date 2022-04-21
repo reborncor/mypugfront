@@ -199,7 +199,7 @@ class _ChatState extends State<Chat> {
                   const Image( image : AssetImage('asset/images/user.png',), width: 30, height: 30,),
                   Flexible(child: Card(
                     color: (messageModel.senderUsername == username) ? Colors.indigo[50] : Colors.white70 ,
-                    child: Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.white70),), padding: const EdgeInsets.all(8),),),)
+                    child: Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.black),), padding: const EdgeInsets.all(8),),),)
                 ],
               ) :Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -208,7 +208,7 @@ class _ChatState extends State<Chat> {
                   Flexible(child: Card(
                     color: (messageModel.senderUsername == username) ? Colors.indigo[50] : Colors.white70 ,
                     child: Container(
-                      child:Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.white70)), padding: EdgeInsets.all(8),) ,
+                      child:Padding(child : Text(messageModel.content, style: TextStyle(color: themeNotifier.isDark ? Colors.black : Colors.black)), padding: EdgeInsets.all(8),) ,
                     ),),)
                   ,
                   Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),

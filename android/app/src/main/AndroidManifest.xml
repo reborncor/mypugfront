@@ -2,7 +2,9 @@
     package="com.example.mypug">
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-   <application
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
         android:label="mypug"
         android:icon="@mipmap/ic_launcher">
 

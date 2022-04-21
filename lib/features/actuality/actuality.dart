@@ -77,7 +77,7 @@ class ActualityState extends State<Actuality> {
     },);
   }
   Widget pugItem(PugModel model){
-    return Container( width : 400 , height : 700,child : PugItem(model: model,currentUsername: _username,)
+    return Container( decoration : BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: APPCOLOR))),width : 400 , height : 700,child : PugItem(model: model,currentUsername: _username,)
     );}
   @override
   Widget build(BuildContext context) {

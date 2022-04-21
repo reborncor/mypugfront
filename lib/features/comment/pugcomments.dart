@@ -58,14 +58,19 @@ class PugCommentsState extends State<PugComments> {
   Widget itemComment(CommentModel model){
 
 
-    return  InkWell(
+    return  Container(
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: APPCOLOR),
+      )),
+        child : InkWell(
       child: Row(
         children: [
           const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
-          Text(model.author),
+          Text(model.author, style: TextStyle(fontWeight: FontWeight.bold),),
+          SizedBox(width: 10,),
           Text(model.content),
         ],
 
+    )
     )
     );
   }
