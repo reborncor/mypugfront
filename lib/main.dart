@@ -53,10 +53,18 @@ class MyApp extends StatelessWidget {
 
           },
 
-          themeMode: ThemeMode.system,
-          theme: themeNotifier.isDark ? ThemeData.dark(): ThemeData.light(),
+          darkTheme: ThemeData(
+            // backgroundColor: Colors.red,
+            brightness: Brightness.dark,
+            primaryColorDark: Colors.black,
+            primaryColor: Colors.black54,
+            scaffoldBackgroundColor: Colors.black54
 
+          ),
 
+          themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
+
+          // theme: themeNotifier.isDark ? ThemeData.dark(): ThemeData.light(),
 
 
           title: 'MyPUG',

@@ -4,9 +4,11 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
+import 'package:provider/provider.dart';
 
 import '../../../components/design/design.dart';
 import '../../../components/tab/tab.dart';
+import '../../../service/themenotifier.dart';
 import '../../../util/util.dart';
 
 class SignUp extends StatefulWidget {
@@ -150,11 +152,21 @@ class SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(backgroundColor: APPCOLOR),
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: APPCOLOR,
+          ),
 
-        body:  userForm()
+          body: Container(
+              decoration: BoxGradient(),
+              child : Padding( padding: const EdgeInsets.all(3),
+                  child : Container(child : userForm(), decoration:
+                  BoxDecoration(
+                    color: notifier.isDark ? Colors.black : Colors.white70,
+                    borderRadius: BorderRadius.circular(10),
+                  ),)  )));
+    },);
 
-    );
   }
 }

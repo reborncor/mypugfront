@@ -1,6 +1,7 @@
 /// Flutter code sample for BottomNavigationBar
 
 
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
@@ -37,43 +38,49 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items:  <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            label: 'Accueil',
+      bottomNavigationBar: DotNavigationBar(
+
+        items:  <DotNavigationBarItem>[
+          DotNavigationBarItem(
+            // label: 'Accueil',
 
             icon: const Icon(Icons.home),
-            backgroundColor: APPCOLOR,
+            // backgroundColor: APPCOLOR,
 
           ),
-          BottomNavigationBarItem(
-            label: 'Creer',
+          DotNavigationBarItem(
+            // label: 'Creer',
 
             icon: const Icon(Icons.add),
-            backgroundColor: APPCOLOR,
+            // backgroundColor: APPCOLOR,
+
 
           ),
-          BottomNavigationBarItem(
-            label: 'Message',
+          DotNavigationBarItem(
+            // label: 'Message',
 
             icon: const Icon(Icons.messenger),
-            backgroundColor: APPCOLOR,
+            // backgroundColor: APPCOLOR,
+
 
           ),
-          BottomNavigationBarItem(
-            label: 'Profile',
+          DotNavigationBarItem(
+            // label: 'Profile',
             icon: const Icon(Icons.account_circle),
-            backgroundColor: APPCOLOR,
+            // backgroundColor: APPCOLOR,
+
+
 
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black54,
         backgroundColor: APPCOLOR,
-        unselectedItemColor: Colors.white70,
+        selectedItemColor: Colors.white70,
+        dotIndicatorColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );

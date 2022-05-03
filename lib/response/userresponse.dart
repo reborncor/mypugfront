@@ -13,12 +13,13 @@ class UserResponse extends BasicResponse{
   late int followers;
   late int following;
   late int pugs;
+  late bool? isFollowing;
 
   UserResponse({ code,  message, payload}) : super(code: code, message:message, payload: payload);
 
 
   UserResponse.jsonData({ code,  message, payload, required this.username, required this.phoneNumber, required this.admin,
-    required this.followers, required this.following, required this.pugs}) :super(code: code, message: message, payload: payload);
+    required this.followers, required this.following, required this.pugs, required this.isFollowing}) :super(code: code, message: message, payload: payload);
 
   factory UserResponse.fromJsonData(Map<String,  dynamic> json){
     return UserResponse.jsonData(
@@ -30,6 +31,8 @@ class UserResponse extends BasicResponse{
       admin: json['payload']['admin'],
       followers: json['payload']['followers'],
       following: json['payload']['following'],
+      isFollowing: json['payload']['isFollowing'],
+
     );
   }
 }

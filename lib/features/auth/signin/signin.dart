@@ -42,7 +42,8 @@ class SignInState extends State<SignIn> {
       children: <Widget>[
 
         const Padding(padding: EdgeInsets.only(bottom: 4),
-            child: Text("MyPUG",style: TextStyle( fontSize: 20),)),
+            child: Image(image: AssetImage("asset/images/logo.png"), width: 100, height: 100,)),
+
         Padding(padding: const EdgeInsets.all(16),
             child:   TextFormField(
               autofillHints:const <String>[AutofillHints.username],

@@ -5,9 +5,9 @@ import 'dart:core';
 
 class PugDetailModel{
 
-  late int? positionX;
-  late int? positionY;
-  late String? text;
+  late int positionX;
+  late int positionY;
+  late String text;
 
   PugDetailModel({ required this.positionX,  required this.positionY,
     required this.text});

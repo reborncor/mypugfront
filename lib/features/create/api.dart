@@ -47,7 +47,7 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
     return data ;
   }
   else{
-    return BasicResponse(code: response.data['code'], message: response.data['message'], payload: null);
+    return BasicResponse(code: 1, message: response.data['message'], payload: null);
   }
 
 

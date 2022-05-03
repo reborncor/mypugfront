@@ -22,7 +22,7 @@ class FollowerItem extends StatefulWidget {
   final String username;
 
 
-  const FollowerItem({Key? key,required this.username}) : super(key: key);
+  const FollowerItem({Key? key,required this.username, }) : super(key: key);
   @override
   FollowerItemState createState() => FollowerItemState();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/service/themenotifier.dart';
 
 setOutlineBorder(borderSide, borderRadius)  {
 
@@ -23,5 +24,24 @@ BaseButtonRoundedColor(double width, double height,color){
       ));
 }
 
+BaseButtonSize(double width, double height,color){
+  return  ButtonStyle(
+      minimumSize: MaterialStateProperty.all(Size(width,height)),
+
+      backgroundColor: MaterialStateProperty.all(color),
+     );
+}
+
 final APPCOLOR = Colors.indigo.shade300;
 final PUGSIZE = 600;
+
+BoxGradient(){
+  return BoxDecoration(
+    gradient: LinearGradient(
+        colors: [APPCOLOR, Colors.blueAccent.shade700, Colors.deepPurple]), );
+}
+
+BoxCircular(ThemeModel notifier){
+  return BoxDecoration(color: notifier.isDark ? Colors.black : Colors.white70,
+      borderRadius: BorderRadius.circular(10));
+}

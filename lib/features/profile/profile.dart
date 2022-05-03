@@ -6,7 +6,9 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
+import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/features/chat/chat.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/profile/api.dart';
@@ -37,22 +39,31 @@ class ProfileState extends State<Profile> {
   late Future<UserPugResponse> _response;
   late Future<UserResponse> _userResponse;
   late String username;
+  late bool isFollowing = false;
+  late ThemeModel notifier;
    @override
   void initState() {
 
-     if(widget.username == ""){
-       _userResponse = getUserInfo();
-       _response = getAllPugsFromUser();
 
-     }
-     else{
-       _userResponse = getUserInfoFromUsername(widget.username);
-       _response = getAllPugsFromUsername(widget.username);
-     }
-
+   fetchData();
     super.initState();
 
   }
+
+
+  fetchData(){
+    if(widget.username == ""){
+      _userResponse = getUserInfo();
+      _response = getAllPugsFromUser();
+
+    }
+    else{
+      _userResponse = getUserInfoFromUsername(widget.username);
+      _response = getAllPugsFromUsername(widget.username);
+    }
+
+  }
+
 
 
   Widget itemProfile(int data, String text){
@@ -65,15 +76,25 @@ class ProfileState extends State<Profile> {
     return FutureBuilder(future: _userResponse,builder: (context, AsyncSnapshot<UserResponse>snapshot) {
       if(snapshot.hasData) {
         username = snapshot.data!.username;
-        return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
+        isFollowing = snapshot.data!.isFollowing ?? false;
+        String textButton = isFollowing ? "Se désabonner":"S'abonner";
+        if(widget.username != ""){
+
+
+        }
+
+
+        return Column(children: [
+
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
 
           children: [
             Column(children: [
-            const SizedBox(height : 150, width : 120,child: CircleAvatar(backgroundColor: Colors.transparent,    maxRadius: 100,
+              const SizedBox(height : 150, width : 120,child: CircleAvatar(backgroundColor: Colors.transparent,    maxRadius: 100,
                 minRadius: 100,
                 child:
-                  Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
-                ),),
+                Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
+              ),),
               Text(username, style: TextStyle(fontSize: 18),),
             ]),
             itemProfile(snapshot.data!.pugs,'Publication'),
@@ -82,7 +103,32 @@ class ProfileState extends State<Profile> {
             InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
 
 
-          ],);
+          ],),
+          (widget.username == "") ? SizedBox(width: 0,height: 0,) :  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              OutlinedButton(
+                  style: BaseButtonSize(150, 30 , Colors.transparent),
+
+                  onPressed: () async {
+                      final result = await unFollowOrFollowUser(username, isFollowing);
+                      if(result.code == SUCCESS_CODE){
+                        log(result.message);
+                        isFollowing = !isFollowing;
+                        await fetchData();
+                        setState(() {
+
+                        });
+                      }
+
+                  }, child: Text(textButton )),
+              OutlinedButton(
+                  style: BaseButtonSize(150, 30 , Colors.transparent),
+                  onPressed: () {
+                    navigateTo(context, Chat.withUsername(receiverUsername: username));
+                  }, child: Text("Message")),
+            ],)
+        ],);
       }
       if(snapshot.connectionState == ConnectionState.done){
         return  const Center( child: Text("Aucune donnée"),);
@@ -120,7 +166,9 @@ class ProfileState extends State<Profile> {
         if(snapshot.hasData){
 
             list = snapshot.data!.pugs;
+            String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
             return Container(
+              decoration: BoxDecoration(image: DecorationImage(image: AssetImage(pathImage))),
               child: GridView.builder(
 
                 itemCount: list.length,
@@ -150,22 +198,30 @@ class ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeModel>(builder: (context, value, child) {
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: APPCOLOR,
+            title: const Text("Profile"),
+            backgroundColor: notifier.isDark ? Colors.black : Colors.white70,
             actions: [
               IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
             ],
           ),
 
-          body:  Center(child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(child : profileHeader(), width : getPhoneHeight(context), height: 200,),
-              Expanded(child: newProfileContent())
-            ],
-          ))
+          body: Container(
+            decoration: BoxGradient(),
+            child: Padding( padding: const EdgeInsets.all(3),
+            child: Container( child:
+            Center(child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
+                Expanded(child: newProfileContent())
+              ],
+            )),
+              decoration: BoxCircular(notifier) ,),),
+          )
 
       );
     },);

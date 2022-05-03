@@ -62,7 +62,7 @@ class PugItemState extends State<PugItem> {
     }
     points.clear();
     for (var element in widget.model.details!) {
-      points.add(Offset(element.positionX!.toDouble(), element.positionY!.toDouble()));
+      points.add(Offset(element.positionX.toDouble(), element.positionY.toDouble()));
     }
 
   }
@@ -79,8 +79,10 @@ class PugItemState extends State<PugItem> {
           visible: isVisible,
           child: Stack(
             children: [
-              CustomPaint(painter: OpenPainter(points: points)),
-              Stack(children: points.asMap().map((i,e) => MapEntry(i, Positioned(child: Text((widget.model.details![i].text ?? "") , style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),)).values.toList()
+              Stack(
+                  children: points.asMap().map((i,e) => MapEntry(i,
+                    Positioned(child: Column(children: [Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,), Text((widget.model.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
+                      , left: e.dx, top: e.dy, ),)).values.toList()
               )],),),
         height: 300,
         decoration: BoxDecoration(
@@ -100,9 +102,8 @@ class PugItemState extends State<PugItem> {
   Widget imageInformation(String title){
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(title),
           Row(
             children: [
               TextButton.icon(

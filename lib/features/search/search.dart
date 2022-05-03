@@ -7,11 +7,14 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
+import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/userfindresponse.dart';
 import 'package:mypug/util/util.dart';
+
+import '../follower/api.dart';
 
 
 class Search extends StatefulWidget {
@@ -78,7 +81,13 @@ class SearchState extends State<Search> {
                   child:InkWell( onTap:(){
                     navigateTo(context, Profile.fromUsername(username: data[index].username));
                   },
-                    child: ListTile(leading: const Icon(Icons.account_circle), title: Text(data[index].username)),));
+                    child: ListTile(
+                        leading: const Icon(Icons.account_circle),
+                        title: Text(data[index].username),
+                      trailing: OutlinedButton(
+                      onPressed: () {  },
+                      child: Text("Profil")))
+                    ),);
 
           },);
         }

@@ -13,8 +13,10 @@ import 'package:mypug/models/ConversationModel.dart';
 import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/design/design.dart';
+import '../../service/themenotifier.dart';
 import 'api.dart';
 
 
@@ -91,10 +93,21 @@ class ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(backgroundColor: APPCOLOR),
-        body: content(),
-    );
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      return Scaffold(
+          appBar: AppBar(
+            backgroundColor: APPCOLOR,
+          ),
+
+          body: Container(
+              decoration: BoxGradient(),
+              child : Padding( padding: const EdgeInsets.all(3),
+                  child : Container(child : content(), decoration:
+                  BoxDecoration(
+                    color: notifier.isDark ? Colors.black : Colors.white70,
+                    borderRadius: BorderRadius.circular(10),
+                  ),)  )));
+    },);
   }
 }
 

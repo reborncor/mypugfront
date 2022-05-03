@@ -171,9 +171,9 @@ class _ChatState extends State<Chat> {
                   sendMessage(messageToSend.text);
                   messageToSend.clear();
                 }, icon: Icon(Icons.send, color : APPCOLOR)),
-                enabledBorder: setOutlineBorder(1.5, 20.0, ),
-                focusedBorder: setOutlineBorder(1.5, 20.0, ),
-                border: setOutlineBorder(1.5, 20.0, ),
+                enabledBorder: setOutlineBorder(1.5, 10.0, ),
+                focusedBorder: setOutlineBorder(1.5, 10.0, ),
+                border: setOutlineBorder(1.5, 10.0, ),
               ),
 
               onTap: (){
@@ -232,7 +232,8 @@ class _ChatState extends State<Chat> {
               title: Text(widget.receiverUsername),
 
             ),
-            body:StreamBuilder(
+            body: Container(decoration: BoxGradient(),
+            child: Padding(padding: EdgeInsets.all(3), child: Container(child: StreamBuilder(
               stream: streamController.stream,
               builder: (context, snapshot) {
                 if(snapshot.hasData){
@@ -266,7 +267,7 @@ class _ChatState extends State<Chat> {
               },
 
 
-            ),
+            ),decoration: BoxCircular(themeNotifier),),),)
 
           );
         },);

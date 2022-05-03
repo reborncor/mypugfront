@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/models/pugmodel.dart';
 
+import '../design/design.dart';
+
 
 class Pug extends StatefulWidget {
 
@@ -43,7 +45,7 @@ class PugState extends State<Pug> {
     imageDescription = widget.model!.imageDescription!;
     imageLike = widget.model!.like;
     points.clear();
-    for (var element in widget.model!.details!) {points.add(Offset(element.positionX!.toDouble(),element.positionY!.toDouble()));};
+    for (var element in widget.model!.details!) {points.add(Offset(element.positionX.toDouble(),element.positionY.toDouble()));};
      }
 
 
@@ -60,8 +62,10 @@ class PugState extends State<Pug> {
             visible: isVisible,
             child: Stack(
               children: [
-                CustomPaint(painter: OpenPainter(points: points)),
-                Stack(children: points.asMap().map((i,e) => MapEntry(i, Positioned(child: Text((widget.model!.details![i].text ?? "") , style: TextStyle(fontSize: 15, color: Colors.white),), left: e.dx, top: e.dy, ),)).values.toList()
+                Stack(
+                    children: points.asMap().map((i,e) => MapEntry(i,
+                      Positioned(child: Column(children: [Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,), Text((widget.model!.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
+                 , left: e.dx, top: e.dy, ),)).values.toList()
                 )],),) ,
         ),
       height: 300,

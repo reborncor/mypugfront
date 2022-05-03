@@ -9,8 +9,10 @@ import 'package:mypug/components/assetthumbnail/assetthumbnail.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/editpug/editpug.dart';
 import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:provider/provider.dart';
 
 class CreatePug extends StatefulWidget {
 
@@ -192,20 +194,26 @@ callBack(Future<File?> file) async {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: APPCOLOR,
-      ),
-      body: Column(
-        children: <Widget>[
-        imageView(),
-          // Text('There are ${assets.length} assets'),
-        imageButtonOption(),
-          imagesGallery(),
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: APPCOLOR,
+        ),
+        body: Container(
+          decoration: BoxDecoration(),
+          child: Padding(padding:  const EdgeInsets.all(3),
+            child: Container(child:  Column(
+              children: <Widget>[
+                imageView(),
+                // Text('There are ${assets.length} assets'),
+                imageButtonOption(),
+                imagesGallery(),
 
 
-        ],
-      ),
-    );
+              ],
+            ), decoration: BoxCircular(notifier),) ,),
+        )
+      );
+    },);
   }
 }
