@@ -19,7 +19,7 @@ navigateWithName(context, String name){
 
 showSnackBar(context, message){
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message)),
+    SnackBar(duration: const Duration(milliseconds: 1500),content: Text(message)),
   );
 }
 

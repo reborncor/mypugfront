@@ -87,11 +87,17 @@ class EditPugState extends State<EditPug> {
   }
 
   addNewPugDetails(double positionX, double positionY,String text){
-    PugDetailModel model = PugDetailModel(positionX: positionX.toInt(), positionY: positionY.toInt(), text: text);
+    if(details.length <= 5){
+      PugDetailModel model = PugDetailModel(positionX: positionX.toInt(), positionY: positionY.toInt(), text: text);
 
-    points.add(Offset(x,y));
-    details.add(model);
-    streamController.add("ok");
+      points.add(Offset(x,y));
+      details.add(model);
+      streamController.add("ok");
+    }
+    else{
+      showSnackBar(context, "Vous avez atteint la limite de référence");
+    }
+
     // log(details.length.toString());
   }
 
@@ -138,6 +144,7 @@ class EditPugState extends State<EditPug> {
         child :Visibility( visible : isTextVisible,
           child: Positioned(
             child: Wrap(
+              spacing: 1,
                 direction: Axis.vertical,
                 children: [
                   Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
@@ -153,7 +160,8 @@ class EditPugState extends State<EditPug> {
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.check,color: APPCOLOR),
                                 onPressed: (){
-                                  addNewPugDetails(x-100, y, textEditingController.text);
+                                  addNewPugDetails(x, y-appBar.preferredSize.height -
+                                      MediaQuery.of(context).padding.top, textEditingController.text);
                                   textEditingController.clear();
                                 },))))
                 ])
@@ -278,7 +286,14 @@ class EditPugState extends State<EditPug> {
           style: BaseButtonRoundedColor(40, 40, APPCOLOR),
           onPressed: () async {
         var result = await createPug(file,textTitleController.text,textDescriptionController.text,details);
-        showSnackBar(context, result.message);
+
+        if(result.code == SUCCESS_CODE){
+          showSnackBar(context, result.message);
+
+        }
+        else{
+
+        }
 
 
       }, child: Text("Envoyer"))],
