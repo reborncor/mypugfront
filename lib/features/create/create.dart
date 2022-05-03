@@ -26,17 +26,20 @@ class CreatePug extends StatefulWidget {
 }
 
 class CreatePugState extends State<CreatePug> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final ImagePicker _picker = ImagePicker();
   File? imageFile;
   Future<File?>? selectedImage;
   StreamController imageStreamController = StreamController();
   List<AssetEntity> assets = [];
+  late ThemeModel notifier;
   late SuperTooltip tooltip;
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       tooltip = SuperTooltip(
+
         popupDirection: TooltipDirection.up,
         showCloseButton: ShowCloseButton.inside,
         borderRadius: 30,
@@ -45,12 +48,12 @@ class CreatePugState extends State<CreatePug> {
         maxHeight: 100,
         minHeight: 100,
         shadowColor: APPCOLOR,
-
-
-        content: const Material(
+        content: Material(
+          color: Colors.transparent,
             child: Center(child:  Text(
               "Choisissez une image nette",
               textAlign: TextAlign.center,
+              style: TextStyle(color: notifier.isDark ? Colors.black : Colors.black),
               softWrap: true,
             ))),
       );
@@ -218,7 +221,9 @@ callBack(Future<File?> file) async {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
       return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Créer"),
           backgroundColor: APPCOLOR,

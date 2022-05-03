@@ -11,6 +11,15 @@ setOutlineBorder(borderSide, borderRadius)  {
 
 }
 
+
+setUnderlineBorder(borderSide, borderRadius)  {
+
+  return UnderlineInputBorder(
+    borderSide: BorderSide(width: borderSide, color: Colors.indigo[300]?? Colors.indigo),
+    borderRadius: BorderRadius.circular(borderRadius),
+  );
+
+}
 BaseButtonRoundedColor(double width, double height,color){
   return  ButtonStyle(
       minimumSize: MaterialStateProperty.all(Size(width,height)),

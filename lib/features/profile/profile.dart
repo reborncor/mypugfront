@@ -20,6 +20,7 @@ import 'package:mypug/response/userresponse.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Profile extends StatefulWidget {
 
@@ -41,11 +42,11 @@ class ProfileState extends State<Profile> {
   late String username;
   late bool isFollowing = false;
   late ThemeModel notifier;
+  final RefreshController _refreshController = RefreshController();
+  late ScrollController scrollController = ScrollController(initialScrollOffset: 200);
 
   @override
   void initState() {
-
-
    fetchData();
     super.initState();
 
@@ -202,6 +203,11 @@ class ProfileState extends State<Profile> {
       _response = getAllPugsFromUsername(widget.username);
 
     }
+    _refreshController.refreshCompleted();
+    scrollController.animateTo(
+        200,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.ease);
     setState(() {
 
     });
@@ -224,27 +230,47 @@ class ProfileState extends State<Profile> {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
       this.notifier = notifier;
       return Scaffold(
-          appBar: AppBar(
-            title: const Text("Profile"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-            actions: [
-              IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
-            ],
-          ),
+        appBar: AppBar(
+          title: const Text("Profile"),
+          backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+          actions: [
+            IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
+          ],
+        ),
           body: Container(
                   decoration: BoxGradient(),
                 child: Padding(padding: const EdgeInsets.all(3),
                   child: Container
-                    (child: RefreshIndicator(
-
-                      onRefresh: () => refreshData(),
-                    child :  ListView(
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
-                      newProfileContent()
-                    ],)), decoration: BoxCircular(notifier),),),),);
+                    (child: content() , decoration: BoxCircular(notifier),),),),);
 
     },);
   }
+
+  Widget content(){
+    String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
+
+    return SmartRefresher(
+      controller: _refreshController,
+      onRefresh: refreshData,
+      child:  CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverAppBar(expandedHeight: 150,
+            automaticallyImplyLeading: false,
+            backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
+            pinned: false,
+            flexibleSpace: FlexibleSpaceBar(
+
+              background: Image.asset(pathImage, fit: BoxFit.fitWidth,),
+            ),),
+          SliverFillRemaining(
+
+            child :SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(children: [ Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
+                newProfileContent()],),),),]),);
+
+  }
 }
+
+

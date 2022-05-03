@@ -4,12 +4,15 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/create/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
+import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 
@@ -27,18 +30,21 @@ class EditPug extends StatefulWidget {
 
 class EditPugState extends State<EditPug> {
 
+  late AppBar appBar;
   late File file;
   TextEditingController textEditingController = TextEditingController();
   TextEditingController textTitleController = TextEditingController();
   TextEditingController textDescriptionController = TextEditingController();
   StreamController streamController = StreamController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final dragController = DragController();
 
   List<PugDetailModel> details = [];
 
   String imageTitle ="";
   String imageDescription ="";
-  double x = 0.0;
-  double y = 0.0;
+  double x = 200.0;
+  double y = 200.0;
   List<Offset> points = [
    ];
 
@@ -46,7 +52,7 @@ class EditPugState extends State<EditPug> {
   bool isExpanded = false;
   bool isVisible = true;
   bool isTextVisible = false;
-
+  late ThemeModel notifier;
   late SuperTooltip tooltip;
   @override
   void initState() {
@@ -61,11 +67,11 @@ class EditPugState extends State<EditPug> {
         minHeight: 100,
         shadowColor: APPCOLOR,
 
-
-
         content: const Material(
+          color: Colors.transparent,
             child: Center(child:  Text(
               "Indiquer au moins une référécence",
+              style: TextStyle(color: Colors.black),
               textAlign: TextAlign.center,
               softWrap: true,
             ))),
@@ -86,7 +92,7 @@ class EditPugState extends State<EditPug> {
     points.add(Offset(x,y));
     details.add(model);
     streamController.add("ok");
-    log(details.length.toString());
+    // log(details.length.toString());
   }
 
 
@@ -99,35 +105,74 @@ class EditPugState extends State<EditPug> {
     );
 
   }
+
+  Widget draggrableWidget(){
+    return Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,);
+
+  }
+
   Widget textPugEditor(){
-    log('$x et $y');
-    return Visibility( visible : isTextVisible,
-        child: Positioned(
-          width: 200,
-          child: TextField(
-              controller: textEditingController,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.check),
-                    onPressed: (){
-                      addNewPugDetails(x-100, y, textEditingController.text);
-                      textEditingController.clear();
-                    },)))
-          , left: x-100, top: y,));
+    log('$x ET $y');
+    return  Positioned(
+        left: x,
+        top: y- appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top,
+
+        child: Draggable(
+            onDragStarted: (){
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            feedback:  draggrableWidget(),
+            childWhenDragging: const SizedBox(width: 0,height: 0,),
+            onDragEnd: (details){
+              x = details.offset.dx;
+              y = details.offset.dy;
+              log("$x et $y");
+              setState(() {
+
+              });
+            },
+        child :Visibility( visible : isTextVisible,
+          child: Positioned(
+            child: Wrap(
+                direction: Axis.vertical,
+                children: [
+                  Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
+                  Container(
+                      width:150,
+                      child: TextField(
+                          controller: textEditingController,
+
+                          decoration: InputDecoration(
+
+                              enabledBorder: setUnderlineBorder(3.0, 5.0),
+                              focusedBorder: setUnderlineBorder(3.0, 5.0),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.check,color: APPCOLOR),
+                                onPressed: (){
+                                  addNewPugDetails(x-100, y, textEditingController.text);
+                                  textEditingController.clear();
+                                },))))
+                ])
+            , left: x, top: y,),)));
+
   }
 
 
 
   Widget imageContent(File image){
 
-    return GestureDetector(
-      child: Container(
+    return Container(
         child: StreamBuilder(
           stream: streamController.stream,
          builder: (context, snapshot) {
            return Container(
              height: 600,
              child: Stack(
+
                children: [
                  Visibility(
                    visible: isVisible,
@@ -144,7 +189,7 @@ class EditPugState extends State<EditPug> {
                        child: InkWell(
                          splashColor: Colors.red, // Splash color
                          onTap: () {
-                           showSnackBar(context, "Cliquer sur l'écran pour choisir la position");
+                           // showSnackBar(_scaffoldKey.currentContext, "Cliquer sur l'écran pour choisir la position");
                            isTextVisible = true;
                            setState(() {
 
@@ -166,17 +211,7 @@ class EditPugState extends State<EditPug> {
               fit: BoxFit.contain,
             )
         ),
-      ),onTap: () {},
-      onTapDown: (TapDownDetails details){
-            x = details.localPosition.dx.toInt().toDouble();
-            y = details.localPosition.dy.toInt().toDouble();
-            setState(() {
-
-            });
-            log('$x et $y');
-
-      },
-    );
+      );
 
   }
 
@@ -197,7 +232,7 @@ class EditPugState extends State<EditPug> {
   Widget imageInformation(String title){
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
               style: BaseButtonRoundedColor(40, 60, APPCOLOR),
@@ -215,6 +250,7 @@ class EditPugState extends State<EditPug> {
     return Column(
       children: [
         TextField(
+
           controller: textDescriptionController,
           keyboardType: TextInputType.multiline,
           textInputAction: TextInputAction.newline,
@@ -224,6 +260,9 @@ class EditPugState extends State<EditPug> {
         ),
         TextField(
       controller: textEditingController,
+      onChanged: (value){
+
+      },
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
           decoration: InputDecoration(hintText: "pug information"),
@@ -234,7 +273,7 @@ class EditPugState extends State<EditPug> {
           onPressed: () {
         log(textEditingController.text);
         addNewTextOnImage(x, y,textEditingController.text);
-      }, child: Text("Ajouter une information")),
+      }, child: Text("Ajouter une référécence")),
       ElevatedButton(
           style: BaseButtonRoundedColor(40, 40, APPCOLOR),
           onPressed: () async {
@@ -252,40 +291,23 @@ class EditPugState extends State<EditPug> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(backgroundColor: APPCOLOR,),
+    return Consumer<ThemeModel>(builder:(context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+        key: _scaffoldKey,
+          appBar: appBar = AppBar(backgroundColor: APPCOLOR,title: Text("Edition"),),
 
-        body:  ListView(
-          children: [
-            imageContent(file),
-            imageInformation(imageTitle),
-            imageDetail(imageDescription)
+          body:  ListView(
+            children: [
+              imageContent(file),
+              imageInformation(imageTitle),
+              imageDetail(imageDescription)
 
-          ],
-        )
+            ],
+          )
 
-    );
+      );
+    },);
   }
 }
 
-class OpenPainter extends CustomPainter {
-
-
-  final List<Offset> points ;
-  OpenPainter({required this.points});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint1 = Paint()
-      ..color = APPCOLOR
-      ..strokeCap = StrokeCap.round //rounded points
-      ..strokeWidth = 15;
-    //list of points
-    var points = this.points;
-    //draw points on canvas
-    canvas.drawPoints(PointMode.points, points, paint1);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
