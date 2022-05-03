@@ -142,7 +142,6 @@ class EditPugState extends State<EditPug> {
               });
             },
         child :Visibility( visible : isTextVisible,
-          child: Positioned(
             child: Wrap(
               spacing: 1,
                 direction: Axis.vertical,
@@ -165,7 +164,7 @@ class EditPugState extends State<EditPug> {
                                   textEditingController.clear();
                                 },))))
                 ])
-            , left: x, top: y,),)));
+            ,)));
 
   }
 
@@ -182,13 +181,14 @@ class EditPugState extends State<EditPug> {
              child: Stack(
 
                children: [
+
+                 textPugEditor(),
                  Visibility(
                    visible: isVisible,
                    child: dataDetails(),),
                  Visibility(
                    visible: isVisible,
                    child: textsOnImage(),),
-                 textPugEditor(),
 
                  Positioned(
                    child: ClipOval(
@@ -315,8 +315,10 @@ class EditPugState extends State<EditPug> {
           body:  ListView(
             children: [
               imageContent(file),
+
               imageInformation(imageTitle),
-              imageDetail(imageDescription)
+              imageDetail(imageDescription),
+
 
             ],
           )
