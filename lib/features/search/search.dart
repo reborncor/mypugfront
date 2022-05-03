@@ -13,7 +13,9 @@ import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/userfindresponse.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
+import '../../service/themenotifier.dart';
 import '../follower/api.dart';
 
 
@@ -28,7 +30,7 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
-
+  late ThemeModel notifier;
   TextEditingController searchController = TextEditingController();
   StreamController streamController = StreamController();
   late UserFindResponse _response;
@@ -98,17 +100,39 @@ class SearchState extends State<Search> {
     },);
   }
 
+  // Column(
+  // children: [
+  // searchBar(),
+  // Expanded(child: resultComponent())
+  // ],
+  // )
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: APPCOLOR,),
-      body: Column(
-        children: [
-          searchBar(),
-          Expanded(child: resultComponent())
-        ],
-      )
-    );
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+          appBar: AppBar(
+            title: const Text("Recherche"),
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+
+          ),
+
+          body: Container(
+            decoration: BoxGradient(),
+            child: Padding( padding: const EdgeInsets.all(3),
+              child: Container( child:
+              Column(
+              children: [
+              searchBar(),
+              Expanded(child: resultComponent())
+              ],
+              ),
+                decoration: BoxCircular(notifier) ,),),
+          )
+
+      );
+    },);
+
   }
 }
 

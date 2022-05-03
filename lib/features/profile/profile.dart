@@ -41,7 +41,8 @@ class ProfileState extends State<Profile> {
   late String username;
   late bool isFollowing = false;
   late ThemeModel notifier;
-   @override
+
+  @override
   void initState() {
 
 
@@ -84,7 +85,8 @@ class ProfileState extends State<Profile> {
         }
 
 
-        return Column(children: [
+        return
+             Column(children: [
 
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
 
@@ -141,20 +143,13 @@ class ProfileState extends State<Profile> {
     },);
   }
 
-  Widget imageItem(PugModel model){
-    return GestureDetector(
-      child: Image.network(model.imageURL),
-      onTap: (){
-          navigateTo(context, Pug(model: model,));
-      },
-    );
-  }
+
   Widget imageItemBuffer(PugModel model){
     
     return InkWell(
       child: Container( decoration : BoxDecoration(border: Border.all(color : Colors.black)),child :Image.memory(base64Decode(model.imageData), fit: BoxFit.fitWidth)),
       onTap: (){
-        navigateTo(context, Pug(model: model,));
+        navigateTo(context, Pug.withPugModel(model: model,));
       },
     );
   }
@@ -167,19 +162,20 @@ class ProfileState extends State<Profile> {
 
             list = snapshot.data!.pugs;
             String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
-            return Container(
+            return  Container(
               decoration: BoxDecoration(image: DecorationImage(image: AssetImage(pathImage))),
               child: GridView.builder(
-
-                itemCount: list.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 2,
-                ), itemBuilder: (context, index){
-              return imageItemBuffer(list[index]);
-            }
-            ),);
+                  shrinkWrap: true, // You won't see infinite size error
+                  physics: const NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                  itemCount: list.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2,
+                  ), itemBuilder: (context, index){
+                return imageItemBuffer(list[index]);
+              }
+              ),);
         }
         if(snapshot.connectionState == ConnectionState.done){
 
@@ -194,7 +190,34 @@ class ProfileState extends State<Profile> {
 
     },);
   }
+  Future<void> refreshData() async {
+    if(widget.username == ""){
+      _userResponse = getUserInfo();
 
+      _response = getAllPugsFromUser();
+    }
+    else{
+      _userResponse = getUserInfoFromUsername(widget.username);
+
+      _response = getAllPugsFromUsername(widget.username);
+
+    }
+    setState(() {
+
+    });
+
+  }
+
+  Widget background(){
+    return SliverAppBar(
+      expandedHeight: 200.0,
+      flexibleSpace: FlexibleSpaceBar(
+          background: Image.network(
+            "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
+            fit: BoxFit.cover,
+          )),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,27 +226,25 @@ class ProfileState extends State<Profile> {
       return Scaffold(
           appBar: AppBar(
             title: const Text("Profile"),
-            backgroundColor: notifier.isDark ? Colors.black : Colors.white70,
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
             actions: [
               IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
             ],
           ),
-
           body: Container(
-            decoration: BoxGradient(),
-            child: Padding( padding: const EdgeInsets.all(3),
-            child: Container( child:
-            Center(child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
-                Expanded(child: newProfileContent())
-              ],
-            )),
-              decoration: BoxCircular(notifier) ,),),
-          )
+                  decoration: BoxGradient(),
+                child: Padding(padding: const EdgeInsets.all(3),
+                  child: Container
+                    (child: RefreshIndicator(
 
-      );
+                      onRefresh: () => refreshData(),
+                    child :  ListView(
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
+                      newProfileContent()
+                    ],)), decoration: BoxCircular(notifier),),),),);
+
     },);
   }
 }

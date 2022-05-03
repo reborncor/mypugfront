@@ -10,6 +10,7 @@ import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/create/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/util/util.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 
 class EditPug extends StatefulWidget {
@@ -39,18 +40,39 @@ class EditPugState extends State<EditPug> {
   double x = 0.0;
   double y = 0.0;
   List<Offset> points = [
-    Offset(200, 300),
-    Offset(250, 300),
-    Offset(300, 300),
-    Offset(350, 300),
    ];
 
 
   bool isExpanded = false;
   bool isVisible = true;
   bool isTextVisible = false;
+
+  late SuperTooltip tooltip;
   @override
   void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      tooltip = SuperTooltip(
+        popupDirection: TooltipDirection.up,
+        showCloseButton: ShowCloseButton.inside,
+        borderRadius: 30,
+        minWidth: 200,
+        maxWidth: 320,
+        maxHeight: 100,
+        minHeight: 100,
+        shadowColor: APPCOLOR,
+
+
+
+        content: const Material(
+            child: Center(child:  Text(
+              "Indiquer au moins une référécence",
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ))),
+      );
+      tooltip.show(context);
+
+    });
 
     details.clear();
     file = widget.file!;
@@ -94,7 +116,10 @@ class EditPugState extends State<EditPug> {
           , left: x-100, top: y,));
   }
 
+
+
   Widget imageContent(File image){
+
     return GestureDetector(
       child: Container(
         child: StreamBuilder(

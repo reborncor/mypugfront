@@ -3,15 +3,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
+import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 import '../../models/CommentModel.dart';
 import '../../service/themenotifier.dart';
@@ -22,9 +25,11 @@ class PugItem extends StatefulWidget {
   final routeName = '/pugitem';
   final PugModel model;
   final String currentUsername;
+  final bool fromProfile;
 
+  const PugItem({Key? key, required this.model, required this.currentUsername, this.fromProfile = false}) : super(key: key);
+  const PugItem.fromProfile({Key? key, required this.model, required this.currentUsername, this.fromProfile = true}) : super(key: key);
 
-  const PugItem({Key? key, required this.model, required this.currentUsername}) : super(key: key);
   @override
   PugItemState createState() => PugItemState();
 }
@@ -58,7 +63,7 @@ class PugItemState extends State<PugItem> {
     imageLike = widget.model.like;
     isLiked = widget.model.isLiked;
     if(widget.model.comments.isNotEmpty){
-      comment = widget.model.comments.first;
+      comment = widget.model.comments.last;
     }
     points.clear();
     for (var element in widget.model.details!) {
@@ -70,10 +75,27 @@ class PugItemState extends State<PugItem> {
 
 
 
+  Widget _typer(String text){
+    return SizedBox(
+      width: 100,
+      child: DefaultTextStyle(
+        style:  TextStyle(fontSize: 15, color: Colors.white),
+        child: AnimatedTextKit(
+            isRepeatingAnimation: false,
+            animatedTexts: [
+              TyperAnimatedText(text
+                  ,speed: Duration(milliseconds: 100)),
 
+            ]
+        ),
+      ),
+    );
+  }
   Widget imageContent(){
     return GestureDetector(
-      child: Container(
+      child: AspectRatio(
+        aspectRatio: 1/1,
+        child: Container(
         child:
         Visibility(
           visible: isVisible,
@@ -81,8 +103,17 @@ class PugItemState extends State<PugItem> {
             children: [
               Stack(
                   children: points.asMap().map((i,e) => MapEntry(i,
-                    Positioned(child: Column(children: [Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,), Text((widget.model.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
-                      , left: e.dx, top: e.dy, ),)).values.toList()
+                    Positioned(
+                      left: e.dx,
+                      top: e.dy,
+                      child: Wrap(
+                        direction: Axis.vertical,
+                          spacing: 1,
+                          children: [
+                            Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
+
+                    _typer((widget.model.details![i].text),),
+                    ]),))).values.toList()
               )],),),
         height: 300,
         decoration: BoxDecoration(
@@ -91,7 +122,8 @@ class PugItemState extends State<PugItem> {
               fit: BoxFit.contain,
             )
         ),
-      ),onTap: () {
+      ),),
+      onTap: () {
       isVisible = !isVisible;
       setState(() {
 
@@ -141,7 +173,12 @@ class PugItemState extends State<PugItem> {
   Widget imageCommentaire(List<CommentModel> list){
 
     if(list.isEmpty){
-      return SizedBox.fromSize(size: const Size(0,0));
+      return  Expanded(flex : 0,child: TextButton(
+
+          onPressed: (){
+            navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
+          }, child: Text("Ajouter un commentaire..", style: TextStyle(color: APPCOLOR),)))
+      ;
     }
 
     return Padding(padding: const EdgeInsets.only(top: 10),
@@ -174,40 +211,16 @@ class PugItemState extends State<PugItem> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold),),],),
+          widget.fromProfile ? SizedBox(width: 0,height: 10,) :Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold), ),),],) ,
           SizedBox( width: 500, height : 500,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),
           imageCommentaire(widget.model.comments),
-          // imageAddComment(widget.model.author, widget.model.id),
 
 
         ],
       );
     },);
   }
-
-  max(int i, maxHeight) {}
 }
 
-class OpenPainter extends CustomPainter {
-
-
-  final List<Offset> points ;
-  OpenPainter({required this.points});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint1 = Paint()
-      ..color = Colors.white
-      ..strokeCap = StrokeCap.round //rounded points
-      ..strokeWidth = 10;
-    //list of points
-    var points = this.points;
-    //draw points on canvas
-    canvas.drawPoints(PointMode.points, points, paint1);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}

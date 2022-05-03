@@ -57,7 +57,7 @@ class FollowerItemState extends State<FollowerItem> {
       onTap:() => navigateTo(context, Profile.fromUsername(username:widget.username)),
 
 
-      child: ListTile(leading: const Icon(Icons.account_circle), title: Text(widget.username), trailing: OutlinedButton(child: Text(text), onPressed:() async {
+      child: ListTile(leading: const Image(image: AssetImage("asset/images/user.png"),width: 40, height: 40,), title: Text(widget.username), trailing: OutlinedButton(child: Text(text), onPressed:() async {
 
 
         final result = await unFollowOrFollowUser(widget.username, follow);

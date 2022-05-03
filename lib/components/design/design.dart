@@ -38,7 +38,7 @@ final PUGSIZE = 600;
 BoxGradient(){
   return BoxDecoration(
     gradient: LinearGradient(
-        colors: [APPCOLOR, Colors.blueAccent.shade700, Colors.deepPurple]), );
+        colors: [APPCOLOR, Colors.blueAccent.shade700, Colors.indigo]), );
 }
 
 BoxCircular(ThemeModel notifier){

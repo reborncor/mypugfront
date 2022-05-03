@@ -5,8 +5,13 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/pug/pugitem.dart';
 import 'package:mypug/models/pugmodel.dart';
+import 'package:provider/provider.dart';
 
+import '../../features/setting/setting.dart';
+import '../../service/themenotifier.dart';
+import '../../util/util.dart';
 import '../design/design.dart';
 
 
@@ -32,6 +37,7 @@ class PugState extends State<Pug> {
   late String imageTitle;
   late String imageDescription;
   late int imageLike;
+  late ThemeModel notifier;
   List<Offset> points = [];
 
   bool isExpanded = false;
@@ -92,9 +98,6 @@ class PugState extends State<Pug> {
             children: [
               TextButton.icon(onPressed: () {
               }, icon: const Icon(Icons.favorite), label: Text(like.toString(), style: const TextStyle(color: Colors.black),),),
-
-              IconButton(onPressed: () {
-              }, icon: const Icon(Icons.share)),
             ],
         )
        
@@ -102,42 +105,44 @@ class PugState extends State<Pug> {
     );
   }
 
+  //
+  // Column(
+  // children: [
+  // SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
+  // imageInformation(imageTitle,imageLike),
+  //
+  // ],
+  // )
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-        backgroundColor: Colors.white,
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+          appBar: AppBar(
+            title: const Text("Profile"),
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            actions: [
+              IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
+            ],
+          ),
 
-        body:  Column(
-          children: [
-            SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
-            imageInformation(imageTitle,imageLike),
+          body: Container(
+            decoration: BoxGradient(),
+            child: Padding( padding: const EdgeInsets.all(3),
+              child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,),
+              //
+              // Column(
+              // children: [
+              // SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
+              // imageInformation(imageTitle,imageLike),
+              //
+              // ],
+              // ),
+                decoration: BoxCircular(notifier) ,),),
+          )
 
-          ],
-        )
-
-    );
+      );
+    },);
   }
 }
 
-class OpenPainter extends CustomPainter {
-
-
-  final List<Offset> points ;
-  OpenPainter({required this.points});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint1 = Paint()
-      ..color = Colors.white
-      ..strokeCap = StrokeCap.round //rounded points
-      ..strokeWidth = 10;
-    //list of points
-    var points = this.points;
-    //draw points on canvas
-    canvas.drawPoints(PointMode.points, points, paint1);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}

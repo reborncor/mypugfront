@@ -48,7 +48,7 @@ class SettingState extends State<Setting> {
 
           appBar: AppBar(
 
-              backgroundColor: APPCOLOR,
+              backgroundColor: themeNotifier.isDark ? Colors.black : APPCOLOR,
               actions: [
                 IconButton(
                     icon: Icon(themeNotifier.isDark
@@ -62,7 +62,9 @@ class SettingState extends State<Setting> {
               ],
           ),
 
-          body: Center(
+          body:Container(decoration: BoxGradient(),
+          child: Padding(padding: EdgeInsets.all(3),
+          child: Container(child:   Center(
               child : FutureBuilder(
                 future: getUserData(),
                 builder: (context, snapshot) {
@@ -72,25 +74,25 @@ class SettingState extends State<Setting> {
                     return  Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                      const Image( image : AssetImage('asset/images/user.png',), width: 100, height: 100,),
-                      itemData(data['username']),
-                      itemData(data['phoneNumber']),
-                      itemData(data['email']),
+                        const Image( image : AssetImage('asset/images/user.png',), width: 100, height: 100,),
+                        itemData(data['username']),
+                        itemData(data['phoneNumber']),
+                        itemData(data['email']),
                         Expanded(
                           child: Align(
-                            alignment: Alignment.center,
-                            child:                       ElevatedButton( style : BaseButtonRoundedColor(60, 40, APPCOLOR),onPressed: () => disconnectUser(), child: Text("Deconnexion"))
+                              alignment: Alignment.center,
+                              child:   ElevatedButton( style : BaseButtonRoundedColor(60, 40, APPCOLOR),onPressed: () => disconnectUser(), child: Text("Deconnexion"))
                           ),
                         )
 
-                    ],);
+                      ],);
 
                   }
                   else{
                     return Text("No data");
                   }
                 },)
-          )
+          ), decoration: BoxCircular(themeNotifier)),),)
       );
 
     },);

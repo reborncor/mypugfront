@@ -13,6 +13,7 @@ import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 class CreatePug extends StatefulWidget {
 
@@ -31,9 +32,31 @@ class CreatePugState extends State<CreatePug> {
   Future<File?>? selectedImage;
   StreamController imageStreamController = StreamController();
   List<AssetEntity> assets = [];
+  late SuperTooltip tooltip;
   @override
   void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      tooltip = SuperTooltip(
+        popupDirection: TooltipDirection.up,
+        showCloseButton: ShowCloseButton.inside,
+        borderRadius: 30,
+        minWidth: 200,
+        maxWidth: 320,
+        maxHeight: 100,
+        minHeight: 100,
+        shadowColor: APPCOLOR,
 
+
+        content: const Material(
+            child: Center(child:  Text(
+              "Choisissez une image nette",
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ))),
+      );
+      tooltip.show(context);
+
+    });
     super.initState();
     _fetchAssets();
   }
@@ -197,6 +220,7 @@ callBack(Future<File?> file) async {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
       return Scaffold(
         appBar: AppBar(
+          title: Text("Créer"),
           backgroundColor: APPCOLOR,
         ),
         body: Container(

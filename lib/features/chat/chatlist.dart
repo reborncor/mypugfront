@@ -96,6 +96,7 @@ class ChatListState extends State<ChatList> {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
       return Scaffold(
           appBar: AppBar(
+            title: Text("Conversations"),
             backgroundColor: APPCOLOR,
           ),
 
