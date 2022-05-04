@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
+import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 import '../../../components/design/design.dart';
 import '../api.dart';
@@ -26,7 +28,7 @@ class SignInState extends State<SignIn> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  late ThemeModel notifier;
   @override
   void initState() {
     super.initState();
@@ -97,6 +99,7 @@ class SignInState extends State<SignIn> {
                 var result =  await signinUser(usernameController.text, passwordController.text);
                 print(result);
                 if(result.code == SUCCESS_CODE) {
+                  this.notifier.isDark = true;
                   navigateWithName(context, const TabView().routeName);
                 }else{
                   showSnackBar(context, result.message);
@@ -120,13 +123,16 @@ class SignInState extends State<SignIn> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<ThemeModel>(builder: (context, notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
 
-        body:  Center(
-            child :userForm()
-        )
+          body:  Center(
+              child :userForm()
+          )
 
-    );
+      );
+    },);
   }
 
 

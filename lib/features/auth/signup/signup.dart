@@ -153,10 +153,11 @@ class SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      notifier.isDark = true;
       return Scaffold(
           appBar: AppBar(
             title: Text("Inscription"),
-            backgroundColor: notifier.isDark ? Colors.black : Colors.white,
+            backgroundColor: notifier.isDark ? Colors.black :  APPCOLOR,
           ),
 
           body: Container(

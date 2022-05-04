@@ -1,9 +1,13 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
+
+import '../../util/util.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -17,18 +21,28 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen> {
 
+  bool isUserLogged = false;
 
   @override
   void initState() {
+    fetchData();
     super.initState();
 
+  }
 
-    navigateToApp(true);
+  fetchData() async {
+    String data = await getCurrentUserToken();
+    if (data.length > 5 ){
+      isUserLogged = true;
+      log(data);
+      log("ACCESS GRANTED");
+    }
+    navigateToApp(isUserLogged);
 
   }
 
   navigateToApp(bool isLogged) async {
-    String path = isLogged  ? const SignIn().routeName : const TabView().routeName;
+    String path = isLogged  ? const TabView().routeName : const SignIn().routeName ;
     Future.delayed(Duration.zero, () async {
       await Navigator.pushNamed(context, path);
     });
@@ -38,8 +52,6 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.white,
-
       body:  Center(child: Text('SplashScreen'))
 
     );

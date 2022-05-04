@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
         builder:(context, ThemeModel themeNotifier, child) {
+
           log(themeNotifier.isDark.toString());
         return MaterialApp(
 
@@ -68,9 +69,9 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          // themeMode: ThemeMode.dark,
-          // theme: themeNotifier.isDark ? ThemeData.dark(): ThemeData.light(),
+          // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
+          themeMode: ThemeMode.dark,
 
           title: 'MyPUG',
           home: const SplashScreen(),

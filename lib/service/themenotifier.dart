@@ -16,11 +16,11 @@ class ThemePreferences {
 }
 
 class ThemeModel extends ChangeNotifier {
-  late bool _isDark = true;
+  bool _isDark = true;
   late ThemePreferences _preferences;
   bool get isDark => _isDark;
 
-  ThemeModel() {
+  ThemeModel()  {
     _isDark = true;
     _preferences = ThemePreferences();
     _preferences.setTheme(_isDark);
