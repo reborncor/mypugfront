@@ -35,7 +35,7 @@ class _ChatState extends State<Chat> {
   late String username;
   StreamController streamController = StreamController();
   late ScrollController scrollController;
-  late MessageModel messageSent;
+  late MessageModel messageSent = MessageModel(id: "id", senderUsername: "senderUsername", receiverUsername: "receiverUsername", content: "content", time: "time");
   late MessageModel newMessage;
   late int startInd;
   late int endInd;
@@ -46,25 +46,33 @@ class _ChatState extends State<Chat> {
     // log("POSITION : "+scrollController.position.toString());
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
+      fetchOldMessage();
       setState(() {
-        log("reach the bottom");
+        log("reach the Top");
       });
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
         !scrollController.position.outOfRange) {
-      fetchOldMessage();
+
       setState(() {
-        log("reach the top");
+        log("reach the Bottom");
       });
     }
 
   }
   goUp(){
-    scrollController.animateTo(
-      scrollController.position.minScrollExtent,
-      duration: Duration(seconds: 1),
-      curve: Curves.easeOut,
-    );
+
+    if (scrollController.hasClients){
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent,
+        duration: Duration(seconds: 1),
+        curve: Curves.easeOut,
+      );
+    }
+    else{
+      log("SCROLL PROBLEM");
+    }
+
   }
 
   goDown(){
@@ -101,7 +109,7 @@ class _ChatState extends State<Chat> {
   fetchOldMessage() async {
     var data = await getUserMessagePageable(widget.receiverUsername, startInd, endInd);
     responseOldMessage = data;
-    messages.insertAll(0, responseOldMessage.oldmessages);
+    messages.addAll(responseOldMessage.oldmessages);
     startInd+=10;
     endInd+=10;
     streamController.add("event");
@@ -114,9 +122,9 @@ class _ChatState extends State<Chat> {
     streamController.add(data);
   }
   addMessageToList(MessageModel messageModel){
-    messages.add(messageModel);
+    messages.insert(0,messageModel);
     streamController.add("ok");
-    goDown();
+    // goUp();
   }
 
   @override
@@ -134,6 +142,7 @@ class _ChatState extends State<Chat> {
     socket.on("messagesuccess",(data) => {
       log("Nouveau message"),
       if(data == "0"){
+        log(messageSent.content),
         addMessageToList(messageSent),
       }
       else{
@@ -177,7 +186,7 @@ class _ChatState extends State<Chat> {
               ),
 
               onTap: (){
-                goDown();
+                goUp();
               },
             )),
 
@@ -224,7 +233,7 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
 
         return Consumer<ThemeModel>(builder: (context,ThemeModel notifier, child) {
-          this.themeNotifier = themeNotifier;
+          this.themeNotifier = notifier;
           return Scaffold(
             appBar: AppBar(
               backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
@@ -239,14 +248,14 @@ class _ChatState extends State<Chat> {
                 if(snapshot.hasData){
 
                   return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Expanded(
                           child:ListView.builder(
-                            reverse: false,
+                            reverse: true,
                             controller: scrollController,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
+
 
                             itemCount: messages.length,
                             itemBuilder: (context, index) {

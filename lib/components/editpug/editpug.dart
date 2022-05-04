@@ -294,16 +294,23 @@ class EditPugState extends State<EditPug> {
         ElevatedButton(
             style: BaseButtonRoundedColor(40, 40, APPCOLOR),
             onPressed: () async {
-              var result = await createPug(file,textTitleController.text,textDescriptionController.text,details);
+              if(details.length >= 1){
+                var result = await createPug(file,textTitleController.text,textDescriptionController.text,details);
 
-              log(result.code.toString() +" "+result.message);
-              if(result.code == SUCCESS_CODE){
-                showSnackBar(context, result.message);
+                log(result.code.toString() +" "+result.message);
+                if(result.code == SUCCESS_CODE){
+                  showSnackBar(context, result.message);
 
+                }
+                else{
+                  showSnackBar(context, "Erreur lors de la création du pug");
+                }
               }
               else{
+                showSnackBar(context, "Veuillez ajouter au moins une référence");
 
               }
+
 
 
             }, child: Text("Envoyer"))],
@@ -333,7 +340,7 @@ class EditPugState extends State<EditPug> {
   Widget content(){
     return ListView(
       children: [
-        Expanded(child: imageContent(file)),
+        imageContent(file),
 
         imageInformation(imageTitle),
         imageDetail(imageDescription),
