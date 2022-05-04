@@ -223,11 +223,11 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
 
-        return Consumer<ThemeModel>(builder: (context,ThemeModel themeNotifier, child) {
+        return Consumer<ThemeModel>(builder: (context,ThemeModel notifier, child) {
           this.themeNotifier = themeNotifier;
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: APPCOLOR ,
+              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
 
               title: Text(widget.receiverUsername),
 

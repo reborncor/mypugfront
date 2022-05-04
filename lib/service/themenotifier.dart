@@ -16,13 +16,15 @@ class ThemePreferences {
 }
 
 class ThemeModel extends ChangeNotifier {
-  late bool _isDark;
+  late bool _isDark = true;
   late ThemePreferences _preferences;
   bool get isDark => _isDark;
 
   ThemeModel() {
-    _isDark = false;
+    _isDark = true;
     _preferences = ThemePreferences();
+    _preferences.setTheme(_isDark);
+
     getPreferences();
   }
 //Switching themes in the flutter apps - Flutterant

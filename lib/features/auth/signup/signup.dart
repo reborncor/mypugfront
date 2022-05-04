@@ -155,7 +155,8 @@ class SignUpState extends State<SignUp> {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
       return Scaffold(
           appBar: AppBar(
-            backgroundColor: APPCOLOR,
+            title: Text("Inscription"),
+            backgroundColor: notifier.isDark ? Colors.black : Colors.white,
           ),
 
           body: Container(

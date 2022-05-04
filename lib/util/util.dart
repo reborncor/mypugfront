@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypug/response/signinresponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +23,17 @@ showSnackBar(context, message){
     SnackBar(duration: const Duration(milliseconds: 1500),content: Text(message)),
   );
 }
-
+showToast(context, message){
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0
+  );
+}
 
 Future<void> saveUserData(SignInResponse data) async {
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
         builder:(context, ThemeModel themeNotifier, child) {
+          log(themeNotifier.isDark.toString());
         return MaterialApp(
 
           routes: {
@@ -53,6 +56,8 @@ class MyApp extends StatelessWidget {
 
           },
 
+
+
           darkTheme: ThemeData(
             // backgroundColor: Colors.red,
             brightness: Brightness.dark,
@@ -62,8 +67,8 @@ class MyApp extends StatelessWidget {
 
           ),
 
-          themeMode: themeNotifier.isDark ? ThemeMode.dark : ThemeMode.light,
 
+          // themeMode: ThemeMode.dark,
           // theme: themeNotifier.isDark ? ThemeData.dark(): ThemeData.light(),
 
 

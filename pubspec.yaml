@@ -49,6 +49,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   animated_text_kit: ^4.2.1
   draggable_widget: ^2.0.0
+  fluttertoast: ^8.0.9
 
 
 flutter_icons:

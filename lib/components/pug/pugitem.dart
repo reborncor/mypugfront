@@ -143,7 +143,7 @@ class PugItemState extends State<PugItem> {
                   if(!isLiked){
                     final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
                     if(result.code == SUCCESS_CODE){
-                      showSnackBar(context, "image liké");
+                      showToast(context, "Vous avez aimé cette image");
                       imageLike+= 1;
                       isLiked = !isLiked;
                     }
@@ -151,7 +151,7 @@ class PugItemState extends State<PugItem> {
                   else{
                     final result = await likeOrUnlikePug(widget.model.id,widget.model.author, false);
                     if(result.code == SUCCESS_CODE){
-                      showSnackBar(context, "like retiré");
+                      // showToast(context, "Like reti")
                       imageLike-= 1;
                       isLiked = !isLiked;
                     }
@@ -186,8 +186,8 @@ class PugItemState extends State<PugItem> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              children: [ Text(comment.author),
-              Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1,      overflow: TextOverflow.ellipsis,)),],),
+              children: [ Text(comment.author, style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),),
+              Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1, style: TextStyle(color : isDarkMode ? Colors.white : Colors.black),     overflow: TextOverflow.ellipsis,)),],),
 
             Expanded(flex : 0,child: TextButton(
               
@@ -199,8 +199,8 @@ class PugItemState extends State<PugItem> {
   }
 
   Widget imageDetail(String detail){
-    return ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
-      trimMode: TrimMode.Line, );
+    return Padding(padding: EdgeInsets.only(left: 8), child:  ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
+      trimMode: TrimMode.Line,style: TextStyle(color: isDarkMode ? Colors.white : Colors.black), ),);
   }
 
 
@@ -211,7 +211,7 @@ class PugItemState extends State<PugItem> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.fromProfile ? SizedBox(width: 0,height: 10,) :Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold), ),),],) ,
+          widget.fromProfile ? SizedBox(width: 0,height: 10,) :Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black), ),),],) ,
           SizedBox( width: 500, height : 500,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),

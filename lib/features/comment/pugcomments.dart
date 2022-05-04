@@ -13,9 +13,11 @@ import 'package:mypug/models/ConversationModel.dart';
 import 'package:mypug/response/commentresponse.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/design/design.dart';
 import '../../components/pug/api.dart';
+import '../../service/themenotifier.dart';
 import 'api.dart';
 
 
@@ -40,89 +42,93 @@ class PugCommentsState extends State<PugComments> {
   late String _username;
   late CommentModel comment;
   TextEditingController textEditingController = TextEditingController();
-  late List<CommentModel> comments;
+  late List<CommentModel> comments = [];
+  late ThemeModel notifier;
 
   @override
   void initState() {
-    // fetchData();
     getCurrentUsername().then((value) => _username = value);
+    fetchData();
     super.initState();
-
   }
 
 
   fetchData() async {
-    _response = await getPugComment(widget.pugId, widget.username);
+    // _response = await getPugComment(widget.pugId, widget.username);
   }
 
-  Widget itemComment(CommentModel model){
+  Widget itemComment(CommentModel model) {
+    return Container(
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(width: 1, color: APPCOLOR),
+            )),
+        child: InkWell(
+            child: Row(
+              children: [
+                const Image(image: AssetImage('asset/images/user.png',),
+                  width: 40,
+                  height: 40,),
+                Text(
+                  model.author, style: TextStyle(fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.white : Colors.black),),
+                SizedBox(width: 10,),
+                Text(model.content, style:  TextStyle(color: notifier.isDark ? Colors.white : Colors.black),),
+              ],
 
-
-    return  Container(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: APPCOLOR),
-      )),
-        child : InkWell(
-      child: Row(
-        children: [
-          const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
-          Text(model.author, style: TextStyle(fontWeight: FontWeight.bold),),
-          SizedBox(width: 10,),
-          Text(model.content),
-        ],
-
-    )
-    )
+            )
+        )
     );
   }
 
-  Widget content(){
-
+  Widget content() {
     return FutureBuilder(
 
       future: getPugComment(widget.pugId, widget.username),
+
       builder: (context, AsyncSnapshot<CommentResponse>snapshot) {
-      if(snapshot.hasData) {
-        log(snapshot.data!.comments.length.toString());
-        comments = snapshot.data!.comments;
-        return ListView.builder(
-          itemCount: comments.length,
-          itemBuilder: (context, index) {
-            return itemComment(comments[index]);
-          },);
-      }
-      if(snapshot.connectionState == ConnectionState.done){
-        return  const Center( child: Text("Aucune donnée"),);
-      }
-      else{
-        return Center(child : CircularProgressIndicator(color: APPCOLOR,));
-      }
-
-
-    },);
+        if (snapshot.hasData) {
+          log(snapshot.data!.comments.length.toString());
+          comments = snapshot.data!.comments;
+          return ListView.builder(
+            itemCount: comments.length,
+            itemBuilder: (context, index) {
+              return itemComment(comments[index]);
+            },);
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Center(child: Text("Aucune donnée"),);
+        }
+        else {
+          return Center(child: CircularProgressIndicator(color: APPCOLOR,));
+        }
+      },);
   }
 
-  Widget imageAddComment(String author, String pugId){
-
-    return Padding(padding: EdgeInsets.all(0), child:  Row( children: [
+  Widget imageAddComment(String author, String pugId) {
+    return Padding(padding: EdgeInsets.all(0), child: Row(children: [
       Expanded(
         child: TextField(
-            controller:  textEditingController,
+          style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+            controller: textEditingController,
             decoration: InputDecoration(
-              suffixIcon:  IconButton(onPressed: () async {
-                final result = await sendComment(pugId, author, textEditingController.text);
-                if(result.code == SUCCESS_CODE){
+              suffixIcon: IconButton(onPressed: () async {
+                final result = await sendComment(
+                    pugId, author, textEditingController.text);
+                if (result.code == SUCCESS_CODE) {
                   // showSnackBar(context, "Nouveau commentaire ajouté");
-                  comment = CommentModel(id: "", author: _username, content: textEditingController.text, date: "");
+                  comment = CommentModel(id: "",
+                      author: _username,
+                      content: textEditingController.text,
+                      date: "");
                   comments.add(comment);
-                  setState(() {
-                  });
+                  setState(() {});
                   textEditingController.clear();
                 }
-              } , icon: Icon(Icons.send, color: APPCOLOR,)),
+              }, icon: Icon(Icons.send, color: APPCOLOR,)),
               hintText: "Ajouter un commentaire",
+              hintStyle: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
               focusedBorder: setOutlineBorder(1.5, 20.0),
               enabledBorder: setOutlineBorder(1.5, 20.0),
-              border:setOutlineBorder(1.5, 20.0),)),),
+              border: setOutlineBorder(1.5, 20.0),)),),
 
     ],
     ),);
@@ -131,10 +137,25 @@ class PugCommentsState extends State<PugComments> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: APPCOLOR, title: Text("Commentaires"),),
-      body: Column(children: [Expanded(child: content()), imageAddComment(widget.username, widget.pugId)], ),
-    );
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Commentaires"),
+          backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+        ),
+
+        body:Container(
+          decoration: BoxGradient(),
+          child: Padding(padding: const EdgeInsets.all(3),
+            child: Container
+              (child: Column(children: [
+              Expanded(child: content()),
+              imageAddComment(widget.username, widget.pugId)
+            ],), decoration: BoxCircular(notifier),),),)
+      );
+    });
   }
 }
 
+//Column(children: [Expanded(child: content()), imageAddComment(widget.username, widget.pugId)], )

@@ -51,6 +51,6 @@ BoxGradient(){
 }
 
 BoxCircular(ThemeModel notifier){
-  return BoxDecoration(color: notifier.isDark ? Colors.black : Colors.white70,
+  return BoxDecoration(color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));
 }

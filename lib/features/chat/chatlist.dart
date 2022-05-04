@@ -36,6 +36,7 @@ class ChatListState extends State<ChatList> {
   StreamController streamController = StreamController();
   late ConversationsResponse _response;
   late String _username;
+  late ThemeModel notifier;
 
   @override
   void initState() {
@@ -60,9 +61,9 @@ class ChatListState extends State<ChatList> {
       onTap:() => navigateTo(context, Chat.withUsername(receiverUsername: receiverUserame)),
       child: ListTile(
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
-      trailing: const Icon(Icons.send),
-      title: Text(receiverUserame,style: const TextStyle(fontSize: 17), ),
-      subtitle: Text((model.chat.first.content),
+      trailing: Icon(Icons.send, color: APPCOLOR,),
+      title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.white : Colors.black ), ),
+      subtitle: Text((model.chat.first.content), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
       ),
     ),);
   }
@@ -94,20 +95,20 @@ class ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
       return Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
+
             title: Text("Conversations"),
-            backgroundColor: APPCOLOR,
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           ),
 
           body: Container(
               decoration: BoxGradient(),
               child : Padding( padding: const EdgeInsets.all(3),
                   child : Container(child : content(), decoration:
-                  BoxDecoration(
-                    color: notifier.isDark ? Colors.black : Colors.white70,
-                    borderRadius: BorderRadius.circular(10),
-                  ),)  )));
+                  BoxCircular(notifier),)  )));
     },);
   }
 }

@@ -226,7 +226,9 @@ callBack(Future<File?> file) async {
         key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Créer"),
-          backgroundColor: APPCOLOR,
+          automaticallyImplyLeading: false,
+
+          backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
         ),
         body: Container(
           decoration: BoxDecoration(),

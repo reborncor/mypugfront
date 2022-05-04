@@ -121,6 +121,8 @@ class ActualityState extends State<Actuality> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Actualité"),
+          automaticallyImplyLeading: false,
+
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           actions: [
             IconButton(onPressed: () {
@@ -140,10 +142,7 @@ class ActualityState extends State<Actuality> {
           decoration: BoxGradient(),
             child : Padding( padding: const EdgeInsets.all(3),
                 child : Container(child : newFriendsPug(), decoration:
-                BoxDecoration(
-                  color: notifier.isDark ? Colors.black : Colors.white70,
-                  borderRadius: BorderRadius.circular(10),
-                ),)  )));
+                BoxCircular(notifier),)  )));
     },);
 
   }

@@ -70,8 +70,8 @@ class ProfileState extends State<Profile> {
 
   Widget itemProfile(int data, String text){
     return Container( height : 50,child : Column(children: [
-      Text(data.toString(), style: const TextStyle(fontSize: 20),),
-      Text(text),
+      Text(data.toString(), style: TextStyle(fontSize: 20, color: notifier.isDark ? Colors.white : Colors.black),),
+      Text(text, style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),),
     ],));
   }
   Widget profileHeader() {
@@ -98,7 +98,7 @@ class ProfileState extends State<Profile> {
                 child:
                 Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
               ),),
-              Text(username, style: TextStyle(fontSize: 18),),
+              Text(username, style: TextStyle(fontSize: 18, color: notifier.isDark ? Colors.white : Colors.black),),
             ]),
             itemProfile(snapshot.data!.pugs,'Publication'),
 
@@ -231,6 +231,8 @@ class ProfileState extends State<Profile> {
       this.notifier = notifier;
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+
           title: const Text("Profile"),
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           actions: [

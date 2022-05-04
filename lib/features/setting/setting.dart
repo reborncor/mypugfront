@@ -20,6 +20,7 @@ class Setting extends StatefulWidget {
 
 class SettingState extends State<Setting> {
 
+  late ThemeModel notifier;
   @override
   void initState() {
     super.initState();
@@ -37,12 +38,13 @@ class SettingState extends State<Setting> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: APPCOLOR, width: 2)
-      ), child:  Text(data, textAlign: TextAlign.center,),),);
+      ), child:  Text(data, textAlign: TextAlign.center,style: TextStyle(color:  notifier.isDark ? Colors.white : Colors.black),),),);
   }
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
       builder: (context,ThemeModel themeNotifier, child) {
+        this.notifier = themeNotifier;
         print(themeNotifier.isDark);
       return Scaffold(
 

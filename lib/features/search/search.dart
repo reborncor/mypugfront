@@ -53,15 +53,20 @@ class SearchState extends State<Search> {
   Widget searchBar(){
 
     return TextField(
+      style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+      cursorColor: APPCOLOR,
       controller: searchController,
       // onChanged: (value){
       //   fetchData();
       // },
       textAlign: TextAlign.center,
-      decoration: InputDecoration(suffixIcon: IconButton(onPressed: () {
+      decoration: InputDecoration(
+        enabledBorder: setUnderlineBorder(2.0, 0.0),
+          focusedBorder: setUnderlineBorder(2.0, 0.0),
+          suffixIcon: IconButton(onPressed: () {
         fetchData();
 
-    }, icon: const Icon(Icons.search),)),);
+    }, icon: Icon(Icons.search,color: APPCOLOR,),)),);
   }
 
   Widget resultComponent(){
@@ -94,7 +99,7 @@ class SearchState extends State<Search> {
           },);
         }
         else {
-          return const Text("Effectuer une recherche");
+          return Text("Effectuer une recherche",style:  TextStyle(color: notifier.isDark ? Colors.white : Colors.black),);
         }
 
     },);
