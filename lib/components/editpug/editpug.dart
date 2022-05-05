@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/create/api.dart';
+import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
@@ -270,27 +271,27 @@ class EditPugState extends State<EditPug> {
         ) ,),
         SizedBox(width: 0,height: 20,),
 
-        TextField(
-          style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
-          controller: textEditingController,
-          onChanged: (value){
-
-          },
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          decoration: InputDecoration(hintText: "pug information",
-          hintStyle: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
-          enabledBorder: setUnderlineBorder(3.0, 3.0),
-          focusedBorder:  setUnderlineBorder(3.0, 3.0),),
-        ),
-        ElevatedButton(
-            style: BaseButtonRoundedColor(40, 40, APPCOLOR),
-
-            onPressed: () {
-              log(textEditingController.text);
-              addNewPugDetails(x, y-appBar.preferredSize.height -
-                  MediaQuery.of(context).padding.top,textEditingController.text);
-            }, child: Text("Ajouter une référécence")),
+        // TextField(
+        //   style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+        //   controller: textEditingController,
+        //   onChanged: (value){
+        //
+        //   },
+        //   keyboardType: TextInputType.text,
+        //   textInputAction: TextInputAction.done,
+        //   decoration: InputDecoration(hintText: "pug information",
+        //   hintStyle: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+        //   enabledBorder: setUnderlineBorder(3.0, 3.0),
+        //   focusedBorder:  setUnderlineBorder(3.0, 3.0),),
+        // ),
+        // ElevatedButton(
+        //     style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+        //
+        //     onPressed: () {
+        //       log(textEditingController.text);
+        //       addNewPugDetails(x, y-appBar.preferredSize.height -
+        //           MediaQuery.of(context).padding.top,textEditingController.text);
+        //     }, child: Text("Ajouter une référécence")),
         ElevatedButton(
             style: BaseButtonRoundedColor(40, 40, APPCOLOR),
             onPressed: () async {
@@ -300,6 +301,7 @@ class EditPugState extends State<EditPug> {
                 log(result.code.toString() +" "+result.message);
                 if(result.code == SUCCESS_CODE){
                   showSnackBar(context, result.message);
+                  navigateTo(context, Profile());
 
                 }
                 else{
