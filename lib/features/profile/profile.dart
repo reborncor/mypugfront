@@ -164,7 +164,6 @@ class ProfileState extends State<Profile> {
             list = snapshot.data!.pugs;
             String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
             return  Container(
-              decoration: BoxDecoration(image: DecorationImage(image: AssetImage(pathImage))),
               child: GridView.builder(
                   shrinkWrap: true, // You won't see infinite size error
                   physics: const NeverScrollableScrollPhysics(), // to disable GridView's scrolling

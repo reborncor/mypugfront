@@ -113,7 +113,16 @@ class ActualityState extends State<Actuality> {
       },), onRefresh: refreshData);
   }
   Widget pugItem(PugModel model){
-    return Container( decoration : BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: APPCOLOR))),width : 400 , height : 700,child : PugItem(model: model,currentUsername: _username,)
+    return Container(
+        decoration : BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    width: 1,
+                    color: APPCOLOR))),
+        width : 400 ,
+        height : 700,
+
+        child : PugItem(model: model,currentUsername: _username,)
     );}
   @override
   Widget build(BuildContext context) {
@@ -129,11 +138,6 @@ class ActualityState extends State<Actuality> {
               navigateWithName(context, const Search().routeName);
 
             }, icon: const Icon(Icons.search)),
-            // IconButton(onPressed: () {
-            //   navigateWithName(context, const ChatList().routeName);
-            //
-            // }, icon: const Icon(Icons.send))
-
 
           ],
         ),

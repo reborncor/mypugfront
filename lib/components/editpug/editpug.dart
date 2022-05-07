@@ -45,8 +45,8 @@ class EditPugState extends State<EditPug> {
 
   String imageTitle ="";
   String imageDescription ="";
-  double x = 200.0;
-  double y = 200.0;
+  double x = 150.0;
+  double y = 250.0;
   List<Offset> points = [
    ];
 
@@ -54,6 +54,7 @@ class EditPugState extends State<EditPug> {
   bool isExpanded = false;
   bool isVisible = true;
   bool isTextVisible = false;
+  bool showEditor = true;
   late ThemeModel notifier;
   late SuperTooltip tooltip;
   @override
@@ -157,7 +158,11 @@ class EditPugState extends State<EditPug> {
                   Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
                   Container(
                       width:150,
-                      child: TextField(
+                      child: Visibility(
+                        visible: showEditor,
+                        child: TextField(
+
+
                           controller: textEditingController,
                           cursorColor: APPCOLOR,
                           style: TextStyle(color: Colors.white),
@@ -172,7 +177,14 @@ class EditPugState extends State<EditPug> {
                                   addNewPugDetails(x, y-appBar.preferredSize.height -
                                       MediaQuery.of(context).padding.top, textEditingController.text);
                                   textEditingController.clear();
-                                },))))
+
+                                  FocusScopeNode currentFocus = FocusScope.of(context);
+                                  log("CLICK "+currentFocus.hasPrimaryFocus.toString());
+                                  if (!currentFocus.hasPrimaryFocus) {
+                                    currentFocus.unfocus();
+                                  }
+                                  showEditor = false;
+                                },))),))
                 ])
             ,)));
 
@@ -209,6 +221,9 @@ class EditPugState extends State<EditPug> {
                          onTap: () {
                            // showSnackBar(_scaffoldKey.currentContext, "Cliquer sur l'écran pour choisir la position");
                            isTextVisible = true;
+                           showEditor = true;
+                           x = 150.00;
+                           y = 250.00;
                            setState(() {
 
                            });

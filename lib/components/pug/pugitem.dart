@@ -110,8 +110,7 @@ class PugItemState extends State<PugItem> {
                         direction: Axis.vertical,
                           spacing: 1,
                           children: [
-                            Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
-
+                            widget.fromProfile ? Image( image : const AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,) : SizedBox(width: 0, height: 0,),
                     _typer((widget.model.details![i].text),),
                     ]),))).values.toList()
               )],),),
