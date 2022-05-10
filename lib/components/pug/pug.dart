@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pugitem.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../features/setting/setting.dart';
 import '../../service/themenotifier.dart';
+import '../../util/config.dart';
 import '../../util/util.dart';
 import '../design/design.dart';
 
@@ -77,7 +79,7 @@ class PugState extends State<Pug> {
       height: 300,
       decoration: BoxDecoration(
           image: DecorationImage(
-            image: MemoryImage(base64Decode(widget.model!.imageData)),
+            image:CachedNetworkImageProvider(URL+"/pugs/"+widget.model!.imageURL),
             fit: BoxFit.contain,
           )
       ),

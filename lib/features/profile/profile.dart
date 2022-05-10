@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
@@ -21,6 +22,8 @@ import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../util/config.dart';
 
 class Profile extends StatefulWidget {
 
@@ -148,7 +151,13 @@ class ProfileState extends State<Profile> {
   Widget imageItemBuffer(PugModel model){
     
     return InkWell(
-      child: Container( decoration : BoxDecoration(border: Border.all(color : Colors.black)),child :Image.memory(base64Decode(model.imageData), fit: BoxFit.fitWidth)),
+      child: Container( decoration :
+      BoxDecoration(border: Border.all(color : Colors.black)),
+          child :FadeInImage.assetNetwork(
+              image: URL+"/pugs/"+model.imageURL,
+            fit: BoxFit.fitWidth,
+           placeholder: "asset/images/empty.png",
+            )),
       onTap: (){
         navigateTo(context, Pug.withPugModel(model: model,));
       },
@@ -213,16 +222,6 @@ class ProfileState extends State<Profile> {
 
   }
 
-  Widget background(){
-    return SliverAppBar(
-      expandedHeight: 200.0,
-      flexibleSpace: FlexibleSpaceBar(
-          background: Image.network(
-            "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0c21b1ac3066ae4d354a3b2e0064c8be&auto=format&fit=crop&w=500&q=60",
-            fit: BoxFit.cover,
-          )),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +230,7 @@ class ProfileState extends State<Profile> {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+
 
           title: const Text("Profile"),
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,

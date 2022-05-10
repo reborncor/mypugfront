@@ -15,7 +15,7 @@ class PugModel{
   String? imageDescription ;
   late List<PugDetailModel>? details;
   late int like;
-  late String imageData;
+  late String? imageData;
   late int date;
   late bool isLiked;
   late String author;

@@ -15,6 +15,7 @@ import 'dart:async';
 Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details ) async{
 
   String token = await getCurrentUserToken();
+  String username = await getCurrentUsername();
   var response;
   const String path = "/pug/add";
 
@@ -24,7 +25,7 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
     print(details.length);
     print(json.encode(details.map((e) => e.toJson()).toList()));
     var formData = FormData.fromMap({
-      "newimage": await MultipartFile.fromFile(file.path, filename: "new_file"),
+      "newimage": await MultipartFile.fromFile(file.path, filename: username),
       "details": details.map((e) => e.toJson()).toList(),
       "imageDescription" : imageDescription,
       "imageTitle" : title,

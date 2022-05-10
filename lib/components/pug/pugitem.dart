@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
@@ -18,6 +19,7 @@ import 'package:super_tooltip/super_tooltip.dart';
 
 import '../../models/CommentModel.dart';
 import '../../service/themenotifier.dart';
+import '../../util/config.dart';
 
 
 class PugItem extends StatefulWidget {
@@ -117,7 +119,7 @@ class PugItemState extends State<PugItem> {
         height: 300,
         decoration: BoxDecoration(
             image: DecorationImage(
-              image: MemoryImage(base64Decode(widget.model.imageData)),
+              image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),
               fit: BoxFit.contain,
             )
         ),
@@ -210,16 +212,45 @@ class PugItemState extends State<PugItem> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.fromProfile ? SizedBox(width: 0,height: 10,) :Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black), ),),],) ,
+          widget.fromProfile ? SizedBox(width: 0,height: 10,) :
+          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black), ),),],) ,
           SizedBox( width: 500, height : 500,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),
           imageCommentaire(widget.model.comments),
-
+          widget.fromProfile ? Padding(
+            padding: EdgeInsets.only(top: 20,),
+            child:  Center(
+              child:ElevatedButton(
+                  onPressed: (){showMyDialogDelete("Supprésion", "Vous êtes sur le point de supprimer un pug");},
+                  child: Text("Supprimer"), style: BaseButtonRoundedColor(150, 40, APPCOLOR))  ,),):SizedBox(width: 0,height: 10,)
 
         ],
       );
     },);
+  }
+
+  void showMyDialogDelete(String title, String text) {
+    showDialog(
+        context: context,
+        builder: (context) => Center(
+            child:AlertDialog(
+              title: Text(title),
+              content: Text(text),
+              actions: [
+                ElevatedButton( style: BaseButtonRoundedColor(60,40,APPCOLOR),onPressed: () async {
+                  final result = await deletePug(widget.model.id, widget.model.author);
+                  if(result.code == SUCCESS_CODE){
+                    showSnackBar(context, result.message);
+                    Navigator.pop(context);
+                    navigateTo(context, Profile());
+                  }
+                }, child: const Text("Confirmer"),),
+            ElevatedButton( style: BaseButtonRoundedColor(60,40,APPCOLOR), onPressed: () => Navigator.pop(context), child: Text("Annuler"))
+              ],
+            )
+        )
+    );
   }
 }
 
