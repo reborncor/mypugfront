@@ -57,15 +57,15 @@ class ChatListState extends State<ChatList> {
     String receiverUserame = model.members.first == _username ? model.members.last : model.members.first;
 
 
-    return  InkWell( 
+    return  (model.chat.isNotEmpty) ?  InkWell(
       onTap:() => navigateTo(context, Chat.withUsername(receiverUsername: receiverUserame)),
       child: ListTile(
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
       trailing: Icon(Icons.send, color: APPCOLOR,),
       title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.white : Colors.black ), ),
-      subtitle: Text((model.chat.first.content), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
+      subtitle: Text((model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
       ),
-    ),);
+    ),) : const SizedBox(width: 0,height: 0,);
   }
 
   Widget content(){
