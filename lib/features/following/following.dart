@@ -17,7 +17,9 @@ import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/response/followerresponse.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
+import '../../service/themenotifier.dart';
 import 'api.dart';
 
 
@@ -38,6 +40,7 @@ class FollowingViewState extends State<FollowingView> {
   late FollowerResponse _response;
   late String _username;
   late List<UserSearchModel> listFollowing;
+  late ThemeModel notifier;
 
   @override
   void initState() {
@@ -86,10 +89,20 @@ class FollowingViewState extends State<FollowingView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: APPCOLOR),
-      body: content(),
-    );
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+          appBar: AppBar(
+            title: const Text("Abonnement"),
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+          ),
+
+          body: Container(
+              decoration: BoxGradient(),
+              child : Padding( padding: const EdgeInsets.all(3),
+                  child : Container(child : content(), decoration:
+                  BoxCircular(notifier),)  )));
+    },);
   }
 }
 

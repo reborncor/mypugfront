@@ -100,7 +100,7 @@ class SignInState extends State<SignIn> {
                 print(result);
                 if(result.code == SUCCESS_CODE) {
                   this.notifier.isDark = true;
-                  navigateWithName(context, const TabView().routeName);
+                  navigateWithNamePop(context, const TabView().routeName);
                 }else{
                   showSnackBar(context, result.message);
                 }

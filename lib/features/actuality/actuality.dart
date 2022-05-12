@@ -90,8 +90,12 @@ class ActualityState extends State<Actuality> {
     streamController.add("event");
   }
 
+
+
+
   Widget newFriendsPug(){
-    return RefreshIndicator(child: StreamBuilder(
+    return RefreshIndicator(
+        child: StreamBuilder(
       stream : streamController.stream,
       builder: (context, snapshot) {
         if(snapshot.hasData){

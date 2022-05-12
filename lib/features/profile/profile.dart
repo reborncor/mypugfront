@@ -47,7 +47,7 @@ class ProfileState extends State<Profile> {
   late ThemeModel notifier;
   final RefreshController _refreshController = RefreshController();
   late ScrollController scrollController = ScrollController(initialScrollOffset: 200);
-
+  late bool hasBackButton = false;
   @override
   void initState() {
    fetchData();
@@ -65,6 +65,10 @@ class ProfileState extends State<Profile> {
     else{
       _userResponse = getUserInfoFromUsername(widget.username);
       _response = getAllPugsFromUsername(widget.username);
+      hasBackButton = true;
+      setState(() {
+
+      });
     }
 
   }
@@ -229,7 +233,7 @@ class ProfileState extends State<Profile> {
       this.notifier = notifier;
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: hasBackButton,
 
 
           title: const Text("Profile"),
@@ -253,6 +257,7 @@ class ProfileState extends State<Profile> {
     return SmartRefresher(
       controller: _refreshController,
       onRefresh: refreshData,
+
       child:  CustomScrollView(
         controller: scrollController,
         slivers: [

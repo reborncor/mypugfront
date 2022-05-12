@@ -44,15 +44,15 @@ class SplashScreenState extends State<SplashScreen> {
   navigateToApp(bool isLogged) async {
     String path = isLogged  ? const TabView().routeName : const SignIn().routeName ;
     Future.delayed(Duration.zero, () async {
-      await Navigator.pushNamed(context, path);
+      await navigateWithNamePop(context, path);
     });
 
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body:  Center(child: Text('SplashScreen'))
+    return Scaffold(
+      body:  Center(child: Image.asset("asset/images/logo.png", width: 80, height: 80),)
 
     );
   }

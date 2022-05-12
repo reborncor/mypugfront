@@ -18,6 +18,10 @@ navigateWithName(context, String name){
   Navigator.pushNamed(context, name);
 }
 
+navigateWithNamePop(context, String name){
+  Navigator.popAndPushNamed(context, name);
+}
+
 showSnackBar(context, message){
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(duration: const Duration(milliseconds: 1500),content: Text(message)),

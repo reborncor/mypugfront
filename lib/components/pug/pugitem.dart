@@ -124,6 +124,16 @@ class PugItemState extends State<PugItem> {
             )
         ),
       ),),
+      onDoubleTap: () async {
+        if(!isLiked){
+          final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
+          if(result.code == SUCCESS_CODE){
+            showToast(context, "Vous avez aimé cette image");
+            imageLike+= 1;
+            isLiked = !isLiked;
+          }
+        }
+      },
       onTap: () {
       isVisible = !isVisible;
       setState(() {

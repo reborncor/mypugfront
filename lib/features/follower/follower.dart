@@ -14,8 +14,10 @@ import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/response/followerresponse.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/design/design.dart';
+import '../../service/themenotifier.dart';
 import 'api.dart';
 
 
@@ -35,6 +37,7 @@ class FollowersViewState extends State<FollowersView> {
   StreamController streamController = StreamController();
   late FollowerResponse _response;
   late String _username;
+  late ThemeModel notifier;
 
   @override
   void initState() {
@@ -56,7 +59,7 @@ class FollowersViewState extends State<FollowersView> {
 
     return  InkWell(
       onTap:() => navigateTo(context, Profile.fromUsername(username: model.username)),
-      child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username), trailing: OutlinedButton(onPressed: () {  },
+      child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username), trailing: OutlinedButton(onPressed: () {navigateTo(context, Profile.fromUsername(username: model.username));  },
       child: const Text("Consulter")),),);
   }
 
@@ -86,10 +89,21 @@ class FollowersViewState extends State<FollowersView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: APPCOLOR,),
-      body: content(),
-    );
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+          appBar: AppBar(
+
+            title: Text("Abonnés"),
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+          ),
+
+          body: Container(
+              decoration: BoxGradient(),
+              child : Padding( padding: const EdgeInsets.all(3),
+                  child : Container(child : content(), decoration:
+                  BoxCircular(notifier),)  )));
+    },);;
   }
 }
 
