@@ -223,7 +223,15 @@ class PugItemState extends State<PugItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           widget.fromProfile ? SizedBox(width: 0,height: 10,) :
-          Row( children: [const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),const SizedBox(width: 10),  GestureDetector(onTap: (){navigateTo(context, Profile.fromUsername(username: widget.model.author));},child:  Text(widget.model.author, style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black), ),),],) ,
+          Row( children: [
+            const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
+            const SizedBox(width: 10),
+            GestureDetector(
+              onTap: (){
+                navigateTo(context, Profile.fromUsername(username: widget.model.author));},
+              child:  Text(widget.model.author,
+                style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black),
+              ),),],) ,
           SizedBox( width: 500, height : 500,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),

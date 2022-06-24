@@ -21,11 +21,12 @@ class Pug extends StatefulWidget {
 
   final routeName = '/pug';
   final PugModel? model;
+  final String? username;
 
+  const Pug({Key? key, this.model, this.username}) : super(key: key);
 
-  const Pug({Key? key, this.model}) : super(key: key);
-
-  const Pug.withPugModel({Key? key, required this.model }) : super(key: key);
+  const Pug.withPugModel({Key? key, required this.model, this.username }) : super(key: key);
+  const Pug.withPugModelFromOtherUser({Key? key, required this.model,this.username }) : super(key: key);
 
   @override
   PugState createState() => PugState();
@@ -72,7 +73,11 @@ class PugState extends State<Pug> {
               children: [
                 Stack(
                     children: points.asMap().map((i,e) => MapEntry(i,
-                      Positioned(child: Column(children: [Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,), Text((widget.model!.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
+                      Positioned(
+                        child: Column(
+                          children: [
+                            Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
+                            Text((widget.model!.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
                  , left: e.dx, top: e.dy, ),)).values.toList()
                 )],),) ,
         ),
@@ -131,7 +136,7 @@ class PugState extends State<Pug> {
           body: Container(
             decoration: BoxGradient(),
             child: Padding( padding: const EdgeInsets.all(3),
-              child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,),
+              child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: false),
               //
               // Column(
               // children: [

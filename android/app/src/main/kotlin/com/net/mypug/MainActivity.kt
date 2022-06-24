@@ -1,4 +1,4 @@
-package com.example.mypug
+package com.net.mypug
 
 import io.flutter.embedding.android.FlutterActivity
 

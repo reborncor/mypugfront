@@ -60,7 +60,6 @@ class ProfileState extends State<Profile> {
     if(widget.username == ""){
       _userResponse = getUserInfo();
       _response = getAllPugsFromUser();
-
     }
     else{
       _userResponse = getUserInfoFromUsername(widget.username);
@@ -163,7 +162,14 @@ class ProfileState extends State<Profile> {
            placeholder: "asset/images/empty.png",
             )),
       onTap: (){
-        navigateTo(context, Pug.withPugModel(model: model,));
+        if(widget.username == ""){
+          navigateTo(context, Pug.withPugModel(model: model,));
+        }
+        else{
+          navigateTo(context, Pug.withPugModelFromOtherUser(model: model,username: widget.username,));
+
+    }
+
       },
     );
   }
@@ -273,7 +279,9 @@ class ProfileState extends State<Profile> {
 
             child :SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: Column(children: [ Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
+              child: Column(
+                children: [
+                  Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
                 newProfileContent()],),),),]),);
 
   }

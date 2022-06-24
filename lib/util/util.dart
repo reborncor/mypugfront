@@ -48,7 +48,6 @@ Future<void> saveUserData(SignInResponse data) async {
   sharedPreferences.setString("email", data.email);
   sharedPreferences.setString("phoneNumber", data.phoneNumber);
 
-
 }
 
 
