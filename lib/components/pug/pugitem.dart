@@ -7,6 +7,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
@@ -77,31 +78,41 @@ class PugItemState extends State<PugItem> {
 
 
 
-  Widget _typer(String text){
+  // Widget _typer(String text){
+  //   return SizedBox(
+  //     width: 100,
+  //     child: DefaultTextStyle(
+  //       style:  TextStyle(fontSize: 15, color: Colors.white),
+  //       child: AnimatedTextKit(
+  //           isRepeatingAnimation: false,
+  //           animatedTexts: [
+  //             TyperAnimatedText(text
+  //                 ,speed: Duration(milliseconds: 100)),
+  //
+  //           ]
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
+  Widget _typer(String text, isVisible){
     return SizedBox(
       width: 100,
-      child: DefaultTextStyle(
-        style:  TextStyle(fontSize: 15, color: Colors.white),
-        child: AnimatedTextKit(
-            isRepeatingAnimation: false,
-            animatedTexts: [
-              TyperAnimatedText(text
-                  ,speed: Duration(milliseconds: 100)),
-
-            ]
-        ),
-      ),
+      child: AnimatedOpacity(
+        opacity: isVisible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 200),
+        child: InstagramMention(text: text, color: Colors.grey),
+      )
     );
   }
   Widget imageContent(){
+    log(widget.model.toString());
     return GestureDetector(
       child: AspectRatio(
         aspectRatio: 4/5,
         child: Container(
-        child:
-        Visibility(
-          visible: isVisible,
-          child: Stack(
+        child: Stack(
             children: [
               Stack(
                   children: points.asMap().map((i,e) => MapEntry(i,
@@ -113,14 +124,14 @@ class PugItemState extends State<PugItem> {
                           spacing: 1,
                           children: [
                             widget.fromProfile ? Image( image : const AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,) : SizedBox(width: 0, height: 0,),
-                    _typer((widget.model.details![i].text),),
+                    _typer(widget.model.details![i].text, isVisible),
                     ]),))).values.toList()
-              )],),),
+              )],),
         height: 300,
         decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),
-              fit: BoxFit.fitWidth,
+              fit: widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
             )
         ),
       ),),

@@ -22,8 +22,10 @@ class ConversationsResponse extends BasicResponse{
     );
   }
 
-
-
+  @override
+  String toString() {
+    return 'ConversationsResponse{conversations: $conversations}';
+  }
 }
 
 

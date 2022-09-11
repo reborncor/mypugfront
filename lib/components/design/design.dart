@@ -58,7 +58,9 @@ BoxGradient(){
 BoxCircular(ThemeModel notifier){
   return BoxDecoration(
       gradient: LinearGradient(
-          colors: [APPCOLOR, Colors.deepPurpleAccent.shade200,APPCOLOR]),
+        begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [APPCOLOR,APPCOLOR, Colors.pinkAccent.shade100,APPCOLOR]),
       color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));
 }

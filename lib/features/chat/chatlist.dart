@@ -2,6 +2,7 @@
 
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -57,15 +58,15 @@ class ChatListState extends State<ChatList> {
     String receiverUserame = model.members.first == _username ? model.members.last : model.members.first;
 
 
-    return  (model.chat.isNotEmpty) ?  InkWell(
+    return   InkWell(
       onTap:() => navigateTo(context, Chat.withUsername(receiverUsername: receiverUserame)),
       child: ListTile(
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
       trailing: Icon(Icons.send, color: APPCOLOR,),
       title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.white : Colors.black ), ),
-      subtitle: Text((model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
+      subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
       ),
-    ),) : const SizedBox(width: 0,height: 0,);
+    ),);
   }
 
   Widget content(){
@@ -75,6 +76,7 @@ class ChatListState extends State<ChatList> {
       future: getUserConversations(),builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
       if(snapshot.hasData) {
         log(snapshot.data!.conversations.length.toString());
+        print(snapshot.data!.conversations.toString());
         return ListView.builder(
           itemCount: snapshot.data!.conversations.length,
           itemBuilder: (context, index) {

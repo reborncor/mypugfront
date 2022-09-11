@@ -4,12 +4,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:badges/badges.dart';
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:instagram_mention/instagram_mention.dart';
-import 'package:label_marker/label_marker.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/create/api.dart';
@@ -25,9 +24,10 @@ class EditPug extends StatefulWidget {
 
   final routeName = '/editpug';
   final File? file;
-  const EditPug({Key? key, this.file}) : super(key: key);
+  final bool isCrop;
+  const EditPug({Key? key, this.file, this.isCrop = false}) : super(key: key);
 
-  const EditPug.withFile({Key? key, required this.file}) : super(key: key);
+  const EditPug.withFile({Key? key, required this.file, required this.isCrop}) : super(key: key);
 
   @override
   EditPugState createState() => EditPugState();
@@ -126,7 +126,15 @@ class EditPugState extends State<EditPug> {
 
   }
   Widget dataTagDetails(){
-    return   Stack(children: details.map((e) => Positioned(child:   InstagramMention(text: e.text,color: Colors.grey) , left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList()
+    return   Stack(children: details.map((e) => Positioned(
+      child:  GestureDetector(
+        onTap: (){
+          details.remove(e);
+          setState(() {
+
+          });
+        },
+        child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: Colors.grey),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList()
     );
 
   }
@@ -137,8 +145,6 @@ class EditPugState extends State<EditPug> {
     return Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,);
 
   }
-
-  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
 
   Widget textPugEditor(){
@@ -192,16 +198,17 @@ class EditPugState extends State<EditPug> {
                                 icon: Icon(Icons.check,color: APPCOLOR),
                                 onPressed: (){
                                   //TODO:test
-                                  addNewPugDetails(x, y-appBar.preferredSize.height -
-                                      MediaQuery.of(context).padding.top, textEditingController.text);
-                                  textEditingController.clear();
-
+                                  if(textEditingController.text.isNotEmpty){
+                                    addNewPugDetails(x, y-appBar.preferredSize.height -
+                                        MediaQuery.of(context).padding.top, textEditingController.text);
+                                    textEditingController.clear();
+                                  }
                                   FocusScopeNode currentFocus = FocusScope.of(context);
                                   log("CLICK "+currentFocus.hasPrimaryFocus.toString());
                                   if (!currentFocus.hasPrimaryFocus) {
                                     currentFocus.unfocus();
                                   }
-                                  showEditor = false;
+                                  // showEditor = false;
                                 },))),))
                 ])
             ,)));
@@ -259,7 +266,7 @@ class EditPugState extends State<EditPug> {
         decoration: BoxDecoration(
             image: DecorationImage(
               image: FileImage(image),
-              fit: BoxFit.contain,
+              fit: widget.isCrop ? BoxFit.fitWidth : BoxFit.contain,
             )
         ),
       );
@@ -308,7 +315,7 @@ class EditPugState extends State<EditPug> {
             style: BaseButtonRoundedColor(40, 40, APPCOLOR),
             onPressed: () async {
               if(details.length >= 1){
-                var result = await createPug(file,textTitleController.text,textDescriptionController.text,details);
+                var result = await createPug(file,textTitleController.text,textDescriptionController.text,details, widget.isCrop);
 
                 log(result.code.toString() +" "+result.message);
                 if(result.code == SUCCESS_CODE){

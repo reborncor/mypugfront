@@ -58,7 +58,7 @@ class FollowerItemState extends State<FollowerItem> {
         onTap:() => navigateTo(context, Profile.fromUsername(username:widget.username)),
 
 
-        child: ListTile(leading: const Image(image: AssetImage("asset/images/user.png"),width: 40, height: 40,), title: Text(widget.username, style: TextStyle(color:  this.notfier.isDark ? Colors.white : Colors.black),), trailing: OutlinedButton(child: Text(text), onPressed:() async {
+        child: ListTile(leading: const Image(image: AssetImage("asset/images/user.png"),width: 40, height: 40,), title: Text(widget.username, style: TextStyle(color:  this.notfier.isDark ? Colors.white : Colors.black),), trailing: OutlinedButton(child: Text(text, style: const TextStyle(color: Colors.white)), onPressed:() async {
 
 
           final result = await unFollowOrFollowUser(widget.username, follow);

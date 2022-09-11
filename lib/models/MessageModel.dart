@@ -38,6 +38,10 @@ class MessageModel{
     };
   }
 
+  @override
+  String toString() {
+    return 'MessageModel{id: $id, senderUsername: $senderUsername, receiverUsername: $receiverUsername, content: $content, time: $time}';
+  }
 }
 
 

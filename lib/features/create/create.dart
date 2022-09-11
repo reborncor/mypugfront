@@ -36,7 +36,7 @@ class CreatePugState extends State<CreatePug> {
   late ThemeModel notifier;
   late SuperTooltip tooltip;
   late bool isCrop = true;
-  late Widget varImagesGallery;
+  var varImagesGallery = null;
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -214,7 +214,7 @@ callBack(Future<File?> file) async {
       ElevatedButton(
           style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
           onPressed: () {
-        navigateTo(context, EditPug.withFile(file: imageFile));
+        navigateTo(context, EditPug.withFile(file: imageFile,isCrop : isCrop));
 
       }, child: const Text('Valider'))
     ],);
@@ -255,8 +255,7 @@ callBack(Future<File?> file) async {
                 imageView(),
                 // Text('There are ${assets.length} assets'),
                 imageButtonOption(),
-                varImagesGallery,
-
+                varImagesGallery?? const SizedBox(width: 0,),
 
 
               ],

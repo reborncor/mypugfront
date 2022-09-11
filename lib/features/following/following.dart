@@ -93,7 +93,7 @@ class FollowingViewState extends State<FollowingView> {
       this.notifier = notifier;
       return Scaffold(
           appBar: AppBar(
-            title: const Text("Abonnement"),
+            title: const Text("Abonnement", style: TextStyle(color: Colors.white)),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           ),
 

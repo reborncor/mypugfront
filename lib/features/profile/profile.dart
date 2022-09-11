@@ -130,12 +130,12 @@ class ProfileState extends State<Profile> {
                         });
                       }
 
-                  }, child: Text(textButton )),
+                  }, child: Text(textButton, style: const TextStyle(color: Colors.white))),
               OutlinedButton(
                   style: BaseButtonSize(150, 30 , Colors.transparent),
                   onPressed: () {
                     navigateTo(context, Chat.withUsername(receiverUsername: username));
-                  }, child: Text("Message")),
+                  }, child: const Text("Message", style: TextStyle(color: Colors.white))),
             ],)
         ],);
       }
@@ -163,10 +163,10 @@ class ProfileState extends State<Profile> {
             )),
       onTap: (){
         if(widget.username == ""){
-          navigateTo(context, Pug.withPugModel(model: model,));
+          navigateTo(context, Pug.withPugModel(model: model));
         }
         else{
-          navigateTo(context, Pug.withPugModelFromOtherUser(model: model,username: widget.username,));
+          navigateTo(context, Pug.withPugModelFromOtherUser(model: model,username: widget.username));
 
     }
 

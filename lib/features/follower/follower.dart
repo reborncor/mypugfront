@@ -60,7 +60,7 @@ class FollowersViewState extends State<FollowersView> {
     return  InkWell(
       onTap:() => navigateTo(context, Profile.fromUsername(username: model.username)),
       child: ListTile(leading: const Icon(Icons.account_circle), title: Text(model.username), trailing: OutlinedButton(onPressed: () {navigateTo(context, Profile.fromUsername(username: model.username));  },
-      child: const Text("Consulter")),),);
+      child: const Text("Consulter", style: TextStyle(color: Colors.white))),),);
   }
 
   Widget content(){
@@ -94,7 +94,7 @@ class FollowersViewState extends State<FollowersView> {
       return Scaffold(
           appBar: AppBar(
 
-            title: Text("Abonnés"),
+            title: const Text("Abonnés", style: TextStyle(color: Colors.white)),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           ),
 

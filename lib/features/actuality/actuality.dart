@@ -14,6 +14,7 @@ import 'package:mypug/response/actualityresponse.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'api.dart';
 
@@ -34,15 +35,18 @@ class ActualityState extends State<Actuality> {
   List<PugModel> list = [];
   late ActualityResponse _response;
   late String _username;
-  late ScrollController scrollController = ScrollController();
+  late ScrollController scrollController = ScrollController(initialScrollOffset: 150);
+
   late int startInd = 0;
   late int endInd = 4;
+  late ThemeModel notifier;
+  final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
+  bool scrollPagePhysique = false;
   @override
   void initState() {
 
     fetchData();
-    // _response = getActuality() as Future<ActualityResponse>;
     scrollController.addListener(scrollListener);
     super.initState();
 
@@ -66,6 +70,15 @@ class ActualityState extends State<Actuality> {
     streamController.add("event");
   }
 
+  setScrollPhysique(bool value){
+    scrollPagePhysique = value;
+    log("SET SCROLL");
+
+    setState(() {
+
+    });
+  }
+
   scrollListener(){
     // log("POSITION : "+scrollController.position.toString());
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
@@ -76,7 +89,10 @@ class ActualityState extends State<Actuality> {
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
         !scrollController.position.outOfRange) {
+      //TOP
+
     }
+
 
   }
 
@@ -88,18 +104,30 @@ class ActualityState extends State<Actuality> {
     _response = await getActualityPageable(startInd, endInd);
     list = _response.pugs;
     streamController.add("event");
+    _refreshController.refreshCompleted();
+    scrollController.animateTo(
+        200,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.ease);
+    this.scrollPagePhysique = false;
+    setState(() {
+
+    });
+
+
   }
 
 
 
 
-  Widget newFriendsPug(){
-    return RefreshIndicator(
-        child: StreamBuilder(
+  Widget content(){
+    return StreamBuilder(
       stream : streamController.stream,
       builder: (context, snapshot) {
         if(snapshot.hasData){
           return ListView.builder(
+              shrinkWrap: true,
+              physics:  scrollPagePhysique ? NeverScrollableScrollPhysics() : null, // to disable ListView's scrolling
               controller: scrollController,
               padding: EdgeInsets.only(top: 20, bottom: 20),
               scrollDirection: Axis.vertical,
@@ -114,7 +142,7 @@ class ActualityState extends State<Actuality> {
         else{
           return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
         }
-      },), onRefresh: refreshData);
+      },);
   }
   Widget pugItem(PugModel model){
     return Container(
@@ -131,6 +159,7 @@ class ActualityState extends State<Actuality> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
       return Scaffold(
         appBar: AppBar(
           title: const Text("Actualité"),
@@ -146,9 +175,61 @@ class ActualityState extends State<Actuality> {
           ],
         ),
 
-        body: Container(child : newFriendsPug(), decoration:
+        body: Container(child : newContent(), decoration:
         BoxCircular(notifier),));
     },);
 
   }
+
+  Widget newContent(){
+    String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
+
+    return StreamBuilder(
+      stream: streamController.stream,
+      builder: (context, snapshot) {
+
+        if(snapshot.hasData) {
+          return  SmartRefresher(
+              controller: _refreshController,
+              onRefresh: refreshData,
+
+              child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverAppBar(expandedHeight: 150,
+                      automaticallyImplyLeading: false,
+                      backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
+                      pinned: false,
+                      flexibleSpace: FlexibleSpaceBar(
+
+                        background: Image.asset(pathImage, fit: BoxFit.fitWidth,),
+                      ),),
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics:  NeverScrollableScrollPhysics() , // to disable ListView's scrolling
+                              // controller: scrollController,
+                              padding: EdgeInsets.only(top: 20, bottom: 20),
+                              scrollDirection: Axis.vertical,
+                              itemCount : list.length,
+                              itemBuilder: (context, index) {
+                                return pugItem(list[index]);
+                              })
+                        ]
+                        ))
+                  ]));
+        }
+        else{
+          return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
+
+        }
+
+
+    },);
+
+  }
+
 }
+
+

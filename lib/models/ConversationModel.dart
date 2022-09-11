@@ -25,6 +25,10 @@ class ConversationModel{
     );
   }
 
+  @override
+  String toString() {
+    return 'ConversationModel{id: $id, members: $members, chat: $chat}';
+  }
 }
 
 

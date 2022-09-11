@@ -22,11 +22,12 @@ class Pug extends StatefulWidget {
   final routeName = '/pug';
   final PugModel? model;
   final String? username;
+  final bool isOwner;
 
-  const Pug({Key? key, this.model, this.username}) : super(key: key);
+  const Pug({Key? key, this.model, this.username,this.isOwner = false}) : super(key: key);
 
-  const Pug.withPugModel({Key? key, required this.model, this.username }) : super(key: key);
-  const Pug.withPugModelFromOtherUser({Key? key, required this.model,this.username }) : super(key: key);
+  const Pug.withPugModel({Key? key, required this.model, this.username, this.isOwner = true }) : super(key: key);
+  const Pug.withPugModelFromOtherUser({Key? key, required this.model,this.username, this.isOwner = false }) : super(key: key);
 
   @override
   PugState createState() => PugState();
@@ -85,7 +86,7 @@ class PugState extends State<Pug> {
       decoration: BoxDecoration(
           image: DecorationImage(
             image:CachedNetworkImageProvider(URL+"/pugs/"+widget.model!.imageURL),
-            fit: BoxFit.contain,
+            fit: widget.model!.isCrop ? BoxFit.fitWidth : BoxFit.contain,
           )
       ),
     ),onTap: () {
@@ -136,7 +137,7 @@ class PugState extends State<Pug> {
           body: Container(
             decoration: BoxGradient(),
             child: Padding( padding: const EdgeInsets.all(3),
-              child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: false),
+              child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: widget.isOwner),
               //
               // Column(
               // children: [
@@ -145,6 +146,7 @@ class PugState extends State<Pug> {
               //
               // ],
               // ),
+
                 decoration: BoxCircular(notifier) ,),),
           )
 
