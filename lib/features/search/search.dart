@@ -122,18 +122,14 @@ class SearchState extends State<Search> {
 
           ),
 
-          body: Container(
-            decoration: BoxGradient(),
-            child: Padding( padding: const EdgeInsets.all(3),
-              child: Container( child:
-              Column(
-              children: [
+          body:Container( child:
+          Column(
+            children: [
               searchBar(),
               Expanded(child: resultComponent())
-              ],
-              ),
-                decoration: BoxCircular(notifier) ,),),
-          )
+            ],
+          ),
+            decoration: BoxCircular(notifier) ,)
 
       );
     },);

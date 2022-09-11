@@ -146,11 +146,8 @@ class ActualityState extends State<Actuality> {
           ],
         ),
 
-        body: Container(
-          decoration: BoxGradient(),
-            child : Padding( padding: const EdgeInsets.all(3),
-                child : Container(child : newFriendsPug(), decoration:
-                BoxCircular(notifier),)  )));
+        body: Container(child : newFriendsPug(), decoration:
+        BoxCircular(notifier),));
     },);
 
   }

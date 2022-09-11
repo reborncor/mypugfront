@@ -50,11 +50,18 @@ BoxGradient(){
         colors: [APPCOLOR, Colors.blueAccent.shade700, Colors.indigo]), );
 }
 
+// BoxCircular(ThemeModel notifier){
+//   return BoxDecoration(color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
+//       borderRadius: BorderRadius.circular(10));
+// }
+
 BoxCircular(ThemeModel notifier){
-  return BoxDecoration(color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
+  return BoxDecoration(
+      gradient: LinearGradient(
+          colors: [APPCOLOR, Colors.deepPurpleAccent.shade200,APPCOLOR]),
+      color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));
 }
-
 loaderImage(){
  return Center(
       child: CircularProgressIndicator(),

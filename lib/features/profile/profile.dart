@@ -248,11 +248,8 @@ class ProfileState extends State<Profile> {
             IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
           ],
         ),
-          body: Container(
-                  decoration: BoxGradient(),
-                child: Padding(padding: const EdgeInsets.all(3),
-                  child: Container
-                    (child: content() , decoration: BoxCircular(notifier),),),),);
+          body: Container
+            (child: content() , decoration: BoxCircular(notifier),),);
 
     },);
   }

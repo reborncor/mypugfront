@@ -96,7 +96,7 @@ class PugItemState extends State<PugItem> {
   Widget imageContent(){
     return GestureDetector(
       child: AspectRatio(
-        aspectRatio: 1/1,
+        aspectRatio: 4/5,
         child: Container(
         child:
         Visibility(
@@ -120,7 +120,7 @@ class PugItemState extends State<PugItem> {
         decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),
-              fit: BoxFit.contain,
+              fit: BoxFit.fitWidth,
             )
         ),
       ),),
@@ -188,7 +188,8 @@ class PugItemState extends State<PugItem> {
 
           onPressed: (){
             navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
-          }, child: Text("Ajouter un commentaire..", style: TextStyle(color: APPCOLOR),)))
+          }, child: Text("Ajouter un commentaire..",
+        style:TextStyle(color: isDarkMode ? Colors.white : Colors.black),)))
       ;
     }
 

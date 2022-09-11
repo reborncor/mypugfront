@@ -7,6 +7,9 @@ import 'dart:ui';
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tags/flutter_tags.dart';
+import 'package:instagram_mention/instagram_mention.dart';
+import 'package:label_marker/label_marker.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/create/api.dart';
@@ -42,8 +45,9 @@ class EditPugState extends State<EditPug> {
   final dragController = DragController();
   late double width = 500;
   late double heihgt = 500;
-  List<PugDetailModel> details = [];
 
+  List<PugDetailModel> details = [];
+  late String pugDetailText = "";
   String imageTitle ="";
   String imageDescription ="";
   double x = 150.0;
@@ -92,6 +96,7 @@ class EditPugState extends State<EditPug> {
     file = widget.file!;
     super.initState();
 
+
   }
 
   addNewPugDetails(double positionX, double positionY,String text){
@@ -108,7 +113,6 @@ class EditPugState extends State<EditPug> {
 
     });
 
-    // log(details.length.toString());
   }
 
 
@@ -121,11 +125,21 @@ class EditPugState extends State<EditPug> {
     );
 
   }
+  Widget dataTagDetails(){
+    return   Stack(children: details.map((e) => Positioned(child:   InstagramMention(text: e.text,color: Colors.grey) , left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList()
+    );
+
+  }
+
+
 
   Widget draggrableWidget(){
     return Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,);
 
   }
+
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+
 
   Widget textPugEditor(){
     log('$x ET $y');
@@ -157,6 +171,9 @@ class EditPugState extends State<EditPug> {
                 direction: Axis.vertical,
                 children: [
                   Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
+
+
+
                   Container(
                       width:150,
                       child: Visibility(
@@ -208,10 +225,10 @@ class EditPugState extends State<EditPug> {
                  textPugEditor(),
                  Visibility(
                    visible: isVisible,
-                   child: dataDetails(),),
-                 Visibility(
-                   visible: isVisible,
-                   child: textsOnImage(),),
+                   child: dataTagDetails(),),
+                 // Visibility(
+                 //   visible: isVisible,
+                 //   child: textsOnImage(),),
 
                  Positioned(
                    child: ClipOval(

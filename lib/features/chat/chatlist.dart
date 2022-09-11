@@ -104,11 +104,8 @@ class ChatListState extends State<ChatList> {
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           ),
 
-          body: Container(
-              decoration: BoxGradient(),
-              child : Padding( padding: const EdgeInsets.all(3),
-                  child : Container(child : content(), decoration:
-                  BoxCircular(notifier),)  )));
+          body: Container(child : content(), decoration:
+          BoxCircular(notifier),));
     },);
   }
 }

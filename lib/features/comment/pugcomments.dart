@@ -145,14 +145,11 @@ class PugCommentsState extends State<PugComments> {
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
         ),
 
-        body:Container(
-          decoration: BoxGradient(),
-          child: Padding(padding: const EdgeInsets.all(3),
-            child: Container
-              (child: Column(children: [
-              Expanded(child: content()),
-              imageAddComment(widget.username, widget.pugId)
-            ],), decoration: BoxCircular(notifier),),),)
+        body:Container
+          (child: Column(children: [
+          Expanded(child: content()),
+          imageAddComment(widget.username, widget.pugId)
+        ],), decoration: BoxCircular(notifier),)
       );
     });
   }

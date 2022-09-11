@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mypug/features/actuality/actuality.dart';
@@ -12,6 +13,7 @@ import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
+import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +23,13 @@ import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 
 void main() {
+  // httpCheck();
   runApp(MyApp());
+}
+
+void httpCheck(){
+  HttpOverrides.global = MyHttpOverrides();
+
 }
 
 class MyApp extends StatelessWidget {

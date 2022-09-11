@@ -241,8 +241,7 @@ class _ChatState extends State<Chat> {
               title: Text(widget.receiverUsername),
 
             ),
-            body: Container(decoration: BoxGradient(),
-            child: Padding(padding: EdgeInsets.all(3), child: Container(child: StreamBuilder(
+            body: Container(child: StreamBuilder(
               stream: streamController.stream,
               builder: (context, snapshot) {
                 if(snapshot.hasData){
@@ -276,7 +275,7 @@ class _ChatState extends State<Chat> {
               },
 
 
-            ),decoration: BoxCircular(themeNotifier),),),)
+            ),decoration: BoxCircular(themeNotifier),)
 
           );
         },);

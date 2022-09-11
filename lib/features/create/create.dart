@@ -35,6 +35,8 @@ class CreatePugState extends State<CreatePug> {
   List<AssetEntity> assets = [];
   late ThemeModel notifier;
   late SuperTooltip tooltip;
+  late bool isCrop = true;
+  late Widget varImagesGallery;
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -61,7 +63,12 @@ class CreatePugState extends State<CreatePug> {
 
     });
     super.initState();
-    _fetchAssets();
+    getGalleryImages();
+
+  }
+  getGalleryImages() async {
+    await _fetchAssets();
+    varImagesGallery = imagesGallery();
   }
 
   _fetchAssets() async {
@@ -73,7 +80,7 @@ class CreatePugState extends State<CreatePug> {
     // Now that we got the album, fetch all the assets it contains
     final recentAssets = await recentAlbum.getAssetListRange(
       start: 0, // start at index 0
-      end: 500, // end at a very big index (to get all the assets)
+      end: 50, // end at a very big index (to get all the assets)
     );
 
 
@@ -157,17 +164,21 @@ callBack(Future<File?> file) async {
   Widget imageView(){
     return  Container(
       color: Colors.black,
+
+
       alignment: Alignment.center,
       child: StreamBuilder<dynamic>(
-        stream: imageStreamController.stream,
+      stream: imageStreamController.stream,
         builder: (_, snapshot) {
           if (imageFile == null) {
             return Container();
           } else{
-            return Image.file(imageFile!,height: 400,);
+            return SizedBox(width: 500, height: 500, child: AspectRatio(aspectRatio: 4/5, child: Image.file(imageFile!,fit: isCrop ? BoxFit.fitWidth : BoxFit.contain),),);
           }
         },
       ),
+
+
     );
   }
 
@@ -194,7 +205,12 @@ callBack(Future<File?> file) async {
               _imgFromCamera();
             },
             child: Text('Photo'),
-          ),],),
+          ),
+        IconButton(onPressed: (){
+          isCrop = !isCrop;
+          setState(() {
+
+        });}, icon: const Icon(Icons.crop))],),
       ElevatedButton(
           style: BaseButtonRoundedColor(60,40,Colors.indigo[300]),
           onPressed: () {
@@ -207,6 +223,7 @@ callBack(Future<File?> file) async {
   Widget imagesGallery(){
     return Expanded(child:
     GridView.builder(
+
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         // A grid view with 3 items per row
         crossAxisCount: 3,
@@ -238,7 +255,8 @@ callBack(Future<File?> file) async {
                 imageView(),
                 // Text('There are ${assets.length} assets'),
                 imageButtonOption(),
-                imagesGallery(),
+                varImagesGallery,
+
 
 
               ],
