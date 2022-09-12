@@ -77,7 +77,7 @@ class PugState extends State<Pug> {
                       Positioned(
                         child: Column(
                           children: [
-                            Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
+                            // Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
                             Text((widget.model!.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
                  , left: e.dx, top: e.dy, ),)).values.toList()
                 )],),) ,

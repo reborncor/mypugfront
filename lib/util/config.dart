@@ -1,6 +1,6 @@
 // String URL = "https://myplugapi.herokuapp.com";
-// String URL = "http://ec2-35-181-58-215.eu-west-3.compute.amazonaws.com";
-String URL = "https://dcb0-2001-861-5e45-dcd0-f1ee-86eb-7545-a6bb.ngrok.io";
+// String URL = "ec2-44-204-68-239.compute-1.amazonaws.com";
+String URL = "http://ec2-44-204-68-239.compute-1.amazonaws.com";
 
 
 //REAL : http://ec2-35-181-58-215.eu-west-3.compute.amazonaws.com
