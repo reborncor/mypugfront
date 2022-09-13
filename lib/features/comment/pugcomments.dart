@@ -111,18 +111,20 @@ class PugCommentsState extends State<PugComments> {
             controller: textEditingController,
             decoration: InputDecoration(
               suffixIcon: IconButton(onPressed: () async {
-                final result = await sendComment(
-                    pugId, author, textEditingController.text);
-                if (result.code == SUCCESS_CODE) {
-                  // showSnackBar(context, "Nouveau commentaire ajouté");
-                  comment = CommentModel(id: "",
-                      author: _username,
-                      content: textEditingController.text,
-                      date: "");
-                  comments.add(comment);
-                  setState(() {});
-                  textEditingController.clear();
+                if(textEditingController.text.isEmpty){
+                  final result = await sendComment(
+                      pugId, author, textEditingController.text);
+                  if (result.code == SUCCESS_CODE) {
+                    comment = CommentModel(id: "",
+                        author: _username,
+                        content: textEditingController.text,
+                        date: "");
+                    comments.add(comment);
+                    setState(() {});
+                    textEditingController.clear();
+                  }
                 }
+
               }, icon: Icon(Icons.send, color: APPCOLOR,)),
               hintText: "Ajouter un commentaire",
               hintStyle: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),

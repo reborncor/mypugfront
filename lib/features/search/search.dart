@@ -53,14 +53,19 @@ class SearchState extends State<Search> {
   Widget searchBar(){
 
     return TextField(
+
       style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
       cursorColor: APPCOLOR,
       controller: searchController,
-      // onChanged: (value){
-      //   fetchData();
-      // },
+
       textAlign: TextAlign.center,
+
       decoration: InputDecoration(
+        hintText: "Effectuer une recherche",
+        hintStyle: const TextStyle(color: Colors.white),
+
+        filled: true,
+        fillColor: APP_COLOR_SEARCH,
         enabledBorder: setUnderlineBorder(2.0, 0.0),
           focusedBorder: setUnderlineBorder(2.0, 0.0),
           suffixIcon: IconButton(onPressed: () {
@@ -99,7 +104,7 @@ class SearchState extends State<Search> {
           },);
         }
         else {
-          return Text("Effectuer une recherche",style:  TextStyle(color: notifier.isDark ? Colors.white : Colors.black),);
+          return const SizedBox(width: 0,);
         }
 
     },);

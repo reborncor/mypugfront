@@ -102,7 +102,7 @@ class PugItemState extends State<PugItem> {
       child: AnimatedOpacity(
         opacity: isVisible ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 200),
-        child: InstagramMention(text: text, color: Colors.grey),
+        child: InstagramMention(text: text, color: APP_COMMENT_COLOR),
       )
     );
   }
@@ -128,6 +128,7 @@ class PugItemState extends State<PugItem> {
                     ]),))).values.toList()
               )],),
         height: 300,
+
         decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),
@@ -244,7 +245,7 @@ class PugItemState extends State<PugItem> {
               child:  Text(widget.model.author,
                 style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black),
               ),),],) ,
-          SizedBox( width: 500, height : 500,child :imageContent(),),
+          SizedBox( width: 500, height : PUGSIZE,child :imageContent(),),
           imageInformation(imageTitle),
           imageDetail(imageDescription),
           imageCommentaire(widget.model.comments),

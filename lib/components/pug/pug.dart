@@ -127,7 +127,7 @@ class PugState extends State<Pug> {
       this.notifier = notifier;
       return Scaffold(
           appBar: AppBar(
-            title: const Text("Profile"),
+            title: const Text("Profil"),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
             actions: [
               IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
@@ -136,7 +136,7 @@ class PugState extends State<Pug> {
 
           body: Container(
             decoration: BoxGradient(),
-            child: Padding( padding: const EdgeInsets.all(3),
+            child: Padding( padding: const EdgeInsets.all(0),
               child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: widget.isOwner),
               //
               // Column(

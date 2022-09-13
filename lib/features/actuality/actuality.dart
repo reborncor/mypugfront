@@ -43,8 +43,11 @@ class ActualityState extends State<Actuality> {
   final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
   bool scrollPagePhysique = false;
+  late double _deviceWidth = 400;
+
   @override
   void initState() {
+
 
     fetchData();
     scrollController.addListener(scrollListener);
@@ -53,6 +56,7 @@ class ActualityState extends State<Actuality> {
   }
 
   fetchData() async {
+      _deviceWidth = getPhoneWidth(context);
      _username = await getCurrentUsername();
      _response = await getActualityPageable(startInd, endInd);
      startInd+=4;
@@ -151,8 +155,8 @@ class ActualityState extends State<Actuality> {
                 bottom: BorderSide(
                     width: 1,
                     color: APPCOLOR))),
-        width : 400 ,
-        height : 700,
+        width : _deviceWidth,
+        height : PUGSIZE+180,
 
         child : PugItem(model: model,currentUsername: _username,)
     );}
@@ -207,6 +211,7 @@ class ActualityState extends State<Actuality> {
                     SliverList(
                         delegate: SliverChildListDelegate([
                           ListView.builder(
+
                               shrinkWrap: true,
                               physics:  NeverScrollableScrollPhysics() , // to disable ListView's scrolling
                               // controller: scrollController,

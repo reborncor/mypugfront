@@ -42,7 +42,9 @@ BaseButtonSize(double width, double height,color){
 }
 
 final APPCOLOR = Colors.indigo.shade300;
-final PUGSIZE = 600;
+final APP_COMMENT_COLOR = Colors.black45.withOpacity(0.5);
+final APP_COLOR_SEARCH = APP_COMMENT_COLOR;
+final PUGSIZE = 600.0;
 
 BoxGradient(){
   return BoxDecoration(
@@ -74,3 +76,4 @@ errorImage(){
   return const Center(child: Icon(Icons.error));
 
 }
+

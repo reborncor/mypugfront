@@ -59,12 +59,15 @@ class ChatListState extends State<ChatList> {
 
 
     return   InkWell(
+
+
       onTap:() => navigateTo(context, Chat.withUsername(receiverUsername: receiverUserame)),
       child: ListTile(
+
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
       trailing: Icon(Icons.send, color: APPCOLOR,),
-      title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.white : Colors.black ), ),
-      subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.white : Colors.black) ,
+      title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.black : Colors.black ), ),
+      subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.black : Colors.black) ,
       ),
     ),);
   }
@@ -80,7 +83,10 @@ class ChatListState extends State<ChatList> {
         return ListView.builder(
           itemCount: snapshot.data!.conversations.length,
           itemBuilder: (context, index) {
-          return itemChat(snapshot.data!.conversations[index]);
+          return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
+          child:  Container(
+            decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
+            child: itemChat(snapshot.data!.conversations[index]),),);
         },);
       }
       if(snapshot.connectionState == ConnectionState.done){

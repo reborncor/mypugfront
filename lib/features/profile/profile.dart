@@ -240,8 +240,6 @@ class ProfileState extends State<Profile> {
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: hasBackButton,
-
-
           title: const Text("Profile"),
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           actions: [
@@ -273,7 +271,6 @@ class ProfileState extends State<Profile> {
               background: Image.asset(pathImage, fit: BoxFit.fitWidth,),
             ),),
           SliverFillRemaining(
-
             child :SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(

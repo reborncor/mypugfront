@@ -50,8 +50,11 @@ class EditPugState extends State<EditPug> {
   late String pugDetailText = "";
   String imageTitle ="";
   String imageDescription ="";
-  double x = 150.0;
-  double y = 250.0;
+  double x = 250.0;
+  double y = 500.0;
+
+  double pugBasicPositionX = 200.0;
+  double pugBasicPositionY = 350.0;
   List<Offset> points = [
    ];
 
@@ -126,16 +129,56 @@ class EditPugState extends State<EditPug> {
 
   }
   Widget dataTagDetails(){
-    return   Stack(children: details.map((e) => Positioned(
-      child:  GestureDetector(
-        onTap: (){
-          details.remove(e);
-          setState(() {
+    
+    //TODO : MakeIt Draggrable
 
-          });
-        },
-        child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: Colors.grey),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList()
-    );
+    // return   Stack(children: details.map((e) => Positioned(
+    //   child:  GestureDetector(
+    //     onTap: (){
+    //       details.remove(e);
+    //       setState(() {
+    //
+    //       });
+    //     },
+    //     child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList());
+
+
+    return Stack(children: details.map((e) =>
+        Positioned(
+          left: e.positionX.toDouble(),
+          top: e.positionY.toDouble()- appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top,
+
+          child: Draggable(
+
+              onDragEnd: (detailsDrag){
+                e.positionX = detailsDrag.offset.dx.toInt();
+                e.positionY = detailsDrag.offset.dy.toInt();
+                setState(() {
+
+                });
+              },
+
+              childWhenDragging: const SizedBox(width: 0,height: 0,),
+
+              child: Positioned(
+                child:  GestureDetector(
+                  onTap: (){
+                    details.remove(e);
+                    setState(() {
+
+                    });
+                  },
+                  child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),
+              feedback: draggablePugDetailItem(e.text)),
+        )
+        ).toList());
+    
+
+  }
+
+  Widget draggablePugDetailItem(String text){
+    return InstagramMention(text: text,color: APP_COMMENT_COLOR);
 
   }
 
@@ -176,30 +219,36 @@ class EditPugState extends State<EditPug> {
               spacing: 1,
                 direction: Axis.vertical,
                 children: [
-                  Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
+                  // Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
 
 
 
                   Container(
-                      width:150,
+                      width:120,
+                      height: 60,
                       child: Visibility(
                         visible: showEditor,
                         child: TextField(
 
-                          maxLength: 30,
+                          maxLength: 20,
                           controller: textEditingController,
                           cursorColor: APPCOLOR,
+                          textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            hintText: "...",
+                            hintStyle: TextStyle(fontSize: 30),
+                            filled: true,
+                              fillColor: APP_COLOR_SEARCH,
 
-                              enabledBorder: setUnderlineBorder(3.0, 5.0),
-                              focusedBorder: setUnderlineBorder(3.0, 5.0),
+                              enabledBorder: setOutlineBorder(2.0, 5.0),
+                              focusedBorder: setOutlineBorder(2.0, 5.0),
                               suffixIcon: IconButton(
                                 icon: Icon(Icons.check,color: APPCOLOR),
                                 onPressed: (){
                                   //TODO:test
                                   if(textEditingController.text.isNotEmpty){
-                                    addNewPugDetails(x, y-appBar.preferredSize.height -
+                                    addNewPugDetails(pugBasicPositionX, pugBasicPositionY-appBar.preferredSize.height -
                                         MediaQuery.of(context).padding.top, textEditingController.text);
                                     textEditingController.clear();
                                   }
@@ -224,7 +273,7 @@ class EditPugState extends State<EditPug> {
           stream: streamController.stream,
          builder: (context, snapshot) {
            return Container(
-             height: 600,
+             height: PUGSIZE,
              child: Stack(
 
                children: [
@@ -233,9 +282,7 @@ class EditPugState extends State<EditPug> {
                  Visibility(
                    visible: isVisible,
                    child: dataTagDetails(),),
-                 // Visibility(
-                 //   visible: isVisible,
-                 //   child: textsOnImage(),),
+
 
                  Positioned(
                    child: ClipOval(
@@ -247,8 +294,8 @@ class EditPugState extends State<EditPug> {
                            // showSnackBar(_scaffoldKey.currentContext, "Cliquer sur l'écran pour choisir la position");
                            isTextVisible = true;
                            showEditor = true;
-                           x = 150.00;
-                           y = 250.00;
+                           x = 280.00;
+                           y = 550.00;
                            setState(() {
 
                            });
@@ -262,11 +309,13 @@ class EditPugState extends State<EditPug> {
            );
          },
        ),
-        height: 600,
+        height: PUGSIZE,
         decoration: BoxDecoration(
             image: DecorationImage(
+
               image: FileImage(image),
               fit: widget.isCrop ? BoxFit.fitWidth : BoxFit.contain,
+
             )
         ),
       );

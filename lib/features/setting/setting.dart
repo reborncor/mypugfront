@@ -64,8 +64,8 @@ class SettingState extends State<Setting> {
               ],
           ),
 
-          body:Container(decoration: BoxGradient(),
-          child: Padding(padding: EdgeInsets.all(3),
+          body:Container(
+          child: Padding(padding: EdgeInsets.all(0),
           child: Container(child:   Center(
               child : FutureBuilder(
                 future: getUserData(),
