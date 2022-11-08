@@ -103,7 +103,6 @@ class EditPugState extends State<EditPug> {
       ImageStreamListener(
             (ImageInfo image, bool synchronousCall) {
           var myImage = image.image;
-          log(myImage.height.toString());
           imageHeight = (myImage.height > PUGSIZE) ? PUGSIZE.toInt() : myImage.height ;
         },
       ),
@@ -220,7 +219,6 @@ class EditPugState extends State<EditPug> {
             onDragEnd: (details){
               x = details.offset.dx;
               y = details.offset.dy;
-              log("$x et $y");
               setState(() {
 
               });
@@ -264,7 +262,6 @@ class EditPugState extends State<EditPug> {
                                     textEditingController.clear();
                                   }
                                   FocusScopeNode currentFocus = FocusScope.of(context);
-                                  log("CLICK "+currentFocus.hasPrimaryFocus.toString());
                                   if (!currentFocus.hasPrimaryFocus) {
                                     currentFocus.unfocus();
                                   }

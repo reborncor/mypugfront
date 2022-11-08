@@ -47,7 +47,6 @@ class _ChatState extends State<Chat> {
         !scrollController.position.outOfRange) {
       fetchOldMessage();
       setState(() {
-        log("reach the Top");
       });
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
@@ -68,7 +67,6 @@ class _ChatState extends State<Chat> {
       );
     }
     else{
-      log("SCROLL PROBLEM");
     }
 
   }
@@ -152,12 +150,10 @@ class _ChatState extends State<Chat> {
     });
 
     socket.on("seenCallback",(data) => {
-      log("Message vu callback :"+data),
     });
 
     socket.on("instantmessage",(data) =>  {
       if(!mounted) print("NOT MOUNTED"),
-      log("OK Instant Message"),
       newMessage = MessageModel.fromJsonData(data),
       addMessageToList(newMessage),
 

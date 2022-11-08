@@ -47,19 +47,20 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
       _selectedIndex = index;
     });
   }
-  fetchData(){
+  fetchData() async {
     notification = 0;
-    _response = getUserConversations();
-    var username = getCurrentUsername();
+     _response = getUserConversations();
+    var username = await getCurrentUsername();
     _response.then((value) =>{
       value.conversations.forEach((element) {
-        if(!element.seen.contains(username)) notification+=1;
-        log("Result"+ element.seen.contains(username).toString());
+        if(!element.seen.contains(username)){
+          notification+=1;
+        };
+      }),
+      setState(() {
       })
     });
-    setState(() {
-      notification;
-    });
+
   }
   void initState() {
     // TODO: implement initState

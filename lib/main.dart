@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeModel>(
         builder:(context, ThemeModel themeNotifier, child) {
 
-          log(themeNotifier.isDark.toString());
         return MaterialApp(
+          debugShowCheckedModeBanner:false,
 
           routes: {
             '/actuality': (context) =>  Actuality(),

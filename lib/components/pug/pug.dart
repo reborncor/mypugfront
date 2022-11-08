@@ -62,40 +62,6 @@ class PugState extends State<Pug> {
 
 
 
-  Widget imageContent(String imageUrl ){
-    return GestureDetector(
-      child: Container(
-      child:
-        Container(
-          height: 300,
-          child: Visibility(
-            visible: isVisible,
-            child: Stack(
-              children: [
-                Stack(
-                    children: points.asMap().map((i,e) => MapEntry(i,
-                      Positioned(
-                        child: Column(
-                          children: [
-                            // Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,),
-                            Text((widget.model!.details![i].text) , style: TextStyle(fontSize: 15, color: Colors.white),)],)
-                 , left: e.dx, top: e.dy, ),)).values.toList()
-                )],),) ,
-        ),
-      height: 300,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-            image:CachedNetworkImageProvider(URL+"/pugs/"+widget.model!.imageURL),
-            fit: widget.model!.isCrop ? BoxFit.fitWidth : BoxFit.contain,
-          )
-      ),
-    ),onTap: () {
-      setState(() {
-        isVisible = !isVisible;
-      });
-    },);
-
-  }
   Widget imageInformation(String title,int like){
     return Container(
       child: Row(
@@ -113,14 +79,6 @@ class PugState extends State<Pug> {
     );
   }
 
-  //
-  // Column(
-  // children: [
-  // SizedBox( width: 500, height : 500,child :imageContent(imageURL)),
-  // imageInformation(imageTitle,imageLike),
-  //
-  // ],
-  // )
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {

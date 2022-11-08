@@ -78,7 +78,6 @@ class ActualityState extends State<Actuality> {
 
   setScrollPhysique(bool value){
     scrollPagePhysique = value;
-    log("SET SCROLL");
 
     setState(() {
 
@@ -90,7 +89,6 @@ class ActualityState extends State<Actuality> {
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
       fetchOldActuality();
-      log("reach the bottom");
 
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
@@ -152,7 +150,6 @@ class ActualityState extends State<Actuality> {
   }
   Widget pugItem(PugModel model){
 
-    log("Heigt"+model.height.toString());
 
     return PugItem(model: model,currentUsername: _username,);
     }

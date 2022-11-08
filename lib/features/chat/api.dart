@@ -94,7 +94,6 @@ Future<OldMessageResponse> getUserMessagePageable(String username, int startInd,
   }
 
   if(response.statusCode == 200) {
-    log("DATA :"+ json.decode(response.body).toString());
     OldMessageResponse data = OldMessageResponse.fromJsonData(json.decode(response.body));
     return data ;
   }

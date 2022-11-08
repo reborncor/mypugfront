@@ -34,8 +34,6 @@ class SplashScreenState extends State<SplashScreen> {
     String data = await getCurrentUserToken();
     if (data.length > 5 ){
       isUserLogged = true;
-      log(data);
-      log("ACCESS GRANTED");
     }
     navigateToApp(isUserLogged);
 

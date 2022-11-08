@@ -47,7 +47,7 @@ class ChatListState extends State<ChatList> {
 
 
   Future<void> onRefresh()  async{
-    _response = getUserConversations();
+    // _response = getUserConversations();
     setState(() {
 
     });
@@ -57,7 +57,6 @@ class ChatListState extends State<ChatList> {
 
     String receiverUserame = model.members.first == _username ? model.members.last : model.members.first;
     bool seen = model.seen.contains(_username);
-    log(seen.toString());
     return   InkWell(
 
 
@@ -77,7 +76,7 @@ class ChatListState extends State<ChatList> {
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: FutureBuilder(
-        future: _response = getUserConversations(),
+        future: getUserConversations(),
         builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
         if(snapshot.hasData){
           return ListView.builder(
