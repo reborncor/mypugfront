@@ -21,13 +21,14 @@ class PugModel{
   late String author;
   late List<CommentModel> comments;
   late bool isCrop;
+  late int height;
 
   PugModel({ required this.id,  required this.imageURL,  required this.imageTitle,required this.imageDescription,
     required this.details,required this.like});
 
   PugModel.jsonData({  required this.imageURL,  required this.imageTitle,required this.imageDescription,
     required this.details,required this.like, required this.imageData, required this.date, required this.isLiked,
-    required this.id, required this.author, required this.comments, required this.isCrop});
+    required this.id, required this.author, required this.comments, required this.isCrop, required this.height});
 
   factory PugModel.fromJsonData(Map<String,  dynamic> json){
     return PugModel.jsonData(
@@ -41,6 +42,8 @@ class PugModel{
       isLiked: json['isLiked'],
       author: json['author'],
       isCrop: json['isCrop'],
+      height: json['height'],
+
       details:  (json['details'] as List).map((e) => PugDetailModel.fromJsonData(e)).toList(),
       comments:  (json['comments'] as List).map((e) => CommentModel.fromJsonData(e)).toList(),
 

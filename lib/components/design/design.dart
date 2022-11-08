@@ -57,12 +57,20 @@ BoxGradient(){
 //       borderRadius: BorderRadius.circular(10));
 // }
 
+const APPCOLOR1 = Color(0xffa89efe);
+const APPCOLOR2 = Color(0xff7c9afc);
+const APPCOLOR3 = Color(0xff60cbf9);
+const APPCOLOR4 = Color(0xffbfa4db);
+const APPCOLOR5 = Color(0xffaa8be6);
+
 BoxCircular(ThemeModel notifier){
   return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [APPCOLOR,APPCOLOR, Colors.pinkAccent.shade100,APPCOLOR]),
+      colors: [APPCOLOR5,APPCOLOR5,APPCOLOR4,APPCOLOR3,APPCOLOR3,APPCOLOR5,APPCOLOR5,APPCOLOR4]),
+
+      // colors: [APPCOLOR,APPCOLOR,APPCOLOR4, Colors.deepPurpleAccent.shade100,APPCOLOR]),
       color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));
 }

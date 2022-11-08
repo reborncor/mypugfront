@@ -58,10 +58,11 @@ class PugCommentsState extends State<PugComments> {
   }
 
   Widget itemComment(CommentModel model) {
-    return Container(
+    return Padding(padding: EdgeInsets.only(bottom: 3, top: 3),
+    child: Container(
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(width: 1, color: APPCOLOR),
-            )),
+          borderRadius: BorderRadius.circular(10),
+          color:  Colors.grey.shade100.withOpacity(0.6),),
         child: InkWell(
             child: Row(
               children: [
@@ -69,14 +70,14 @@ class PugCommentsState extends State<PugComments> {
                   width: 40,
                   height: 40,),
                 Text(
-                  model.author, style: TextStyle(fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.white : Colors.black),),
+                  model.author, style: TextStyle(fontSize : 18, fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.black : Colors.black),),
                 SizedBox(width: 10,),
-                Text(model.content, style:  TextStyle(color: notifier.isDark ? Colors.white : Colors.black),),
+                Text(model.content, style:  TextStyle(fontSize : 18, color: notifier.isDark ? Colors.black : Colors.black),),
               ],
 
             )
         )
-    );
+    ),);
   }
 
   Widget content() {
@@ -111,10 +112,11 @@ class PugCommentsState extends State<PugComments> {
             controller: textEditingController,
             decoration: InputDecoration(
               suffixIcon: IconButton(onPressed: () async {
-                if(textEditingController.text.isEmpty){
+                if(textEditingController.text.isNotEmpty){
                   final result = await sendComment(
                       pugId, author, textEditingController.text);
                   if (result.code == SUCCESS_CODE) {
+
                     comment = CommentModel(id: "",
                         author: _username,
                         content: textEditingController.text,
@@ -124,6 +126,7 @@ class PugCommentsState extends State<PugComments> {
                     textEditingController.clear();
                   }
                 }
+
 
               }, icon: Icon(Icons.send, color: APPCOLOR,)),
               hintText: "Ajouter un commentaire",

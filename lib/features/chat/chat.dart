@@ -18,7 +18,6 @@ class Chat extends StatefulWidget {
 
   final routeName = '/chat';
   String receiverUsername = "";
-
   Chat({Key? key}) : super(key: key);
 
   Chat.withUsername({Key? key, required this.receiverUsername}) : super(key: key);
@@ -53,7 +52,6 @@ class _ChatState extends State<Chat> {
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
         !scrollController.position.outOfRange) {
-
       setState(() {
         log("reach the Bottom");
       });
@@ -120,6 +118,8 @@ class _ChatState extends State<Chat> {
     response = data;
     messages = response.conversation.chat;
     streamController.add(data);
+    sendMessageSeen();
+
   }
   addMessageToList(MessageModel messageModel){
     messages.insert(0,messageModel);
@@ -151,6 +151,10 @@ class _ChatState extends State<Chat> {
 
     });
 
+    socket.on("seenCallback",(data) => {
+      log("Message vu callback :"+data),
+    });
+
     socket.on("instantmessage",(data) =>  {
       if(!mounted) print("NOT MOUNTED"),
       log("OK Instant Message"),
@@ -159,12 +163,15 @@ class _ChatState extends State<Chat> {
 
     });
 
+
   }
 
   sendMessage(String message){
     messageSent = MessageModel(time: "",content: message, senderUsername: username ,receiverUsername: widget.receiverUsername, id: "");
     socket.emit("message",messageSent.toJson());
-
+  }
+  sendMessageSeen(){
+    socket.emit("seenConversation",{"senderUsername" : username, "conversationId" : response.conversation.id});
   }
 
 

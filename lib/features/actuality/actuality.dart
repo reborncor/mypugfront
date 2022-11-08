@@ -16,6 +16,7 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../util/config.dart';
 import 'api.dart';
 
 class Actuality extends StatefulWidget {
@@ -52,11 +53,12 @@ class ActualityState extends State<Actuality> {
     fetchData();
     scrollController.addListener(scrollListener);
     super.initState();
+    // _deviceWidth = getPhoneWidth(context);
+
 
   }
 
   fetchData() async {
-      _deviceWidth = getPhoneWidth(context);
      _username = await getCurrentUsername();
      _response = await getActualityPageable(startInd, endInd);
      startInd+=4;
@@ -149,17 +151,11 @@ class ActualityState extends State<Actuality> {
       },);
   }
   Widget pugItem(PugModel model){
-    return Container(
-        decoration : BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    width: 1,
-                    color: APPCOLOR))),
-        width : _deviceWidth,
-        height : PUGSIZE+180,
 
-        child : PugItem(model: model,currentUsername: _username,)
-    );}
+    log("Heigt"+model.height.toString());
+
+    return PugItem(model: model,currentUsername: _username,);
+    }
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {

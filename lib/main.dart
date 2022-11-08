@@ -23,7 +23,7 @@ import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 
 void main() {
-  // httpCheck();
+  httpCheck();
   runApp(MyApp());
 }
 
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             '/create': (context) =>  CreatePug(),
             '/profile': (context) => Profile(),
             '/setting': (context) =>  Setting(),
-            '/tabview': (context) =>  TabView(),
+              '/tabview': (context) =>  TabView(),
             '/signin': (context) =>  SignIn(),
             '/signup': (context) =>  SignUp(),
             '/pug': (context) =>  Pug(),
@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
 
 
           darkTheme: ThemeData(
-            // backgroundColor: Colors.red,
             brightness: Brightness.dark,
             primaryColorDark: Colors.black,
             primaryColor: Colors.black54,

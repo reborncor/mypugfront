@@ -17,7 +17,7 @@ class ConversationResponse extends BasicResponse{
     return ConversationResponse.jsonData(
       code: json['code'],
       message: json['message'],
-      conversation: ConversationModel.fromJsonData( json['payload']['conversation']),
+      conversation: ConversationModel.fromJsonData( json['payload']),
     );
   }
 

@@ -102,129 +102,145 @@ class PugItemState extends State<PugItem> {
       child: AnimatedOpacity(
         opacity: isVisible ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 200),
-        child: InstagramMention(text: text, color: APP_COMMENT_COLOR),
+        child: text.isNotEmpty ? InstagramMention(text: text, color: APP_COMMENT_COLOR) : SizedBox(width: 0,),
       )
     );
   }
   Widget imageContent(){
-    log(widget.model.toString());
-    return GestureDetector(
-      child: AspectRatio(
-        aspectRatio: 4/5,
-        child: Container(
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 200, maxHeight: (widget.model.height  > 200)? widget.model.height.toDouble(): 300),
+      child: GestureDetector(
         child: Stack(
-            children: [
-              Stack(
-                  children: points.asMap().map((i,e) => MapEntry(i,
+          fit: StackFit.expand,
+          children: [
+            Image(image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
+                ),
+            Stack(
+                children: points.asMap().map((i,e) => MapEntry(i,
                     Positioned(
                       left: e.dx,
                       top: e.dy,
                       child: Wrap(
-                        direction: Axis.vertical,
+                          direction: Axis.vertical,
                           spacing: 1,
                           children: [
                             // widget.fromProfile ? Image( image : const AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,) : SizedBox(width: 0, height: 0,),
-                    _typer(widget.model.details![i].text, isVisible),
-                    ]),))).values.toList()
-              )],),
-        height: 300,
+                            _typer(widget.model.details![i].text, isVisible),
+                          ]),))).values.toList()
+            )],),
 
-        decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),
-              fit: widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
-            )
-        ),
-      ),),
-      onDoubleTap: () async {
-        if(!isLiked){
-          final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
-          if(result.code == SUCCESS_CODE){
-            showToast(context, "Vous avez aimé cette image");
-            imageLike+= 1;
-            isLiked = !isLiked;
+        onDoubleTap: () async {
+          if(!isLiked){
+            final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
+            if(result.code == SUCCESS_CODE){
+              // showToast(context, "Vous avez aimé cette image");
+              imageLike+= 1;
+              isLiked = !isLiked;
+            }
           }
-        }
-      },
-      onTap: () {
-      isVisible = !isVisible;
-      setState(() {
+        },
+        onTap: () {
+          isVisible = !isVisible;
+          setState(() {
 
-      });
-    },);
+          });
+        },),);
+
 
   }
-  Widget imageInformation(String title){
+
+
+  Widget imageInformation(String title, list){
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Row(
-            children: [
-              TextButton.icon(
-                onPressed: () async {
-                  if(!isLiked){
-                    final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
-                    if(result.code == SUCCESS_CODE){
-                      showToast(context, "Vous avez aimé cette image");
-                      imageLike+= 1;
-                      isLiked = !isLiked;
-                    }
-                  }
-                  else{
-                    final result = await likeOrUnlikePug(widget.model.id,widget.model.author, false);
-                    if(result.code == SUCCESS_CODE){
-                      // showToast(context, "Like reti")
-                      imageLike-= 1;
-                      isLiked = !isLiked;
-                    }
-                  }
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              width: 30,
+              child: Text(imageLike.toString(), style: TextStyle(color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),),
+                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            imageCommentaire(list),
+            Column(
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      if(!isLiked){
+                        final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
+                        if(result.code == SUCCESS_CODE){
+                          showToast(context, "Vous avez aimé cette image");
+                          imageLike+= 1;
+                          isLiked = !isLiked;
+                        }
+                      }
+                      else{
+                        final result = await likeOrUnlikePug(widget.model.id,widget.model.author, false);
+                        if(result.code == SUCCESS_CODE){
+                          imageLike-= 1;
+                          isLiked = !isLiked;
+                        }
+                      }
+                      setState(() {
+                      });
 
-                  setState(() {
-                  });
+                    }, icon: (isLiked) ?  Icon(Icons.favorite, color: APPCOLOR,) :
+                Icon(Icons.favorite_border, color: APPCOLOR,)
+                ),
+              ],
+            )
 
-
-
-                }, icon: (isLiked) ?  Icon(Icons.favorite, color: APPCOLOR,) :  Icon(Icons.favorite_border, color: APPCOLOR,)  , label: Text(imageLike.toString(), style: TextStyle(color: APPCOLOR),),),
-            ],
-          )
-
-        ],) ,
+          ],)
+      ]),
     );
   }
 
   Widget imageCommentaire(List<CommentModel> list){
 
-    if(list.isEmpty){
-      return  Expanded(flex : 0,child: TextButton(
+      return Column(children: [
+          TextButton(
 
           onPressed: (){
-            navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
-          }, child: Text("Ajouter un commentaire..",
-        style:TextStyle(color: isDarkMode ? Colors.white : Colors.black),)))
-      ;
-    }
+        navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
+      }, child: Container(
+    padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(10),
+    color: Colors.grey.shade300.withOpacity(0.5)),
+    child: Text("commentaires",
+    textAlign: TextAlign.center,
+    style:TextStyle(fontSize : 19, color: isDarkMode ? Colors.white : Colors.black),),))
+      ],);
 
-    return Padding(padding: const EdgeInsets.only(top: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [ Text(comment.author, style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),),
-              Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1, style: TextStyle(color : isDarkMode ? Colors.white : Colors.black),     overflow: TextOverflow.ellipsis,)),],),
 
-            Expanded(flex : 0,child: TextButton(
-              
-                onPressed: (){
-                  navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
-                  }, child: Text("commentaires", style: TextStyle(color: APPCOLOR),)))
-
-      ],));
+    // return Padding(padding: const EdgeInsets.only(top: 10),
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Row(
+    //           children: [ Text(comment.author, style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),),
+    //           Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1, style: TextStyle(color : isDarkMode ? Colors.white : Colors.black),     overflow: TextOverflow.ellipsis,)),],),
+    //
+    //         Expanded(flex : 0,child: TextButton(
+    //
+    //             onPressed: (){
+    //               navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
+    //               }, child: Text("commentaires", style: TextStyle(color: APPCOLOR),)))
+    //
+    //   ],));
   }
 
+  // Widget imageDetail(String detail){
+  //   return Padding(padding: EdgeInsets.only(left: 8), child:  ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
+  //     trimMode: TrimMode.Line,style: TextStyle(color: isDarkMode ? Colors.white : Colors.black), ),);
+  // }
+
   Widget imageDetail(String detail){
-    return Padding(padding: EdgeInsets.only(left: 8), child:  ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
-      trimMode: TrimMode.Line,style: TextStyle(color: isDarkMode ? Colors.white : Colors.black), ),);
+    return Padding(padding: EdgeInsets.only(left: 8), child:
+    Text(
+      detail,
+      style: TextStyle(color: isDarkMode ? Colors.black : Colors.black), ),);
   }
 
 
@@ -235,20 +251,35 @@ class PugItemState extends State<PugItem> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
+          Container(
+            decoration: BoxDecoration(
+              // borderRadius: BorderRadius.circular(10),
+              // color: Colors.grey.shade100.withOpacity(0.6)
+            ),
+            child: Column(
+                children: [
           widget.fromProfile ? SizedBox(width: 0,height: 10,) :
-          Row( children: [
+            Row( children: [
             const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
             const SizedBox(width: 10),
             GestureDetector(
-              onTap: (){
-                navigateTo(context, Profile.fromUsername(username: widget.model.author));},
-              child:  Text(widget.model.author,
-                style: TextStyle(fontWeight: FontWeight.bold, color: notifier.isDark ? Colors.white :Colors.black),
-              ),),],) ,
-          SizedBox( width: 500, height : PUGSIZE,child :imageContent(),),
-          imageInformation(imageTitle),
-          imageDetail(imageDescription),
-          imageCommentaire(widget.model.comments),
+            onTap: (){
+              navigateTo(context, Profile.fromUsername(username: widget.model.author));},
+              child:  Container(
+                padding: EdgeInsets.only(left: 10,right: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.shade300.withOpacity(0.6)
+                ),
+                  child:
+              Text(widget.model.author,
+                style: TextStyle( fontSize: 20,color: notifier.isDark ? Colors.white :Colors.black),
+              )),),],)
+          ]),),
+          imageContent(),
+          imageInformation(imageTitle,widget.model.comments),
+          // imageDetail(widget.model.imageDescription!),
           widget.fromProfile ? Padding(
             padding: EdgeInsets.only(top: 20,),
             child:  Center(

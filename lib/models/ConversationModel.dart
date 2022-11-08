@@ -9,17 +9,19 @@ class ConversationModel{
   String id;
   List<dynamic> members;
   List<MessageModel> chat;
+  late List<dynamic> seen;
 
   ConversationModel({ required this.id,  required this.members, required this.chat});
 
 
-  ConversationModel.jsonData({required this.id,  required this.members, required this.chat});
+  ConversationModel.jsonData({required this.id,  required this.members, required this.chat, required this.seen});
 
   factory ConversationModel.fromJsonData(Map<String,  dynamic> json){
     return ConversationModel.jsonData(
       id: json['_id'],
       members: json['members'] as List,
       chat:  (json['chat'] as List).map((e) => MessageModel.fromJsonData(e)).toList(),
+      seen: json['seen'] as List,
 
 
     );
@@ -27,7 +29,7 @@ class ConversationModel{
 
   @override
   String toString() {
-    return 'ConversationModel{id: $id, members: $members, chat: $chat}';
+    return 'ConversationModel{id: $id, members: $members, chat: $chat, seen :$seen}';
   }
 }
 

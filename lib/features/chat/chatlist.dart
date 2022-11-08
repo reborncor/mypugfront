@@ -5,13 +5,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/chat/chat.dart';
-import 'package:mypug/features/profile/profile.dart';
-import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/ConversationModel.dart';
-import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -35,29 +33,31 @@ class ChatListState extends State<ChatList> {
 
   TextEditingController searchController = TextEditingController();
   StreamController streamController = StreamController();
-  late ConversationsResponse _response;
+  late Future<ConversationsResponse> _response;
   late String _username;
   late ThemeModel notifier;
 
   @override
   void initState() {
-    fetchData();
     getCurrentUsername().then((value) => _username = value);
     super.initState();
 
   }
 
 
-  fetchData() async {
-    _response = await getUserConversations();
 
+  Future<void> onRefresh()  async{
+    _response = getUserConversations();
+    setState(() {
+
+    });
   }
 
   Widget itemChat(ConversationModel model){
 
     String receiverUserame = model.members.first == _username ? model.members.last : model.members.first;
-
-
+    bool seen = model.seen.contains(_username);
+    log(seen.toString());
     return   InkWell(
 
 
@@ -65,39 +65,38 @@ class ChatListState extends State<ChatList> {
       child: ListTile(
 
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
-      trailing: Icon(Icons.send, color: APPCOLOR,),
+      trailing: seen ? Icon(Icons.send, color: APPCOLOR,) : Badge(badgeContent: Text("N"),child: Icon(Icons.send, color: APPCOLOR,)),
       title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.black : Colors.black ), ),
-      subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ), style:  TextStyle( color: notifier.isDark ? Colors.black : Colors.black) ,
+      subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ),
+        style:  TextStyle( color: notifier.isDark ? Colors.black : Colors.black) ,
       ),
     ),);
   }
 
   Widget content(){
-
-    return FutureBuilder(
-
-      future: getUserConversations(),builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
-      if(snapshot.hasData) {
-        log(snapshot.data!.conversations.length.toString());
-        print(snapshot.data!.conversations.toString());
-        return ListView.builder(
-          itemCount: snapshot.data!.conversations.length,
-          itemBuilder: (context, index) {
-          return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
-          child:  Container(
-            decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
-            child: itemChat(snapshot.data!.conversations[index]),),);
-        },);
-      }
-      if(snapshot.connectionState == ConnectionState.done){
-        return  const Center( child: Text("Aucune donnée"),);
-      }
-      else{
-        return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
-      }
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      child: FutureBuilder(
+        future: _response = getUserConversations(),
+        builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
+        if(snapshot.hasData){
+          return ListView.builder(
+            itemCount: snapshot.data!.conversations.length,
+            itemBuilder: (context, index) {
+              return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
+                child:  Container(
+                  decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
+                  child: itemChat(snapshot.data!.conversations[index]),),);
+            },);
+        }
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return loaderImage();
+        }
+        return const Center(child: Text("Aucune donnée"),);
+      },)
 
 
-    },);
+    );
   }
 
   @override
@@ -107,7 +106,6 @@ class ChatListState extends State<ChatList> {
       return Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-
             title: Text("Conversations"),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
           ),

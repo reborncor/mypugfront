@@ -12,7 +12,7 @@ import 'package:mypug/util/util.dart';
 
 import 'dart:async';
 
-Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop ) async{
+Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop, int height) async{
 
   String token = await getCurrentUserToken();
   String username = await getCurrentUsername();
@@ -29,7 +29,8 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
       "details": details.map((e) => e.toJson()).toList(),
       "imageDescription" : imageDescription,
       "imageTitle" : title,
-      "isCrop" : isCrop
+      "isCrop" : isCrop,
+      "height" : height,
     });
 
 

@@ -44,7 +44,8 @@ class EditPugState extends State<EditPug> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dragController = DragController();
   late double width = 500;
-  late double heihgt = 500;
+  late double height = 500;
+  late int imageHeight = PUGSIZE.toInt();
 
   List<PugDetailModel> details = [];
   late String pugDetailText = "";
@@ -70,7 +71,7 @@ class EditPugState extends State<EditPug> {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       width = getPhoneWidth(context);
-      heihgt = getPhoneHeight(context);
+      height = getPhoneHeight(context);
       tooltip = SuperTooltip(
         popupDirection: TooltipDirection.up,
         showCloseButton: ShowCloseButton.inside,
@@ -97,6 +98,16 @@ class EditPugState extends State<EditPug> {
 
     details.clear();
     file = widget.file!;
+    Image image = Image.file(file);
+    image.image.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener(
+            (ImageInfo image, bool synchronousCall) {
+          var myImage = image.image;
+          log(myImage.height.toString());
+          imageHeight = (myImage.height > PUGSIZE) ? PUGSIZE.toInt() : myImage.height ;
+        },
+      ),
+    );
     super.initState();
 
 
@@ -230,7 +241,7 @@ class EditPugState extends State<EditPug> {
                         visible: showEditor,
                         child: TextField(
 
-                          maxLength: 20,
+                          maxLength: 25,
                           controller: textEditingController,
                           cursorColor: APPCOLOR,
                           textAlign: TextAlign.center,
@@ -364,7 +375,7 @@ class EditPugState extends State<EditPug> {
             style: BaseButtonRoundedColor(40, 40, APPCOLOR),
             onPressed: () async {
               if(details.length >= 1){
-                var result = await createPug(file,textTitleController.text,textDescriptionController.text,details, widget.isCrop);
+                var result = await createPug(file,textTitleController.text,textDescriptionController.text,details, widget.isCrop,imageHeight);
 
                 log(result.code.toString() +" "+result.message);
                 if(result.code == SUCCESS_CODE){

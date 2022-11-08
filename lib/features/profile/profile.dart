@@ -93,7 +93,7 @@ class ProfileState extends State<Profile> {
 
 
         return
-             Column(children: [
+          Column(children: [
 
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
 
@@ -106,10 +106,30 @@ class ProfileState extends State<Profile> {
               ),),
               Text(username, style: TextStyle(fontSize: 18, color: notifier.isDark ? Colors.white : Colors.black),),
             ]),
-            itemProfile(snapshot.data!.pugs,'Publication'),
 
-            InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
-            InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade100.withOpacity(0.2),
+              ),
+
+              height: 90,
+              child:   Row(
+
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               itemProfile(snapshot.data!.pugs,'Pugs'),
+                ),
+                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
+                ),
+                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:                InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
+                  ,)
+
+
+              ],),),
+
+
+
 
 
           ],),

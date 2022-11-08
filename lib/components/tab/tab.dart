@@ -3,6 +3,7 @@
 
 import 'dart:developer';
 
+import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
@@ -10,6 +11,10 @@ import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/create/create.dart';
 import 'package:mypug/features/profile/profile.dart';
+import 'package:mypug/util/util.dart';
+
+import '../../features/chat/api.dart';
+import '../../response/conversationsresponse.dart';
 
 
 /// This is the stateful widget that the main application instantiates.
@@ -28,6 +33,8 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
 
   int _selectedIndex = 0;
+  late Future<ConversationsResponse> _response;
+  late int notification = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     const Actuality(),
     const CreatePug(),
@@ -35,13 +42,28 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
     Profile(),
   ];
   void _onItemTapped(int index) {
+    fetchData();
     setState(() {
       _selectedIndex = index;
     });
   }
-
+  fetchData(){
+    notification = 0;
+    _response = getUserConversations();
+    var username = getCurrentUsername();
+    _response.then((value) =>{
+      value.conversations.forEach((element) {
+        if(!element.seen.contains(username)) notification+=1;
+        log("Result"+ element.seen.contains(username).toString());
+      })
+    });
+    setState(() {
+      notification;
+    });
+  }
   void initState() {
     // TODO: implement initState
+    fetchData();
     _selectedIndex = widget.initialIndex;
   }
   @override
@@ -70,9 +92,10 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
           ),
           DotNavigationBarItem(
+
             // label: 'Message',
 
-            icon: const Icon(Icons.messenger),
+            icon:( notification > 0) ?  Badge(badgeContent: Text(notification.toString()), child: const Icon(Icons.messenger),) : const Icon(Icons.messenger) ,
             // backgroundColor: APPCOLOR,
 
 
