@@ -45,6 +45,7 @@ class ActualityState extends State<Actuality> {
   StreamController streamController = StreamController();
   bool scrollPagePhysique = false;
   late double _deviceWidth = 400;
+  late AppBar appBar;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class ActualityState extends State<Actuality> {
      endInd+=4;
      list = _response.pugs;
      streamController.add("event");
+     streamController.done;
     socketService.initialise(_username);
   }
 
@@ -128,7 +130,9 @@ class ActualityState extends State<Actuality> {
     return StreamBuilder(
       stream : streamController.stream,
       builder: (context, snapshot) {
+        // log(snapshot.connectionState.toString());
         if(snapshot.hasData){
+
           return ListView.builder(
               shrinkWrap: true,
               physics:  scrollPagePhysique ? NeverScrollableScrollPhysics() : null, // to disable ListView's scrolling
@@ -149,9 +153,7 @@ class ActualityState extends State<Actuality> {
       },);
   }
   Widget pugItem(PugModel model){
-
-
-    return PugItem(model: model,currentUsername: _username,);
+    return PugItem(model: model,currentUsername: _username, appBar: appBar,);
     }
   @override
   Widget build(BuildContext context) {
@@ -185,6 +187,12 @@ class ActualityState extends State<Actuality> {
       stream: streamController.stream,
       builder: (context, snapshot) {
 
+
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
+        }
+
+
         if(snapshot.hasData) {
           return  SmartRefresher(
               controller: _refreshController,
@@ -207,7 +215,6 @@ class ActualityState extends State<Actuality> {
 
                               shrinkWrap: true,
                               physics:  NeverScrollableScrollPhysics() , // to disable ListView's scrolling
-                              // controller: scrollController,
                               padding: EdgeInsets.only(top: 20, bottom: 20),
                               scrollDirection: Axis.vertical,
                               itemCount : list.length,
@@ -219,7 +226,7 @@ class ActualityState extends State<Actuality> {
                   ]));
         }
         else{
-          return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
+          return  const Center(child: Text("Aucune donnée"),);
 
         }
 
@@ -229,5 +236,3 @@ class ActualityState extends State<Actuality> {
   }
 
 }
-
-

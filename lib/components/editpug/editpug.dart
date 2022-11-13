@@ -43,8 +43,8 @@ class EditPugState extends State<EditPug> {
   StreamController streamController = StreamController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dragController = DragController();
-  late double width = 500;
-  late double height = 500;
+  double width = 500;
+  double height = 500;
   late int imageHeight = PUGSIZE.toInt();
 
   List<PugDetailModel> details = [];
@@ -70,8 +70,10 @@ class EditPugState extends State<EditPug> {
   void initState() {
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
+
       width = getPhoneWidth(context);
       height = getPhoneHeight(context);
+
       tooltip = SuperTooltip(
         popupDirection: TooltipDirection.up,
         showCloseButton: ShowCloseButton.inside,
@@ -96,6 +98,8 @@ class EditPugState extends State<EditPug> {
 
     });
 
+
+
     details.clear();
     file = widget.file!;
     Image image = Image.file(file);
@@ -107,6 +111,12 @@ class EditPugState extends State<EditPug> {
         },
       ),
     );
+
+
+
+    setState(() {
+
+    });
     super.initState();
 
 
@@ -129,41 +139,19 @@ class EditPugState extends State<EditPug> {
   }
 
 
-  Widget textsOnImage(){
-    return   Stack(children: details.map((e) => Positioned(child: Text(e.text, style: TextStyle(fontSize: 15, color: Colors.white),), left: e.positionX+10, top: e.positionY+30, ),).toList()
-    );
-  }
-  Widget dataDetails(){
-    return   Stack(children: details.map((e) => Positioned(child: Image( image : AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList()
-    );
-
-  }
   Widget dataTagDetails(){
-    
-    //TODO : MakeIt Draggrable
-
-    // return   Stack(children: details.map((e) => Positioned(
-    //   child:  GestureDetector(
-    //     onTap: (){
-    //       details.remove(e);
-    //       setState(() {
-    //
-    //       });
-    //     },
-    //     child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),).toList());
-
 
     return Stack(children: details.map((e) =>
         Positioned(
           left: e.positionX.toDouble(),
-          top: e.positionY.toDouble()- appBar.preferredSize.height -
-              MediaQuery.of(context).padding.top,
+          top: e.positionY.toDouble(),
 
           child: Draggable(
 
               onDragEnd: (detailsDrag){
                 e.positionX = detailsDrag.offset.dx.toInt();
-                e.positionY = detailsDrag.offset.dy.toInt();
+                e.positionY = detailsDrag.offset.dy.toInt() - appBar.preferredSize.height.toInt() -
+                    MediaQuery.of(context).padding.top.toInt();
                 setState(() {
 
                 });
@@ -179,11 +167,11 @@ class EditPugState extends State<EditPug> {
 
                     });
                   },
-                  child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) , ),
+                  child: Badge(badgeContent: Text('X'), child:  Center(child : InstagramMention(text: e.text,color: APP_COMMENT_COLOR)),) , ),
               feedback: draggablePugDetailItem(e.text)),
         )
         ).toList());
-    
+
 
   }
 
@@ -310,7 +298,7 @@ class EditPugState extends State<EditPug> {
                          child: SizedBox(width: 50, height: 50, child: Icon(Icons.add)),
                        ),
                      ),
-                   ),width: 50, height: 50, left: width-75, top: 550,)
+                   ),width: 50, height: 50, left: getPhoneWidth(context) - 75, top: 550,)
                ],
              ),
            );

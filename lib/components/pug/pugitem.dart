@@ -29,9 +29,9 @@ class PugItem extends StatefulWidget {
   final PugModel model;
   final String currentUsername;
   final bool fromProfile;
-
-  const PugItem({Key? key, required this.model, required this.currentUsername, this.fromProfile = false}) : super(key: key);
-  const PugItem.fromProfile({Key? key, required this.model, required this.currentUsername, this.fromProfile = true}) : super(key: key);
+  final AppBar appBar;
+  const PugItem({Key? key, required this.model, required this.currentUsername, this.fromProfile = false, required this.appBar}) : super(key: key);
+  const PugItem.fromProfile({Key? key, required this.model, required this.currentUsername, this.fromProfile = true, required this.appBar}) : super(key: key);
 
   @override
   PugItemState createState() => PugItemState();
@@ -78,43 +78,28 @@ class PugItemState extends State<PugItem> {
 
 
 
-  // Widget _typer(String text){
-  //   return SizedBox(
-  //     width: 100,
-  //     child: DefaultTextStyle(
-  //       style:  TextStyle(fontSize: 15, color: Colors.white),
-  //       child: AnimatedTextKit(
-  //           isRepeatingAnimation: false,
-  //           animatedTexts: [
-  //             TyperAnimatedText(text
-  //                 ,speed: Duration(milliseconds: 100)),
-  //
-  //           ]
-  //       ),
-  //     ),
-  //   );
-  // }
-
 
   Widget _typer(String text, isVisible){
-    return SizedBox(
-      width: 100,
+    return Container(
       child: AnimatedOpacity(
         opacity: isVisible ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 200),
-        child: text.isNotEmpty ? Center( child: InstagramMention(text:text, color: APP_COMMENT_COLOR, padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),)) : SizedBox(width: 0,),
+        child: text.isNotEmpty ? Center( child: InstagramMention(text:text, color: APP_COMMENT_COLOR)) : SizedBox(width: 0,),
       )
     );
   }
   Widget imageContent(){
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: 200, maxHeight: (widget.model.height  > 200)? widget.model.height.toDouble(): 300),
+    return Container(
+      child: ConstrainedBox(
+      constraints: BoxConstraints(
+          minHeight: 200, maxHeight: (widget.model.height  > 200)? widget.model.height.toDouble(): 300),
       child: GestureDetector(
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image(image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
-                ),
+            Image(
+              image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
+            ),
             Stack(
                 children: points.asMap().map((i,e) => MapEntry(i,
                     Positioned(
@@ -148,7 +133,7 @@ class PugItemState extends State<PugItem> {
           setState(() {
 
           });
-        },),);
+        },),),);
 
 
   }
@@ -263,17 +248,15 @@ class PugItemState extends State<PugItem> {
     return Consumer<ThemeModel>(builder: (context, ThemeModel  notifier, child) {
       isDarkMode = notifier.isDark;
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               // borderRadius: BorderRadius.circular(10),
               // color: Colors.grey.shade100.withOpacity(0.6)
             ),
             child: Column(
                 children: [
-          widget.fromProfile ? SizedBox(width: 0,height: 10,) :
+          widget.fromProfile ? SizedBox(width: 0,height: 0,) :
             Row( children: [
             const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
             const SizedBox(width: 10),
@@ -305,7 +288,6 @@ class PugItemState extends State<PugItem> {
       );
     },);
   }
-
   void showMyDialogDelete(String title, String text) {
     showDialog(
         context: context,
