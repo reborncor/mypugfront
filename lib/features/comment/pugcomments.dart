@@ -26,9 +26,10 @@ class PugComments extends StatefulWidget {
   final routeName = '/pugcomments';
   final String pugId;
   final String username;
+  String description;
 
-  const PugComments({Key? key, this.pugId = "", this.username = ""}) : super(key: key);
-  const PugComments.withData({Key? key, required this.pugId, required this.username});
+   PugComments({Key? key, this.pugId = "", this.username = "",  this.description = ""}) : super(key: key);
+   PugComments.withData({Key? key, required this.pugId, required this.username, required this.description});
 
   @override
   PugCommentsState createState() => PugCommentsState();
@@ -89,11 +90,22 @@ class PugCommentsState extends State<PugComments> {
         if (snapshot.hasData) {
           log(snapshot.data!.comments.length.toString());
           comments = snapshot.data!.comments;
-          return ListView.builder(
+          log("Decription :"+widget.description);
+          return Column(
+
+
+
+
+            children: [
+              (widget.description.isEmpty) ?
+              SizedBox(width: 0, height: 0,):
+              Padding(padding: EdgeInsets.only(bottom: 5), child:  Text( widget.description, style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold, fontSize: 17)),) ,
+              Expanded(child:  ListView.builder(
             itemCount: comments.length,
             itemBuilder: (context, index) {
               return itemComment(comments[index]);
-            },);
+            },))
+          ],);
         }
         if (snapshot.connectionState == ConnectionState.done) {
           return const Center(child: Text("Aucune donnée"),);

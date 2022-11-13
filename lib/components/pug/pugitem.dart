@@ -62,7 +62,7 @@ class PugItemState extends State<PugItem> {
     super.initState();
     imageURL = widget.model.imageURL;
     imageTitle = widget.model.imageTitle!;
-    imageDescription = widget.model.imageDescription!;
+    imageDescription = widget.model.imageDescription;
     imageLike = widget.model.like;
     isLiked = widget.model.isLiked;
     if(widget.model.comments.isNotEmpty){
@@ -102,7 +102,7 @@ class PugItemState extends State<PugItem> {
       child: AnimatedOpacity(
         opacity: isVisible ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 200),
-        child: text.isNotEmpty ? InstagramMention(text: text, color: APP_COMMENT_COLOR) : SizedBox(width: 0,),
+        child: text.isNotEmpty ? Center( child: InstagramMention(text:text, color: APP_COMMENT_COLOR, padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),)) : SizedBox(width: 0,),
       )
     );
   }
@@ -136,6 +136,10 @@ class PugItemState extends State<PugItem> {
               // showToast(context, "Vous avez aimé cette image");
               imageLike+= 1;
               isLiked = !isLiked;
+
+              setState(() {
+
+              });
             }
           }
         },
@@ -155,10 +159,20 @@ class PugItemState extends State<PugItem> {
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-              width: 30,
-              child: Text(imageLike.toString(), style: TextStyle(color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),),
-                ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+
+              Container(
+                width: 50,
+                alignment: Alignment.center,
+                child: Text(widget.model.numberOfComments.toString(),  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+              ),
+
+              Container(
+            width: 30,
+            child: Text(imageLike.toString(), style: TextStyle(color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),),
+          ),],),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -170,7 +184,7 @@ class PugItemState extends State<PugItem> {
                       if(!isLiked){
                         final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
                         if(result.code == SUCCESS_CODE){
-                          showToast(context, "Vous avez aimé cette image");
+                          // showToast(context, "Vous avez aimé cette image");
                           imageLike+= 1;
                           isLiked = !isLiked;
                         }
@@ -199,10 +213,10 @@ class PugItemState extends State<PugItem> {
   Widget imageCommentaire(List<CommentModel> list){
 
       return Column(children: [
-          TextButton(
+          GestureDetector(
 
-          onPressed: (){
-        navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
+          onTap: (){
+        navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author, description : widget.model.imageDescription));
       }, child: Container(
     padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
     decoration: BoxDecoration(

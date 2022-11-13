@@ -58,8 +58,6 @@ class FollowingViewState extends State<FollowingView> {
 
   Widget itemFollowing(UserSearchModel model,index){
 
-
-
     return FollowerItem(username: model.username);
   }
 

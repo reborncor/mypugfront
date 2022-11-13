@@ -171,15 +171,15 @@ class EditPugState extends State<EditPug> {
 
               childWhenDragging: const SizedBox(width: 0,height: 0,),
 
-              child: Positioned(
-                child:  GestureDetector(
+              child:
+              GestureDetector(
                   onTap: (){
                     details.remove(e);
                     setState(() {
 
                     });
                   },
-                  child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) ,), left: e.positionX.toDouble(), top: e.positionY.toDouble(), ),
+                  child: Badge(badgeContent: Text('X'), child:  InstagramMention(text: e.text,color: APP_COMMENT_COLOR),) , ),
               feedback: draggablePugDetailItem(e.text)),
         )
         ).toList());
@@ -234,11 +234,11 @@ class EditPugState extends State<EditPug> {
 
                   Container(
                       width:120,
-                      height: 60,
+                      height: 150,
                       child: Visibility(
                         visible: showEditor,
                         child: TextField(
-
+                          textInputAction: TextInputAction.newline,
                           maxLength: 25,
                           controller: textEditingController,
                           cursorColor: APPCOLOR,
@@ -299,7 +299,6 @@ class EditPugState extends State<EditPug> {
                        child: InkWell(
                          splashColor: Colors.red, // Splash color
                          onTap: () {
-                           // showSnackBar(_scaffoldKey.currentContext, "Cliquer sur l'écran pour choisir la position");
                            isTextVisible = true;
                            showEditor = true;
                            x = 280.00;
@@ -311,7 +310,7 @@ class EditPugState extends State<EditPug> {
                          child: SizedBox(width: 50, height: 50, child: Icon(Icons.add)),
                        ),
                      ),
-                   ),width: 50, height: 50, left: 350, top: 550,)
+                   ),width: 50, height: 50, left: width-75, top: 550,)
                ],
              ),
            );

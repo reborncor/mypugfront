@@ -96,7 +96,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
             // label: 'Message',
 
-            icon:( notification > 0) ?  Badge(badgeContent: Text(notification.toString()), child: const Icon(Icons.messenger),) : const Icon(Icons.messenger) ,
+            icon:( notification > 0) ?  Badge(badgeContent: Text(notification.toString()), badgeColor: APPCOLOR6, child: const Icon(Icons.messenger),) : const Icon(Icons.messenger) ,
             // backgroundColor: APPCOLOR,
 
 

@@ -12,7 +12,7 @@ class PugModel{
   String id;
   String imageURL;
   String? imageTitle;
-  String? imageDescription ;
+  late String imageDescription ;
   late List<PugDetailModel>? details;
   late int like;
   late String? imageData;
@@ -22,13 +22,14 @@ class PugModel{
   late List<CommentModel> comments;
   late bool isCrop;
   late int height;
+  late int numberOfComments;
 
   PugModel({ required this.id,  required this.imageURL,  required this.imageTitle,required this.imageDescription,
     required this.details,required this.like});
 
   PugModel.jsonData({  required this.imageURL,  required this.imageTitle,required this.imageDescription,
     required this.details,required this.like, required this.imageData, required this.date, required this.isLiked,
-    required this.id, required this.author, required this.comments, required this.isCrop, required this.height});
+    required this.id, required this.author, required this.comments, required this.isCrop, required this.height,required this.numberOfComments});
 
   factory PugModel.fromJsonData(Map<String,  dynamic> json){
     return PugModel.jsonData(
@@ -43,7 +44,7 @@ class PugModel{
       author: json['author'],
       isCrop: json['isCrop'],
       height: json['height'],
-
+      numberOfComments: json['numberOfComments'],
       details:  (json['details'] as List).map((e) => PugDetailModel.fromJsonData(e)).toList(),
       comments:  (json['comments'] as List).map((e) => CommentModel.fromJsonData(e)).toList(),
 

@@ -104,7 +104,7 @@ class ProfileState extends State<Profile> {
                 child:
                 Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
               ),),
-              Text(username, style: TextStyle(fontSize: 18, color: notifier.isDark ? Colors.white : Colors.black),),
+              Text(username, style: TextStyle(fontSize: 18, color: notifier.isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),),
             ]),
 
             Container(
@@ -137,7 +137,8 @@ class ProfileState extends State<Profile> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlinedButton(
-                  style: BaseButtonSize(150, 30 , Colors.transparent),
+
+                  style: BaseButtonSize(150, 30 , APPCOLOR6),
 
                   onPressed: () async {
                       final result = await unFollowOrFollowUser(username, isFollowing);

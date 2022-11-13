@@ -52,7 +52,7 @@ class PugState extends State<Pug> {
     super.initState();
     imageURL = widget.model!.imageURL;
     imageTitle = widget.model!.imageTitle!;
-    imageDescription = widget.model!.imageDescription!;
+    imageDescription = widget.model!.imageDescription;
     imageLike = widget.model!.like;
     points.clear();
     for (var element in widget.model!.details!) {points.add(Offset(element.positionX.toDouble(),element.positionY.toDouble()));};

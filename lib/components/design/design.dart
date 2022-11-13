@@ -62,6 +62,7 @@ const APPCOLOR2 = Color(0xff7c9afc);
 const APPCOLOR3 = Color(0xff60cbf9);
 const APPCOLOR4 = Color(0xffbfa4db);
 const APPCOLOR5 = Color(0xffaa8be6);
+const APPCOLOR6 = Color(0xffA020F0);
 
 BoxCircular(ThemeModel notifier){
   return BoxDecoration(
