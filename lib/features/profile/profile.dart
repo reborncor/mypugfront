@@ -200,7 +200,6 @@ class ProfileState extends State<Profile> {
       future: _response ,
       builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
         if(snapshot.hasData){
-
             list = snapshot.data!.pugs;
             String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
             return  Container(

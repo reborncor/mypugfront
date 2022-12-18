@@ -28,7 +28,7 @@ Future<UserPugResponse> getAllPugsFromUser() async{
   }
 
   if(response.statusCode == 200) {
-    // print(json.decode(response.body));
+    print(json.decode(response.body));
     print(response.contentLength);
 
     try {

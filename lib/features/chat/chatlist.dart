@@ -72,6 +72,14 @@ class ChatListState extends State<ChatList> {
     ),);
   }
 
+  sortChatList(List<ConversationModel> list){
+    list.sort( (a, b) {
+      if(b.chat.isEmpty || a.chat.isEmpty) return 1;
+      return a.chat.last.time.compareTo(b.chat.last.time)*-1;
+    });
+    return list;
+  }
+
   Widget content(){
     return RefreshIndicator(
       onRefresh: onRefresh,
@@ -79,13 +87,14 @@ class ChatListState extends State<ChatList> {
         future: getUserConversations(),
         builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
         if(snapshot.hasData){
+          List<ConversationModel> result = sortChatList(snapshot.data!.conversations);
           return ListView.builder(
             itemCount: snapshot.data!.conversations.length,
             itemBuilder: (context, index) {
               return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
                 child:  Container(
                   decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
-                  child: itemChat(snapshot.data!.conversations[index]),),);
+                  child: itemChat(result[index]),),);
             },);
         }
         if(snapshot.connectionState == ConnectionState.waiting){

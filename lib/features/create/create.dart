@@ -37,8 +37,10 @@ class CreatePugState extends State<CreatePug> {
   late SuperTooltip tooltip;
   late bool isCrop = true;
   var varImagesGallery = null;
+  late String isNotFirstUse;
   @override
   void initState() {
+
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       tooltip = SuperTooltip(
 
@@ -59,13 +61,24 @@ class CreatePugState extends State<CreatePug> {
               softWrap: true,
             ))),
       );
-      tooltip.show(context);
+
+
+      getUserFirstUse().then((value) => {
+        if(value.isNotEmpty){
+          tooltip.show(context)
+        }
+      });
 
     });
     super.initState();
     getGalleryImages();
 
   }
+
+
+  // fetchData() async {
+  //    isNotFirstUse= await getUserFirstUse();
+  // }
   getGalleryImages() async {
     await _fetchAssets();
     varImagesGallery = imagesGallery();

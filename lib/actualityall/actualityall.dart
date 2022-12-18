@@ -19,17 +19,17 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../util/config.dart';
 import 'api.dart';
 
-class Actuality extends StatefulWidget {
+class ActualityAll extends StatefulWidget {
 
-  final routeName = '/actuality';
+  final routeName = '/actualityall';
 
-  const Actuality({Key? key}) : super(key: key);
+  const ActualityAll({Key? key}) : super(key: key);
 
   @override
-  ActualityState createState() => ActualityState();
+  ActualityAllState createState() => ActualityAllState();
 }
 
-class ActualityState extends State<Actuality> {
+class ActualityAllState extends State<ActualityAll> {
 
 
   List<PugDetailModel> details = [];
@@ -151,13 +151,6 @@ class ActualityState extends State<Actuality> {
         }
       },);
   }
-
-  sortPug() {
-    list.sort((a, b) {
-      if (b.date.isNaN || a.date.isNaN) return 1;
-      return a.date.compareTo(b.date) * -1;
-    });
-  }
   Widget pugItem(PugModel model){
     return PugItem(model: model,currentUsername: _username);
     }
@@ -167,7 +160,7 @@ class ActualityState extends State<Actuality> {
       this.notifier = notifier;
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Amis"),
+          title: const Text("Actualité"),
           automaticallyImplyLeading: false,
 
           backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
@@ -185,8 +178,6 @@ class ActualityState extends State<Actuality> {
     },);
 
   }
-
-
 
   Widget newContent(){
     String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
@@ -244,6 +235,3 @@ class ActualityState extends State<Actuality> {
   }
 
 }
-
-
-

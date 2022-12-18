@@ -94,7 +94,11 @@ class EditPugState extends State<EditPug> {
             ))),
       );
 
-      tooltip.show(context);
+      getUserFirstUse().then((value) => {
+        if(value.isNotEmpty){
+          tooltip.show(context)
+        }
+      });
 
     });
 

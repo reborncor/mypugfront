@@ -36,7 +36,6 @@ class Pug extends StatefulWidget {
 class PugState extends State<Pug> {
 
 
-  late AppBar appBar;
   late String imageURL;
   late String imageTitle;
   late String imageDescription;
@@ -84,7 +83,7 @@ class PugState extends State<Pug> {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
       this.notifier = notifier;
       return Scaffold(
-          appBar:appBar =  AppBar(
+          appBar: AppBar(
             title: const Text("Profil"),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
             actions: [
@@ -94,7 +93,7 @@ class PugState extends State<Pug> {
 
           body: Container(
             decoration: BoxGradient(),
-            child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: widget.isOwner, appBar: appBar, ),
+            child: Container( child: PugItem.fromProfile(currentUsername: widget.model!.author,model: widget.model!,fromProfile: widget.isOwner, ),
                 decoration: BoxCircular(notifier) ,),),
 
 

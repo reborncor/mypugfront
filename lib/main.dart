@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mypug/actualityall/actualityall.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner:false,
 
           routes: {
+            '/actualityall': (context) =>  ActualityAll(),
+
             '/actuality': (context) =>  Actuality(),
             '/create': (context) =>  CreatePug(),
             '/profile': (context) => Profile(),

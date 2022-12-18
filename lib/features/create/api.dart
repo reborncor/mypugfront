@@ -1,16 +1,21 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart'as http;
+import 'package:minio/io.dart';
+import 'package:minio/minio.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/response/baseresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 
 import 'dart:async';
+
+import 'package:simple_s3/simple_s3.dart';
 
 Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop, int height) async{
 
@@ -34,11 +39,26 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
     });
 
 
+    final minio = Minio(
+      endPoint: 's3.amazonaws.com',
+      accessKey: 'AKIAT7QFB2DP5XDKBBNS',
+      secretKey: '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',
+      region: 'eu-west-3'
+    );
+
+
+    log(file.path);
+    final stat = await file.stat();
+
+    final result = await minio.fPutObject('bucketmypug','uploads/'+"newfile", file.path);
+    print(result);
+
     Dio dio = Dio();
     dio.options.headers.addAll(headers);
     response = await dio.post(URL+path, data: formData);
-    // print(response.statusCode);
-    // print(response.data['message']);
+
+
+
   }
   catch (e) {
     print(e.toString());

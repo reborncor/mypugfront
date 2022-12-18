@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypug/response/signinresponse.dart';
@@ -51,9 +53,24 @@ Future<void> saveUserData(SignInResponse data) async {
 }
 
 
+Future<void> saveUserFirstUse(SignInResponse data) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  sharedPreferences.setString("firstUse", "firstUse");
+
+}
+
+Future<String> getUserFirstUse()async{
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Object? firstUse = sharedPreferences.get("firstUse");
+  return firstUse.toString();
+}
+
+
+
 deleteData() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  sharedPreferences.clear();
+  sharedPreferences.remove("token");
+  sharedPreferences.remove("username");
 }
 Future<String> getCurrentUserToken()async{
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

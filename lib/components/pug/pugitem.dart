@@ -29,9 +29,8 @@ class PugItem extends StatefulWidget {
   final PugModel model;
   final String currentUsername;
   final bool fromProfile;
-  final AppBar appBar;
-  const PugItem({Key? key, required this.model, required this.currentUsername, this.fromProfile = false, required this.appBar}) : super(key: key);
-  const PugItem.fromProfile({Key? key, required this.model, required this.currentUsername, this.fromProfile = true, required this.appBar}) : super(key: key);
+  const PugItem({Key? key, required this.model, required this.currentUsername, this.fromProfile = false}) : super(key: key);
+  const PugItem.fromProfile({Key? key, required this.model, required this.currentUsername, this.fromProfile = true}) : super(key: key);
 
   @override
   PugItemState createState() => PugItemState();
@@ -118,7 +117,6 @@ class PugItemState extends State<PugItem> {
           if(!isLiked){
             final result = await likeOrUnlikePug(widget.model.id,widget.model.author, true);
             if(result.code == SUCCESS_CODE){
-              // showToast(context, "Vous avez aimé cette image");
               imageLike+= 1;
               isLiked = !isLiked;
 
@@ -212,28 +210,8 @@ class PugItemState extends State<PugItem> {
     style:TextStyle(fontSize : 19, color: isDarkMode ? Colors.white : Colors.black),),))
       ],);
 
-
-    // return Padding(padding: const EdgeInsets.only(top: 10),
-    //     child: Row(
-    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //       children: [
-    //         Row(
-    //           children: [ Text(comment.author, style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),),
-    //           Padding(padding: const EdgeInsets.all(8) , child : Text(comment.content, maxLines: 1, style: TextStyle(color : isDarkMode ? Colors.white : Colors.black),     overflow: TextOverflow.ellipsis,)),],),
-    //
-    //         Expanded(flex : 0,child: TextButton(
-    //
-    //             onPressed: (){
-    //               navigateTo(context, PugComments.withData(pugId: widget.model.id, username: widget.model.author));
-    //               }, child: Text("commentaires", style: TextStyle(color: APPCOLOR),)))
-    //
-    //   ],));
   }
 
-  // Widget imageDetail(String detail){
-  //   return Padding(padding: EdgeInsets.only(left: 8), child:  ReadMoreText(detail, trimLines : 1,trimCollapsedText: "Voir plus",trimExpandedText: "Moins",  colorClickableText: APPCOLOR,
-  //     trimMode: TrimMode.Line,style: TextStyle(color: isDarkMode ? Colors.white : Colors.black), ),);
-  // }
 
   Widget imageDetail(String detail){
     return Padding(padding: EdgeInsets.only(left: 8), child:

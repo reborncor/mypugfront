@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/actualityall/actualityall.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/chat/chatlist.dart';
@@ -36,6 +37,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   late Future<ConversationsResponse> _response;
   late int notification = 0;
   static final List<Widget> _widgetOptions = <Widget>[
+    const ActualityAll(),
     const Actuality(),
     const CreatePug(),
     const ChatList(),
@@ -77,10 +79,20 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
       bottomNavigationBar: DotNavigationBar(
 
         items:  <DotNavigationBarItem>[
+
+
           DotNavigationBarItem(
             // label: 'Accueil',
 
             icon: const Icon(Icons.home),
+            // backgroundColor: APPCOLOR,
+
+          ),
+
+          DotNavigationBarItem(
+            // label: 'Accueil',
+
+            icon: Image.asset("asset/images/acutalityall.png", width: 30, height: 30,fit: BoxFit.fitWidth ,alignment: Alignment.bottomLeft, color: Colors.white,),
             // backgroundColor: APPCOLOR,
 
           ),
