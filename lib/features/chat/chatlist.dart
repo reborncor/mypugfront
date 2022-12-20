@@ -88,19 +88,25 @@ class ChatListState extends State<ChatList> {
         builder: (context, AsyncSnapshot<ConversationsResponse>snapshot) {
         if(snapshot.hasData){
           List<ConversationModel> result = sortChatList(snapshot.data!.conversations);
-          return ListView.builder(
-            itemCount: snapshot.data!.conversations.length,
-            itemBuilder: (context, index) {
-              return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
-                child:  Container(
-                  decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
-                  child: itemChat(result[index]),),);
-            },);
+          if(snapshot.data!.conversations.isNotEmpty){
+            return ListView.builder(
+              itemCount: snapshot.data!.conversations.length,
+              itemBuilder: (context, index) {
+                return Padding(padding: EdgeInsets.only(bottom: 5, left: 6, right: 6),
+                  child:  Container(
+                    decoration: BoxDecoration(color: Colors.grey.shade100.withOpacity(0.6), borderRadius: BorderRadius.circular(20)),
+                    child: itemChat(result[index]),),);
+              },);
+          }
+
+          else{
+            return const Center(child: Text("Aucune Conversation"),);
+          }
         }
         if(snapshot.connectionState == ConnectionState.waiting){
           return loaderImage();
         }
-        return const Center(child: Text("Aucune donnée"),);
+        return const Center(child: Text("Aucune Conversation"),);
       },)
 
 

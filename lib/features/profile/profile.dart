@@ -138,7 +138,7 @@ class ProfileState extends State<Profile> {
             children: [
               OutlinedButton(
 
-                  style: BaseButtonSize(150, 30 , APPCOLOR6),
+                  style: BaseButtonSize(150, 30 , isFollowing ? APPCOLOR6 : Colors.white),
 
                   onPressed: () async {
                       final result = await unFollowOrFollowUser(username, isFollowing);
@@ -152,11 +152,13 @@ class ProfileState extends State<Profile> {
                       }
 
                   }, child: Text(textButton, style: const TextStyle(color: Colors.white))),
-              OutlinedButton(
+              IgnorePointer(
+                  ignoring: (username == "lucie"),
+                  child: OutlinedButton(
                   style: BaseButtonSize(150, 30 , Colors.transparent),
                   onPressed: () {
                     navigateTo(context, Chat.withUsername(receiverUsername: username));
-                  }, child: const Text("Message", style: TextStyle(color: Colors.white))),
+                  }, child: const Text("Message", style: TextStyle(color: Colors.white)))),
             ],)
         ],);
       }
@@ -178,7 +180,7 @@ class ProfileState extends State<Profile> {
       child: Container( decoration :
       BoxDecoration(border: Border.all(color : Colors.black)),
           child :FadeInImage.assetNetwork(
-              image: URL+"/pugs/"+model.imageURL,
+              image: model.imageURL,
             fit: BoxFit.fitWidth,
            placeholder: "asset/images/empty.png",
             )),

@@ -123,34 +123,6 @@ class ActualityAllState extends State<ActualityAll> {
   }
 
 
-
-
-  Widget content(){
-    return StreamBuilder(
-      stream : streamController.stream,
-      builder: (context, snapshot) {
-        // log(snapshot.connectionState.toString());
-        if(snapshot.hasData){
-
-          return ListView.builder(
-              shrinkWrap: true,
-              physics:  scrollPagePhysique ? NeverScrollableScrollPhysics() : null, // to disable ListView's scrolling
-              controller: scrollController,
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              scrollDirection: Axis.vertical,
-              itemCount : list.length,
-              itemBuilder: (context, index) {
-                return pugItem(list[index]);
-              });
-        }
-        if(snapshot.connectionState == ConnectionState.done){
-          return  const Center( child: Text("Aucune donnée"),);
-        }
-        else{
-          return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
-        }
-      },);
-  }
   Widget pugItem(PugModel model){
     return PugItem(model: model,currentUsername: _username);
     }
@@ -225,7 +197,7 @@ class ActualityAllState extends State<ActualityAll> {
                   ]));
         }
         else{
-          return  const Center(child: Text("Aucune donnée"),);
+          return  const Center(child: Text("Aucune publication"),);
 
         }
 

@@ -53,7 +53,7 @@ Future<void> saveUserData(SignInResponse data) async {
 }
 
 
-Future<void> saveUserFirstUse(SignInResponse data) async {
+Future<void> saveUserFirstUse() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   sharedPreferences.setString("firstUse", "firstUse");
 

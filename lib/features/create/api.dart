@@ -20,24 +20,10 @@ import 'package:simple_s3/simple_s3.dart';
 Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop, int height) async{
 
   String token = await getCurrentUserToken();
-  String username = await getCurrentUsername();
   var response;
   const String path = "/pug/add";
 
   try {
-
-    Map<String, String> headers = { "Content-type": "application/json",'Authorization': 'Bearer '+ token};
-    print(details.length);
-    print(json.encode(details.map((e) => e.toJson()).toList()));
-    var formData = FormData.fromMap({
-      "newimage": await MultipartFile.fromFile(file.path, filename: username),
-      "details": details.map((e) => e.toJson()).toList(),
-      "imageDescription" : imageDescription,
-      "imageTitle" : title,
-      "isCrop" : isCrop,
-      "height" : height,
-    });
-
 
     final minio = Minio(
       endPoint: 's3.amazonaws.com',
@@ -46,15 +32,24 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
       region: 'eu-west-3'
     );
 
+    final encryptedFileName = utf8.fuse(base64).encode(file.path);
+    final result = await minio.fPutObject('bucketmypug','uploads/'+encryptedFileName+'.png', file.path);
+    final imageUrl = "https://bucketmypug.s3.eu-west-3.amazonaws.com/uploads/"+encryptedFileName+'.png';
 
-    log(file.path);
-    final stat = await file.stat();
-
-    final result = await minio.fPutObject('bucketmypug','uploads/'+"newfile", file.path);
-    print(result);
+    Map<String, String> headers = { "Content-type": "application/json",'Authorization': 'Bearer '+ token};
+    print(details.length);
+    print(json.encode(details.map((e) => e.toJson()).toList()));
+    var formData ={
+      "details": details.map((e) => e.toJson()).toList(),
+      "imageDescription" : imageDescription,
+      "imageTitle" : title,
+      "isCrop" : isCrop,
+      "height" : height,
+      "imageUrl" : imageUrl
+    };
 
     Dio dio = Dio();
-    dio.options.headers.addAll(headers);
+        dio.options.headers.addAll(headers);
     response = await dio.post(URL+path, data: formData);
 
 

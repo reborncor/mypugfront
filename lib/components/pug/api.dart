@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
+import 'package:minio/minio.dart';
 import 'package:mypug/response/baseresponse.dart';
 
 import 'package:mypug/util/config.dart';
@@ -102,7 +103,7 @@ Future<BasicResponse> sendComment(String pugId, String userPug, String comment) 
 
 }
 
-Future<BasicResponse> deletePug(String pugId, String userPug) async{
+Future<BasicResponse> deletePug(String pugId, String userPug, String imageUrl) async{
 
   String token = await getCurrentUserToken();
   late http.Response response;
@@ -116,8 +117,18 @@ Future<BasicResponse> deletePug(String pugId, String userPug) async{
 
   try {
     var url = Uri.parse(URL+path);
+    
     response = await http.put(url,
         headers: {"Content-type": "application/json",'Authorization': 'Bearer '+ token},  body: json.encode(data));
+
+    final minio = Minio(
+        endPoint: 's3.amazonaws.com',
+        accessKey: 'AKIAT7QFB2DP5XDKBBNS',
+        secretKey: 'lt+j3KXYHiFFvVquUWwAkJ1K0KVy7NmOubcL/B5B',
+        region: 'eu-west-3'
+    );
+
+    final result = await minio.removeObject('bucketmypug','uploads/'+imageUrl.replaceAll(AWS_URL+"/uploads/", ""));
   }
   catch (e) {
     print(e.toString());

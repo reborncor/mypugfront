@@ -64,9 +64,15 @@ class ActualityState extends State<Actuality> {
      startInd+=4;
      endInd+=4;
      list = _response.pugs;
+     if(list.isNotEmpty){
      streamController.add("event");
+     }
+     else{
+       streamController.addError("empty");
+     }
      streamController.done;
-    socketService.initialise(_username);
+
+     socketService.initialise(_username);
   }
 
   fetchOldActuality() async {
@@ -123,41 +129,6 @@ class ActualityState extends State<Actuality> {
   }
 
 
-
-
-  Widget content(){
-    return StreamBuilder(
-      stream : streamController.stream,
-      builder: (context, snapshot) {
-        // log(snapshot.connectionState.toString());
-        if(snapshot.hasData){
-
-          return ListView.builder(
-              shrinkWrap: true,
-              physics:  scrollPagePhysique ? NeverScrollableScrollPhysics() : null, // to disable ListView's scrolling
-              controller: scrollController,
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              scrollDirection: Axis.vertical,
-              itemCount : list.length,
-              itemBuilder: (context, index) {
-                return pugItem(list[index]);
-              });
-        }
-        if(snapshot.connectionState == ConnectionState.done){
-          return  const Center( child: Text("Aucune donnée"),);
-        }
-        else{
-          return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
-        }
-      },);
-  }
-
-  sortPug() {
-    list.sort((a, b) {
-      if (b.date.isNaN || a.date.isNaN) return 1;
-      return a.date.compareTo(b.date) * -1;
-    });
-  }
   Widget pugItem(PugModel model){
     return PugItem(model: model,currentUsername: _username);
     }
@@ -195,11 +166,9 @@ class ActualityState extends State<Actuality> {
       stream: streamController.stream,
       builder: (context, snapshot) {
 
-
         if(snapshot.connectionState == ConnectionState.waiting){
           return  Center(child : CircularProgressIndicator(color: APPCOLOR,));
         }
-
 
         if(snapshot.hasData) {
           return  SmartRefresher(
@@ -234,7 +203,7 @@ class ActualityState extends State<Actuality> {
                   ]));
         }
         else{
-          return  const Center(child: Text("Aucune donnée"),);
+          return  const Center(child: Text("Aucune publication"),);
 
         }
 

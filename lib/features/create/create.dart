@@ -1,6 +1,7 @@
 
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,8 @@ class CreatePugState extends State<CreatePug> {
 
 
       getUserFirstUse().then((value) => {
-        if(value.isNotEmpty){
+        log("EMPTY :"+value),
+        if(value.isNotEmpty && value.length < 5){
           tooltip.show(context)
         }
       });

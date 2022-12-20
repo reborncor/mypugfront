@@ -95,9 +95,11 @@ class EditPugState extends State<EditPug> {
       );
 
       getUserFirstUse().then((value) => {
-        if(value.isNotEmpty){
-          tooltip.show(context)
-        }
+        if(value.isNotEmpty && value.length < 5){
+          tooltip.show(context),
+          saveUserFirstUse().then((value) => null),
+
+    }
       });
 
     });
@@ -215,55 +217,59 @@ class EditPugState extends State<EditPug> {
 
               });
             },
-        child :Visibility( visible : isTextVisible,
-            child: Wrap(
-              spacing: 1,
-                direction: Axis.vertical,
-                children: [
-                  // Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
-
-
-
-                  Container(
-                      width:120,
-                      height: 150,
-                      child: Visibility(
-                        visible: showEditor,
-                        child: TextField(
-                          textInputAction: TextInputAction.newline,
-                          maxLength: 25,
-                          controller: textEditingController,
-                          cursorColor: APPCOLOR,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "...",
-                            hintStyle: TextStyle(fontSize: 30),
-                            filled: true,
-                              fillColor: APP_COLOR_SEARCH,
-
-                              enabledBorder: setOutlineBorder(2.0, 5.0),
-                              focusedBorder: setOutlineBorder(2.0, 5.0),
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.check,color: APPCOLOR),
-                                onPressed: (){
-                                  //TODO:test
-                                  if(textEditingController.text.isNotEmpty){
-                                    addNewPugDetails(pugBasicPositionX, pugBasicPositionY-appBar.preferredSize.height -
-                                        MediaQuery.of(context).padding.top, textEditingController.text);
-                                    textEditingController.clear();
-                                  }
-                                  FocusScopeNode currentFocus = FocusScope.of(context);
-                                  if (!currentFocus.hasPrimaryFocus) {
-                                    currentFocus.unfocus();
-                                  }
-                                  // showEditor = false;
-                                },))),))
-                ])
-            ,)));
+        child :textEditorWidget()));
 
   }
 
+  Widget textEditorWidget(){
+    return Visibility( visible : isTextVisible,
+      child: Wrap(
+          spacing: 1,
+          direction: Axis.vertical,
+          children: [
+            // Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
+
+
+
+            Container(
+              width: 140,
+                height: 150,
+                child: Visibility(
+                  visible: showEditor,
+                  child: TextField(
+                      textInputAction: TextInputAction.newline,
+                      maxLength: 25,
+                      maxLines: null,
+                      controller: textEditingController,
+                      cursorColor: APPCOLOR,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                          hintText: "...",
+                          hintStyle: TextStyle(fontSize: 30),
+                          filled: true,
+                          fillColor: APP_COLOR_SEARCH,
+
+                          enabledBorder: setOutlineBorder(2.0, 5.0),
+                          focusedBorder: setOutlineBorder(2.0, 5.0),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.check,color: APPCOLOR),
+                            onPressed: (){
+                              //TODO:test
+                              if(textEditingController.text.isNotEmpty){
+                                addNewPugDetails(pugBasicPositionX, pugBasicPositionY-appBar.preferredSize.height -
+                                    MediaQuery.of(context).padding.top, textEditingController.text);
+                                textEditingController.clear();
+                              }
+                              FocusScopeNode currentFocus = FocusScope.of(context);
+                              if (!currentFocus.hasPrimaryFocus) {
+                                currentFocus.unfocus();
+                              }
+                              // showEditor = false;
+                            },))),))
+          ])
+      ,);
+  }
 
 
   Widget imageContent(File image){

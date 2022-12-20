@@ -97,7 +97,7 @@ class PugItemState extends State<PugItem> {
           fit: StackFit.expand,
           children: [
             Image(
-              image: NetworkImage(URL+"/pugs/"+widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
+              image: NetworkImage(widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
             ),
             Stack(
                 children: points.asMap().map((i,e) => MapEntry(i,
@@ -275,7 +275,7 @@ class PugItemState extends State<PugItem> {
               content: Text(text),
               actions: [
                 ElevatedButton( style: BaseButtonRoundedColor(60,40,APPCOLOR),onPressed: () async {
-                  final result = await deletePug(widget.model.id, widget.model.author);
+                  final result = await deletePug(widget.model.id, widget.model.author, widget.model.imageURL);
                   if(result.code == SUCCESS_CODE){
                     showSnackBar(context, result.message);
                     Navigator.pop(context);

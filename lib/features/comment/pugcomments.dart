@@ -71,9 +71,12 @@ class PugCommentsState extends State<PugComments> {
                   width: 40,
                   height: 40,),
                 Text(
-                  model.author, style: TextStyle(fontSize : 18, fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.black : Colors.black),),
+                  model.author,
+                  style: TextStyle(fontSize : 18, fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.black : Colors.black),),
                 SizedBox(width: 10,),
-                Text(model.content, style:  TextStyle(fontSize : 18, color: notifier.isDark ? Colors.black : Colors.black),),
+                Text(model.content,
+                  overflow: TextOverflow.visible,
+                  style:  TextStyle(fontSize : 18, color: notifier.isDark ? Colors.black : Colors.black),),
               ],
 
             )
