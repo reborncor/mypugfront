@@ -39,7 +39,6 @@ class ActualityAllState extends State<ActualityAll> {
   late ScrollController scrollController = ScrollController(initialScrollOffset: 150);
 
   late int startInd = 0;
-  late int endInd = 4;
   late ThemeModel notifier;
   final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
@@ -53,16 +52,13 @@ class ActualityAllState extends State<ActualityAll> {
     fetchData();
     scrollController.addListener(scrollListener);
     super.initState();
-    // _deviceWidth = getPhoneWidth(context);
 
 
   }
 
   fetchData() async {
      _username = await getCurrentUsername();
-     _response = await getActualityPageable(startInd, endInd);
-     startInd+=4;
-     endInd+=4;
+     _response = await getActualityPageable(startInd, 0);
      list = _response.pugs;
      streamController.add("event");
      streamController.done;
@@ -70,10 +66,9 @@ class ActualityAllState extends State<ActualityAll> {
   }
 
   fetchOldActuality() async {
-    _response = await getActualityPageable(startInd, endInd);
+    startInd+=5;
+    _response = await getActualityPageable(startInd, 0);
     list.addAll(_response.pugs);
-    startInd+=4;
-    endInd+=4;
     streamController.add("event");
   }
 
@@ -105,8 +100,8 @@ class ActualityAllState extends State<ActualityAll> {
 
   Future<void> refreshData() async {
     startInd = 0;
-    endInd = startInd+4;
-    _response = await getActualityPageable(startInd, endInd);
+    list.clear();
+    _response = await getActualityPageable(startInd, 0);
     list = _response.pugs;
     streamController.add("event");
     _refreshController.refreshCompleted();
