@@ -61,7 +61,6 @@ class PugCommentsState extends State<PugComments> {
   Widget itemComment(CommentModel model) {
     return Padding(padding: EdgeInsets.only(bottom: 3, top: 3),
     child: Container(
-        // margin: const EdgeInsets.only(bottom: 5.0, top: 5),
       padding: const EdgeInsets.only(bottom: 3.0, top: 3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

@@ -176,7 +176,9 @@ class _ChatState extends State<Chat> {
       children: <Widget>[
         Expanded(
             child: TextField(
-              // style: TextStyle(color: themeNotifier.isDark ? Colors.white : Colors.black),
+              maxLines: null,
+              textInputAction: TextInputAction.newline,
+              keyboardType: TextInputType.multiline,
               controller: messageToSend,
               decoration: InputDecoration(
                 suffixIcon: IconButton(onPressed: () {
