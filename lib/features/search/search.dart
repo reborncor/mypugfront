@@ -46,14 +46,21 @@ class SearchState extends State<Search> {
 
 
   fetchData() async {
-    _response = await findAllUsers(searchController.text);
-    streamController.add(_response.usernames);
+
+    if(searchController.text.isNotEmpty){
+      _response = await findAllUsers(searchController.text);
+      streamController.add(_response.usernames);
+    }
   }
 
   Widget searchBar(){
 
     return TextField(
 
+      textInputAction: TextInputAction.search,
+      onSubmitted: (value){
+        fetchData();
+      },
       style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
       cursorColor: APPCOLOR,
       controller: searchController,
