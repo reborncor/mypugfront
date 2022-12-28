@@ -9,6 +9,7 @@ import 'package:mypug/response/baseresponse.dart';
 
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
+import 'package:simple_s3/simple_s3.dart';
 
 
 
@@ -123,12 +124,12 @@ Future<BasicResponse> deletePug(String pugId, String userPug, String imageUrl) a
 
     final minio = Minio(
         endPoint: 's3.amazonaws.com',
-        accessKey: 'AKIAT7QFB2DP5XDKBBNS',
-        secretKey: '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',
-        region: 'eu-west-3'
+        accessKey: AWS_ACCESSKEY,
+        secretKey: AWS_SECRETKEY,
+        region: AWSRegions.euWest3.region
     );
 
-    final result = await minio.removeObject('bucketmypug','uploads/'+imageUrl.replaceAll(AWS_URL+"/uploads/", ""));
+    await minio.removeObject('bucketmypug','uploads/'+imageUrl.replaceAll(AWS_URL+"/uploads/", ""));
   }
   catch (e) {
     print(e.toString());

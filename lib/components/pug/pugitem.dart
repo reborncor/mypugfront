@@ -279,7 +279,7 @@ class PugItemState extends State<PugItem> {
                   if(result.code == SUCCESS_CODE){
                     showSnackBar(context, result.message);
                     Navigator.pop(context);
-                    navigateTo(context, Profile());
+                    navigateWithNamePop(context, Profile().routeName);
                   }
                 }, child: const Text("Confirmer"),),
             ElevatedButton( style: BaseButtonRoundedColor(60,40,APPCOLOR), onPressed: () => Navigator.pop(context), child: Text("Annuler"))

@@ -64,7 +64,7 @@ class ChatListState extends State<ChatList> {
       child: ListTile(
 
       leading: const Image( image : AssetImage('asset/images/user.png',), width: 40, height: 40,),
-      trailing: seen ? Icon(Icons.send, color: APPCOLOR,) : Badge(badgeContent: Text("N"), badgeColor : APPCOLOR6,child: Icon(Icons.send, color: APPCOLOR,)),
+      trailing: seen ? Icon(Icons.send, color: APPCOLOR,) : Badge(badgeContent: Text("1"), badgeColor : APPCOLOR6,child: Icon(Icons.send, color: APPCOLOR,)),
       title: Text(receiverUserame,style: TextStyle(fontSize: 17, color: notifier.isDark ? Colors.black : Colors.black ), ),
       subtitle: Text((model.chat.isEmpty ?  "" :model.chat.first.content ),
         style:  TextStyle( color: notifier.isDark ? Colors.black : Colors.black) ,

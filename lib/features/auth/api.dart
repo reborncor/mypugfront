@@ -12,7 +12,7 @@ Future<SignInResponse> signinUser(String username, String password) async{
   const String path = "/user/signin";
 
   Map data =  {
-    'username' : username,
+    'username' : username.toLowerCase(),
     'password' : password
   };
   try {
@@ -52,7 +52,7 @@ Future<SignInResponse> signUpUSer(String username, String password, String phone
   const String path = "/user/signup";
 
   Map data =  {
-    'username' : username,
+    'username' : username.toLowerCase(),
     'password' : password,
     'phoneNumber' : phoneNumber,
     'email' : email

@@ -61,6 +61,8 @@ class PugCommentsState extends State<PugComments> {
   Widget itemComment(CommentModel model) {
     return Padding(padding: EdgeInsets.only(bottom: 3, top: 3),
     child: Container(
+        // margin: const EdgeInsets.only(bottom: 5.0, top: 5),
+      padding: const EdgeInsets.only(bottom: 3.0, top: 3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color:  Colors.grey.shade100.withOpacity(0.6),),
@@ -74,9 +76,9 @@ class PugCommentsState extends State<PugComments> {
                   model.author,
                   style: TextStyle(fontSize : 18, fontWeight: FontWeight.bold,color: notifier.isDark ? Colors.black : Colors.black),),
                 SizedBox(width: 10,),
-                Text(model.content,
-                  overflow: TextOverflow.visible,
-                  style:  TextStyle(fontSize : 18, color: notifier.isDark ? Colors.black : Colors.black),),
+               Flexible(child:  Text(model.content,
+                 overflow: TextOverflow.visible,
+                 style:  TextStyle(fontSize : 18, color: notifier.isDark ? Colors.black : Colors.black),),)
               ],
 
             )
@@ -123,6 +125,9 @@ class PugCommentsState extends State<PugComments> {
     return Padding(padding: EdgeInsets.all(0), child: Row(children: [
       Expanded(
         child: TextField(
+          maxLines: null,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
           style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
             controller: textEditingController,
             decoration: InputDecoration(

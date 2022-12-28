@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-
-
-
 import 'package:dio/dio.dart';
 import 'package:http/http.dart'as http;
 import 'package:minio/io.dart';
@@ -20,6 +16,8 @@ import 'package:simple_s3/simple_s3.dart';
 Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop, int height) async{
 
   String token = await getCurrentUserToken();
+  String username = await getCurrentUsername();
+
   var response;
   const String path = "/pug/add";
 
@@ -27,14 +25,14 @@ Future<BasicResponse> createPug(File file,String title, String imageDescription,
 
     final minio = Minio(
       endPoint: 's3.amazonaws.com',
-      accessKey: 'AKIAT7QFB2DP5XDKBBNS',
-      secretKey: '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',
-      region: 'eu-west-3'
+      accessKey: AWS_ACCESSKEY,
+      secretKey: AWS_SECRETKEY,
+      region: AWSRegions.euWest3.region,
     );
 
-    final encryptedFileName = utf8.fuse(base64).encode(file.path);
-    final result = await minio.fPutObject('bucketmypug','uploads/'+encryptedFileName+'.png', file.path);
-    final imageUrl = "https://bucketmypug.s3.eu-west-3.amazonaws.com/uploads/"+encryptedFileName+'.png';
+    final encryptedFileName = utf8.fuse(base64).encode(username+file.path);
+    await minio.fPutObject(AWS_BUCKETNAME,'uploads/'+encryptedFileName+'.png', file.path);
+    final imageUrl = "$AWS_URL/uploads/"+encryptedFileName+'.png';
 
     Map<String, String> headers = { "Content-type": "application/json",'Authorization': 'Bearer '+ token};
     print(details.length);
