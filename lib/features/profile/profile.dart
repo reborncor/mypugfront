@@ -138,7 +138,7 @@ class ProfileState extends State<Profile> {
             children: [
               OutlinedButton(
 
-                  style: BaseButtonSize(150, 30 , isFollowing ? APPCOLOR6 : Colors.transparent),
+                  style: BaseButtonSize(150, 30 , isFollowing ? Colors.transparent : APPCOLOR6),
 
                   onPressed: () async {
                       final result = await unFollowOrFollowUser(username, isFollowing);
