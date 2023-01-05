@@ -55,9 +55,6 @@ class PugItemState extends State<PugItem> {
   void initState() {
 
 
-    // log(widget.model.id.toString());
-    // log(widget.model.author.toString());
-
     super.initState();
     imageURL = widget.model.imageURL;
     imageTitle = widget.model.imageTitle!;
