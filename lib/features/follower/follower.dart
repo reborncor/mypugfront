@@ -24,11 +24,14 @@ import 'api.dart';
 class FollowersView extends StatefulWidget {
 
   final routeName = '/follower';
+  String userSearched ="";
 
+  FollowersView({Key? key}) : super(key: key);
+  FollowersView.withName({Key? key, required this.userSearched}) : super(key: key);
 
-  const FollowersView({Key? key}) : super(key: key);
   @override
   FollowersViewState createState() => FollowersViewState();
+
 }
 
 class FollowersViewState extends State<FollowersView> {
@@ -41,17 +44,11 @@ class FollowersViewState extends State<FollowersView> {
 
   @override
   void initState() {
-    fetchData();
     getCurrentUsername().then((value) => _username = value);
     super.initState();
 
   }
 
-
-  fetchData() async {
-    _response = await getUserFollowers();
-
-  }
 
   Widget itemChat(UserSearchModel model){
 
@@ -67,7 +64,7 @@ class FollowersViewState extends State<FollowersView> {
 
     return FutureBuilder(
 
-      future: getUserFollowers(),builder: (context, AsyncSnapshot<FollowerResponse>snapshot) {
+      future: getUserFollowers(widget.userSearched),builder: (context, AsyncSnapshot<FollowerResponse>snapshot) {
       if(snapshot.hasData) {
         log(snapshot.data!.usernames.length.toString());
         return ListView.builder(

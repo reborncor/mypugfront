@@ -26,9 +26,11 @@ import 'api.dart';
 class FollowingView extends StatefulWidget {
 
   final routeName = '/following';
+  String userSearched = "";
 
+   FollowingView({Key? key}) : super(key: key);
+   FollowingView.withName({Key? key, required this.userSearched}) : super(key: key);
 
-  const FollowingView({Key? key}) : super(key: key);
   @override
   FollowingViewState createState() => FollowingViewState();
 }
@@ -37,24 +39,20 @@ class FollowingViewState extends State<FollowingView> {
 
   TextEditingController searchController = TextEditingController();
   StreamController streamController = StreamController();
-  late FollowerResponse _response;
   late String _username;
   late List<UserSearchModel> listFollowing;
   late ThemeModel notifier;
 
   @override
   void initState() {
-    fetchData();
+    log("NAME : "+widget.userSearched);
     getCurrentUsername().then((value) => _username = value);
     super.initState();
 
   }
 
 
-  fetchData() async {
-    _response = await getUserFollowings();
 
-  }
 
   Widget itemFollowing(UserSearchModel model,index){
 
@@ -65,7 +63,7 @@ class FollowingViewState extends State<FollowingView> {
 
     return FutureBuilder(
 
-      future: getUserFollowings(),builder: (context, AsyncSnapshot<FollowerResponse>snapshot) {
+      future: getUserFollowings(widget.userSearched),builder: (context, AsyncSnapshot<FollowerResponse>snapshot) {
       if(snapshot.hasData) {
         listFollowing = snapshot.data!.usernames;
         return ListView.builder(

@@ -29,6 +29,14 @@ class UserPugResponse extends BasicResponse{
 
     );
   }
+
+
+
+
+  @override
+  String toString() {
+    return 'UserPugResponse{username: $username, pugs: $pugs}';
+  }
 }
 
 

@@ -86,11 +86,6 @@ class ProfileState extends State<Profile> {
         username = snapshot.data!.username;
         isFollowing = snapshot.data!.isFollowing ?? false;
         String textButton = isFollowing ? "Se désabonner":"S'abonner";
-        if(widget.username != ""){
-
-
-        }
-
 
         return
           Column(children: [
@@ -120,9 +115,9 @@ class ProfileState extends State<Profile> {
               children: [
                 Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               itemProfile(snapshot.data!.pugs,'Pugs'),
                 ),
-                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateWithName(context, const FollowersView().routeName);},),
+                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateTo(context, FollowersView.withName(userSearched: username,));},),
                 ),
-                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:                InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateWithName(context, const FollowingView().routeName);},)
+                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:                InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateTo(context,  FollowingView.withName(userSearched : username));},)
                   ,)
 
 
@@ -203,7 +198,6 @@ class ProfileState extends State<Profile> {
       builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
         if(snapshot.hasData){
             list = snapshot.data!.pugs;
-            String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
             return  Container(
               child: GridView.builder(
                   shrinkWrap: true, // You won't see infinite size error
