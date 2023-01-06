@@ -94,6 +94,20 @@ class PugItemState extends State<PugItem> {
           fit: StackFit.expand,
           children: [
             Image(
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+
+                //TODO: replace with animation
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: APPCOLOR,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
               image: NetworkImage(widget.model.imageURL ),fit:widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
             ),
             Stack(
