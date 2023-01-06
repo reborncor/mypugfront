@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:mypug/response/commentresponse.dart';
 
@@ -11,7 +12,7 @@ Future<CommentResponse> getPugComment(String pugId, String username) async{
   String token = await getCurrentUserToken();
   late http.Response response;
   const String path = "/pug/comment";
-
+  log(pugId + " "+username);
   try {
     final queryParameters = {
       'username': username,
@@ -24,13 +25,13 @@ Future<CommentResponse> getPugComment(String pugId, String username) async{
   }
   catch (e) {
     print(e.toString());
-
     return json.decode(response.body);
   }
 
   if(response.statusCode == 200) {
     CommentResponse data = CommentResponse.fromJsonData(
         json.decode(response.body));
+
     return data ;
 
   }

@@ -104,7 +104,9 @@ class SearchState extends State<Search> {
                         leading: const Icon(Icons.account_circle),
                         title: Text(data[index].username),
                       trailing: OutlinedButton(
-                      onPressed: () {  },
+                      onPressed: () {
+                        navigateTo(context, Profile.fromUsername(username: data[index].username));
+                      },
                       child: Text("Profil")))
                     ),);
 

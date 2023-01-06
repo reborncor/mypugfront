@@ -97,9 +97,6 @@ class PugCommentsState extends State<PugComments> {
           log("Decription :"+widget.description);
           return Column(
 
-
-
-
             children: [
               (widget.description.isEmpty) ?
               SizedBox(width: 0, height: 0,):
