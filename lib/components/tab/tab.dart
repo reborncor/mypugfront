@@ -1,4 +1,3 @@
-/// Flutter code sample for BottomNavigationBar
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import 'package:mypug/util/util.dart';
 import '../../features/chat/api.dart';
 import '../../response/conversationsresponse.dart';
 
-/// This is the stateful widget that the main application instantiates.
 class TabView extends StatefulWidget {
   final routeName = '/tabview';
   final int initialIndex;
@@ -27,7 +25,6 @@ class TabView extends StatefulWidget {
   State<TabView> createState() => _TabViewState();
 }
 
-/// This is the private State class that goes with MyStatefulWidget.
 class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   late Future<ConversationsResponse> _response;
@@ -63,7 +60,6 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   }
 
   void initState() {
-    // TODO: implement initState
     fetchData();
     _selectedIndex = widget.initialIndex;
   }
@@ -78,14 +74,9 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
       bottomNavigationBar: DotNavigationBar(
         items: <DotNavigationBarItem>[
           DotNavigationBarItem(
-            // label: 'Accueil',
-
             icon: const Icon(Icons.home),
-            // backgroundColor: APPCOLOR,
           ),
           DotNavigationBarItem(
-            // label: 'Accueil',
-
             icon: Image.asset(
               "asset/images/acutalityall.png",
               width: 30,
@@ -94,17 +85,11 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
               alignment: Alignment.bottomLeft,
               color: Colors.white,
             ),
-            // backgroundColor: APPCOLOR,
           ),
           DotNavigationBarItem(
-            // label: 'Creer',
-
             icon: const Icon(Icons.add),
-            // backgroundColor: APPCOLOR,
           ),
           DotNavigationBarItem(
-            // label: 'Message',
-
             icon: (notification > 0)
                 ? Badge(
                     badgeContent: Text(notification.toString()),
@@ -112,12 +97,9 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
                     child: const Icon(Icons.messenger),
                   )
                 : const Icon(Icons.messenger),
-            // backgroundColor: APPCOLOR,
           ),
           DotNavigationBarItem(
-            // label: 'Profile',
             icon: const Icon(Icons.account_circle),
-            // backgroundColor: APPCOLOR,
           ),
         ],
         currentIndex: _selectedIndex,

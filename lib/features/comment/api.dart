@@ -1,43 +1,41 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'package:mypug/response/commentresponse.dart';
 
 import '../../util/config.dart';
 import '../../util/util.dart';
 
-Future<CommentResponse> getPugComment(String pugId, String username) async{
-
+Future<CommentResponse> getPugComment(String pugId, String username) async {
   String token = await getCurrentUserToken();
   late http.Response response;
   const String path = "/pug/comment";
-  log(pugId + " "+username);
+  log(pugId + " " + username);
   try {
     final queryParameters = {
       'username': username,
-      'pugId':pugId,
+      'pugId': pugId,
     };
-    var url = Uri.parse(URL+path).replace(queryParameters: queryParameters);
+    var url = Uri.parse(URL + path).replace(queryParameters: queryParameters);
 
-    response = await http.get(url,
-        headers: {"Content-type": "application/json",'Authorization': 'Bearer '+ token});
-  }
-  catch (e) {
+    response = await http.get(url, headers: {
+      "Content-type": "application/json",
+      'Authorization': 'Bearer ' + token
+    });
+  } catch (e) {
     print(e.toString());
     return json.decode(response.body);
   }
 
-  if(response.statusCode == 200) {
-    CommentResponse data = CommentResponse.fromJsonData(
-        json.decode(response.body));
+  if (response.statusCode == 200) {
+    CommentResponse data =
+        CommentResponse.fromJsonData(json.decode(response.body));
 
-    return data ;
-
+    return data;
+  } else {
+    return CommentResponse(
+        code: json.decode(response.body)['code'],
+        message: json.decode(response.body)['message']);
   }
-  else{
-    return CommentResponse(code: json.decode(response.body)['code'], message: json.decode(response.body)['message']);
-  }
-
-
 }

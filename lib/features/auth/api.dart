@@ -1,10 +1,9 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:mypug/response/signinresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart'as http;
 
 Future<SignInResponse> signinUser(String username, String password) async{
   http.Response response;

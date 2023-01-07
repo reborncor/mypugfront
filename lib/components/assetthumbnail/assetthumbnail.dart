@@ -18,17 +18,16 @@ class AssetThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We're using a FutureBuilder since thumbData is a future
     return FutureBuilder<Uint8List?>(
       future: asset.thumbData,
       builder: (_, snapshot) {
         final bytes = snapshot.data;
-        // If we have no data, display a spinner
+
         if (bytes == null)
           return CircularProgressIndicator(
             color: APPCOLOR,
           );
-        // If there's data, display it as an image
+
         return InkWell(
           onTap: () {
             if (asset.type == AssetType.image) {
@@ -39,11 +38,9 @@ class AssetThumbnail extends StatelessWidget {
           },
           child: Stack(
             children: [
-              // Wrap the image in a Positioned.fill to fill the space
               Positioned.fill(
                 child: Image.memory(bytes, fit: BoxFit.cover),
               ),
-              // Display a Play icon if the asset is a video
               if (asset.type == AssetType.video)
                 Center(
                   child: Container(

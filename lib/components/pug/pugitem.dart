@@ -101,7 +101,6 @@ class PugItemState extends State<PugItem> {
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
 
-                  //TODO: replace with animation
                   return Center(
                     child: CircularProgressIndicator(
                       color: APPCOLOR,
@@ -127,7 +126,6 @@ class PugItemState extends State<PugItem> {
                                 direction: Axis.vertical,
                                 spacing: 1,
                                 children: [
-                                  // widget.fromProfile ? Image( image : const AssetImage('asset/images/r-logo.png',), width: 40, height: 40, color: APPCOLOR,) : SizedBox(width: 0, height: 0,),
                                   _typer(
                                       widget.model.details![i].text, isVisible),
                                 ]),
@@ -196,7 +194,6 @@ class PugItemState extends State<PugItem> {
                         final result = await likeOrUnlikePug(
                             widget.model.id, widget.model.author, true);
                         if (result.code == SUCCESS_CODE) {
-                          // showToast(context, "Vous avez aimé cette image");
                           imageLike += 1;
                           isLiked = !isLiked;
                         }
@@ -274,10 +271,7 @@ class PugItemState extends State<PugItem> {
         return Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                  // borderRadius: BorderRadius.circular(10),
-                  // color: Colors.grey.shade100.withOpacity(0.6)
-                  ),
+              decoration: const BoxDecoration(),
               child: Column(children: [
                 widget.fromProfile
                     ? SizedBox(
@@ -322,7 +316,6 @@ class PugItemState extends State<PugItem> {
             ),
             imageContent(),
             imageInformation(imageTitle, widget.model.comments),
-            // imageDetail(widget.model.imageDescription!),
             widget.fromProfile
                 ? Padding(
                     padding: EdgeInsets.only(

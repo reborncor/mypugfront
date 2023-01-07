@@ -1,6 +1,3 @@
-
-
-
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -15,13 +12,11 @@ import 'package:provider/provider.dart';
 
 import '../../service/themenotifier.dart';
 
-
 class Search extends StatefulWidget {
-
   final routeName = '/search';
 
-
   const Search({Key? key}) : super(key: key);
+
   @override
   SearchState createState() => SearchState();
 }
@@ -34,117 +29,105 @@ class SearchState extends State<Search> {
 
   @override
   void initState() {
-
     super.initState();
-
   }
 
-
-
-
   fetchData() async {
-
-    if(searchController.text.isNotEmpty){
+    if (searchController.text.isNotEmpty) {
       _response = await findAllUsers(searchController.text);
       streamController.add(_response.usernames);
     }
   }
 
-  Widget searchBar(){
-
+  Widget searchBar() {
     return TextField(
-
       textInputAction: TextInputAction.search,
-      onSubmitted: (value){
+      onSubmitted: (value) {
         fetchData();
       },
       style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
       cursorColor: APPCOLOR,
       controller: searchController,
-
       textAlign: TextAlign.center,
-
       decoration: InputDecoration(
-        hintText: "Effectuer une recherche",
-        hintStyle: const TextStyle(color: Colors.white),
-
-        filled: true,
-        fillColor: APP_COLOR_SEARCH,
-        enabledBorder: setUnderlineBorder(2.0, 0.0),
+          hintText: "Effectuer une recherche",
+          hintStyle: const TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: APP_COLOR_SEARCH,
+          enabledBorder: setUnderlineBorder(2.0, 0.0),
           focusedBorder: setUnderlineBorder(2.0, 0.0),
-          suffixIcon: IconButton(onPressed: () {
-        fetchData();
-
-    }, icon: Icon(Icons.search,color: APPCOLOR,),)),);
+          suffixIcon: IconButton(
+            onPressed: () {
+              fetchData();
+            },
+            icon: Icon(
+              Icons.search,
+              color: APPCOLOR,
+            ),
+          )),
+    );
   }
 
-  Widget resultComponent(){
+  Widget resultComponent() {
     return StreamBuilder(
       stream: streamController.stream,
       builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.none){
+        if (snapshot.connectionState == ConnectionState.none) {
           return const Text("aucunne donnée");
-
         }
 
-        if(snapshot.hasData) {
-        List<UserSearchModel> data = _response.usernames;
-        return ListView.builder(
+        if (snapshot.hasData) {
+          List<UserSearchModel> data = _response.usernames;
+          return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
               return Padding(
-                  padding: const EdgeInsets.all(4),
-                  child:InkWell( onTap:(){
-                    navigateTo(context, Profile.fromUsername(username: data[index].username));
-                  },
+                padding: const EdgeInsets.all(4),
+                child: InkWell(
+                    onTap: () {
+                      navigateTo(context,
+                          Profile.fromUsername(username: data[index].username));
+                    },
                     child: ListTile(
                         leading: const Icon(Icons.account_circle),
                         title: Text(data[index].username),
-                      trailing: OutlinedButton(
-                      onPressed: () {
-                        navigateTo(context, Profile.fromUsername(username: data[index].username));
-                      },
-                      child: Text("Profil")))
-                    ),);
-
-          },);
+                        trailing: OutlinedButton(
+                            onPressed: () {
+                              navigateTo(
+                                  context,
+                                  Profile.fromUsername(
+                                      username: data[index].username));
+                            },
+                            child: Text("Profil")))),
+              );
+            },
+          );
+        } else {
+          return const SizedBox(
+            width: 0,
+          );
         }
-        else {
-          return const SizedBox(width: 0,);
-        }
-
-    },);
+      },
+    );
   }
 
-  // Column(
-  // children: [
-  // searchBar(),
-  // Expanded(child: resultComponent())
-  // ],
-  // )
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
-      this.notifier = notifier;
-      return Scaffold(
-          appBar: AppBar(
-            title: const Text("Recherche"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-
-          ),
-
-          body:Container( child:
-          Column(
-            children: [
-              searchBar(),
-              Expanded(child: resultComponent())
-            ],
-          ),
-            decoration: BoxCircular(notifier) ,)
-
-      );
-    },);
-
+    return Consumer<ThemeModel>(
+      builder: (context, ThemeModel notifier, child) {
+        this.notifier = notifier;
+        return Scaffold(
+            appBar: AppBar(
+              title: const Text("Recherche"),
+              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            ),
+            body: Container(
+              child: Column(
+                children: [searchBar(), Expanded(child: resultComponent())],
+              ),
+              decoration: BoxCircular(notifier),
+            ));
+      },
+    );
   }
 }
-

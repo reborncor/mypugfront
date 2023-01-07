@@ -1,12 +1,10 @@
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
-import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
@@ -16,7 +14,6 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../util/config.dart';
 import 'api.dart';
 
 class Actuality extends StatefulWidget {
@@ -88,19 +85,12 @@ class ActualityState extends State<Actuality> {
   }
 
   scrollListener(){
-    // log("POSITION : "+scrollController.position.toString());
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
       fetchOldActuality();
-
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
-        !scrollController.position.outOfRange) {
-      //TOP
-
-    }
-
-
+        !scrollController.position.outOfRange) {}
   }
 
 
@@ -184,18 +174,16 @@ class ActualityState extends State<Actuality> {
                       ),),
                     SliverList(
                         delegate: SliverChildListDelegate([
-                          ListView.builder(
-
-                              shrinkWrap: true,
-                              physics:  NeverScrollableScrollPhysics() , // to disable ListView's scrolling
-                              padding: EdgeInsets.only(top: 20, bottom: 20),
-                              scrollDirection: Axis.vertical,
-                              itemCount : list.length,
-                              itemBuilder: (context, index) {
-                                return pugItem(list[index]);
-                              })
-                        ]
-                        ))
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(top: 20, bottom: 20),
+                      scrollDirection: Axis.vertical,
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        return pugItem(list[index]);
+                      })
+                ]))
                   ]));
         }
         else{

@@ -47,11 +47,6 @@ BoxGradient() {
   );
 }
 
-// BoxCircular(ThemeModel notifier){
-//   return BoxDecoration(color: notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
-//       borderRadius: BorderRadius.circular(10));
-// }
-
 const APPCOLOR1 = Color(0xffa89efe);
 const APPCOLOR2 = Color(0xff7c9afc);
 const APPCOLOR3 = Color(0xff60cbf9);
@@ -74,8 +69,6 @@ BoxCircular(ThemeModel notifier) {
             APPCOLOR5,
             APPCOLOR4
           ]),
-
-      // colors: [APPCOLOR,APPCOLOR,APPCOLOR4, Colors.deepPurpleAccent.shade100,APPCOLOR]),
       color:
           notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));

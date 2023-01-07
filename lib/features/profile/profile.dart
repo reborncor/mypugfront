@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:developer';
 
@@ -22,18 +21,18 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Profile extends StatefulWidget {
-
   final routeName = '/profile';
-  String username ="";
+  String username = "";
 
   Profile({Key? key}) : super(key: key);
+
   Profile.fromUsername({Key? key, required this.username}) : super(key: key);
+
   @override
   ProfileState createState() => ProfileState();
 }
 
 class ProfileState extends State<Profile> {
-
   List<PugDetailModel> details = [];
   List<PugModel> list = [];
   late Future<UserPugResponse> _response;
@@ -42,259 +41,329 @@ class ProfileState extends State<Profile> {
   late bool isFollowing = false;
   late ThemeModel notifier;
   final RefreshController _refreshController = RefreshController();
-  late ScrollController scrollController = ScrollController(initialScrollOffset: 200);
+  late ScrollController scrollController =
+      ScrollController(initialScrollOffset: 200);
   late bool hasBackButton = false;
+
   @override
   void initState() {
-    log("USERNAME :"+widget.username);
-   fetchData();
+    log("USERNAME :" + widget.username);
+    fetchData();
     super.initState();
-
   }
 
-
-  fetchData(){
-    if(widget.username == ""){
+  fetchData() {
+    if (widget.username == "") {
       _userResponse = getUserInfo();
       _response = getAllPugsFromUser();
-    }
-    else{
+    } else {
       _userResponse = getUserInfoFromUsername(widget.username);
       _response = getAllPugsFromUsername(widget.username);
       hasBackButton = true;
-      setState(() {
-
-      });
+      setState(() {});
     }
-
   }
 
-
-
-  Widget itemProfile(int data, String text){
-    return Container( height : 50,child : Column(children: [
-      Text(data.toString(), style: TextStyle(fontSize: 20, color: notifier.isDark ? Colors.white : Colors.black),),
-      Text(text, style: TextStyle(color: notifier.isDark ? Colors.white : Colors.black),),
-    ],));
-  }
-  Widget profileHeader() {
-    return FutureBuilder(future: _userResponse,builder: (context, AsyncSnapshot<UserResponse>snapshot) {
-      if(snapshot.hasData) {
-        username = snapshot.data!.username;
-        isFollowing = snapshot.data!.isFollowing ?? false;
-        String textButton = isFollowing ? "Se désabonner":"S'abonner";
-
-        return
-          Column(children: [
-
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,crossAxisAlignment: CrossAxisAlignment.center,
-
+  Widget itemProfile(int data, String text) {
+    return Container(
+        height: 50,
+        child: Column(
           children: [
-            Column(children: [
-              const SizedBox(height : 150, width : 120,child: CircleAvatar(backgroundColor: Colors.transparent,    maxRadius: 100,
-                minRadius: 100,
-                child:
-                Image( image : AssetImage('asset/images/user.png',), width: 120, height: 120,),
-              ),),
-              Text(username, style: TextStyle(fontSize: 18, color: notifier.isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold),),
-            ]),
-
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100.withOpacity(0.2),
-              ),
-
-              height: 90,
-              child:   Row(
-
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               itemProfile(snapshot.data!.pugs,'Pugs'),
-                ),
-                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:               InkWell(child :  itemProfile(snapshot.data!.followers,'Abonnés'), onTap: (){navigateTo(context, FollowersView.withName(userSearched: username,));},),
-                ),
-                Padding(padding: EdgeInsets.only(left: 10, right: 10), child:                InkWell( child: itemProfile(snapshot.data!.following,'Abonnement'), onTap:(){navigateTo(context,  FollowingView.withName(userSearched : username));},)
-                  ,)
-
-
-              ],),),
-
-
-
-
-
-          ],),
-          (widget.username == "") ? SizedBox(width: 0,height: 0,) :  Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              OutlinedButton(
-
-                  style: BaseButtonSize(150, 30 , isFollowing ? Colors.transparent : APPCOLOR6),
-
-                  onPressed: () async {
-                      final result = await unFollowOrFollowUser(username, isFollowing);
-                      if(result.code == SUCCESS_CODE){
-                        log(result.message);
-                        isFollowing = !isFollowing;
-                        await fetchData();
-                        setState(() {
-
-                        });
-                      }
-
-                  }, child: Text(textButton, style: const TextStyle(color: Colors.white))),
-              IgnorePointer(
-                  ignoring: (username == "lucie"),
-                  child: OutlinedButton(
-                  style: BaseButtonSize(150, 30 , Colors.transparent),
-                  onPressed: () {
-                    navigateTo(context, Chat.withUsername(receiverUsername: username));
-                  }, child: const Text("Message", style: TextStyle(color: Colors.white)))),
-            ],)
-        ],);
-      }
-      if(snapshot.connectionState == ConnectionState.done){
-        return  const Center( child: Text("Aucune donnée"),);
-      }
-      else{
-        return Center(child : CircularProgressIndicator(color: APPCOLOR,));
-      }
-
-
-    },);
+            Text(
+              data.toString(),
+              style: TextStyle(
+                  fontSize: 20,
+                  color: notifier.isDark ? Colors.white : Colors.black),
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                  color: notifier.isDark ? Colors.white : Colors.black),
+            ),
+          ],
+        ));
   }
 
+  Widget profileHeader() {
+    return FutureBuilder(
+      future: _userResponse,
+      builder: (context, AsyncSnapshot<UserResponse> snapshot) {
+        if (snapshot.hasData) {
+          username = snapshot.data!.username;
+          isFollowing = snapshot.data!.isFollowing ?? false;
+          String textButton = isFollowing ? "Se désabonner" : "S'abonner";
 
-  Widget imageItemBuffer(PugModel model){
-    
-    return InkWell(
-      child: Container( decoration :
-      BoxDecoration(border: Border.all(color : Colors.black)),
-          child :FadeInImage.assetNetwork(
-              image: model.imageURL,
-            fit: BoxFit.fitWidth,
-           placeholder: "asset/images/empty.png",
-            )),
-      onTap: (){
-        if(widget.username == ""){
-          navigateTo(context, Pug.withPugModel(model: model));
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(children: [
+                    const SizedBox(
+                      height: 150,
+                      width: 120,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        maxRadius: 100,
+                        minRadius: 100,
+                        child: Image(
+                          image: AssetImage(
+                            'asset/images/user.png',
+                          ),
+                          width: 120,
+                          height: 120,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      username,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: notifier.isDark ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ]),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.grey.shade100.withOpacity(0.2),
+                    ),
+                    height: 90,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: itemProfile(snapshot.data!.pugs, 'Pugs'),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: InkWell(
+                            child: itemProfile(
+                                snapshot.data!.followers, 'Abonnés'),
+                            onTap: () {
+                              navigateTo(
+                                  context,
+                                  FollowersView.withName(
+                                    userSearched: username,
+                                  ));
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: InkWell(
+                            child: itemProfile(
+                                snapshot.data!.following, 'Abonnement'),
+                            onTap: () {
+                              navigateTo(
+                                  context,
+                                  FollowingView.withName(
+                                      userSearched: username));
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              (widget.username == "")
+                  ? SizedBox(
+                      width: 0,
+                      height: 0,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        OutlinedButton(
+                            style: BaseButtonSize(150, 30,
+                                isFollowing ? Colors.transparent : APPCOLOR6),
+                            onPressed: () async {
+                              final result = await unFollowOrFollowUser(
+                                  username, isFollowing);
+                              if (result.code == SUCCESS_CODE) {
+                                log(result.message);
+                                isFollowing = !isFollowing;
+                                await fetchData();
+                                setState(() {});
+                              }
+                            },
+                            child: Text(textButton,
+                                style: const TextStyle(color: Colors.white))),
+                        IgnorePointer(
+                            ignoring: (username == "lucie"),
+                            child: OutlinedButton(
+                                style:
+                                    BaseButtonSize(150, 30, Colors.transparent),
+                                onPressed: () {
+                                  navigateTo(
+                                      context,
+                                      Chat.withUsername(
+                                          receiverUsername: username));
+                                },
+                                child: const Text("Message",
+                                    style: TextStyle(color: Colors.white)))),
+                      ],
+                    )
+            ],
+          );
         }
-        else{
-          navigateTo(context, Pug.withPugModelFromOtherUser(model: model,username: widget.username));
-
-    }
-
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Center(
+            child: Text("Aucune donnée"),
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            color: APPCOLOR,
+          ));
+        }
       },
     );
   }
 
-  Widget newProfileContent(){
-    return FutureBuilder(
-      future: _response ,
-      builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
-        if(snapshot.hasData){
-            list = snapshot.data!.pugs;
-            return  Container(
-              child: GridView.builder(
-                  shrinkWrap: true, // You won't see infinite size error
-                  physics: const NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                  itemCount: list.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2,
-                  ), itemBuilder: (context, index){
-                return imageItemBuffer(list[index]);
-              }
-              ),);
+  Widget imageItemBuffer(PugModel model) {
+    return InkWell(
+      child: Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          child: FadeInImage.assetNetwork(
+            image: model.imageURL,
+            fit: BoxFit.fitWidth,
+            placeholder: "asset/images/empty.png",
+          )),
+      onTap: () {
+        if (widget.username == "") {
+          navigateTo(context, Pug.withPugModel(model: model));
+        } else {
+          navigateTo(
+              context,
+              Pug.withPugModelFromOtherUser(
+                  model: model, username: widget.username));
         }
-        if(snapshot.connectionState == ConnectionState.done){
-
-          return  const Center( child: Text(""),);
-        }
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return  const Center( child: Text(""),);
-        }
-        else{
-          return Center(child : CircularProgressIndicator(color: APPCOLOR,));
-        }
-
-    },);
+      },
+    );
   }
+
+  Widget newProfileContent() {
+    return FutureBuilder(
+      future: _response,
+      builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
+        if (snapshot.hasData) {
+          list = snapshot.data!.pugs;
+          return Container(
+            child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: list.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
+                ),
+                itemBuilder: (context, index) {
+                  return imageItemBuffer(list[index]);
+                }),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Center(
+            child: Text(""),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: Text(""),
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            color: APPCOLOR,
+          ));
+        }
+      },
+    );
+  }
+
   Future<void> refreshData() async {
-    if(widget.username == ""){
+    if (widget.username == "") {
       _userResponse = getUserInfo();
 
       _response = getAllPugsFromUser();
-    }
-    else{
-      // _userResponse = getUserInfoFromUsername(widget.username);
-      //
-      // _response = getAllPugsFromUsername(widget.username);
+    } else {
       _userResponse = getUserInfo();
 
       _response = getAllPugsFromUser();
-
     }
     _refreshController.refreshCompleted();
-    scrollController.animateTo(
-        200,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.ease);
-    setState(() {
-
-    });
-
+    scrollController.animateTo(200,
+        duration: Duration(milliseconds: 1000), curve: Curves.ease);
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
-      this.notifier = notifier;
-      return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: hasBackButton,
-          title: const Text("Profile"),
-          backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-          actions: [
-            IconButton(onPressed: () => navigateTo(context, const Setting()), icon: const Icon(Icons.settings_rounded))
-          ],
-        ),
-          body: Container
-            (child: content() , decoration: BoxCircular(notifier),),);
-
-    },);
+    return Consumer<ThemeModel>(
+      builder: (context, ThemeModel notifier, child) {
+        this.notifier = notifier;
+        return Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: hasBackButton,
+            title: const Text("Profile"),
+            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            actions: [
+              IconButton(
+                  onPressed: () => navigateTo(context, const Setting()),
+                  icon: const Icon(Icons.settings_rounded))
+            ],
+          ),
+          body: Container(
+            child: content(),
+            decoration: BoxCircular(notifier),
+          ),
+        );
+      },
+    );
   }
 
-  Widget content(){
-    String pathImage = notifier.isDark? "asset/images/logo-header-dark.png":"asset/images/logo-header-light.png";
+  Widget content() {
+    String pathImage = notifier.isDark
+        ? "asset/images/logo-header-dark.png"
+        : "asset/images/logo-header-light.png";
 
     return SmartRefresher(
       controller: _refreshController,
       onRefresh: refreshData,
-
-      child:  CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverAppBar(expandedHeight: 150,
-            automaticallyImplyLeading: false,
-            backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
-            pinned: false,
-            flexibleSpace: FlexibleSpaceBar(
-
-              background: Image.asset(pathImage, fit: BoxFit.fitWidth,),
-            ),),
-          SliverFillRemaining(
-            child :SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  Container(child : profileHeader(), width : getPhoneWidth(context), height: 250,),
-                newProfileContent()],),),),]),);
-
+      child: CustomScrollView(controller: scrollController, slivers: [
+        SliverAppBar(
+          expandedHeight: 150,
+          automaticallyImplyLeading: false,
+          backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
+          pinned: false,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Image.asset(
+              pathImage,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+        ),
+        SliverFillRemaining(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                Container(
+                  child: profileHeader(),
+                  width: getPhoneWidth(context),
+                  height: 250,
+                ),
+                newProfileContent()
+              ],
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }
-
-

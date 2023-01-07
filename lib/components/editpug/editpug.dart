@@ -121,11 +121,10 @@ class EditPugState extends State<EditPug> {
           positionY: positionY.toInt(),
           text: text);
       details.add(model);
-      // streamController.add("ok");
     } else {
       showSnackBar(context, "Vous avez atteint la limite de référence");
     }
-    //
+
     setState(() {});
   }
 
@@ -208,8 +207,6 @@ class EditPugState extends State<EditPug> {
     return Visibility(
       visible: isTextVisible,
       child: Wrap(spacing: 1, direction: Axis.vertical, children: [
-        // Image.asset("asset/images/r-logo.png", width: 40, height: 40, color: APPCOLOR,),
-
         Container(
             width: 140,
             height: 150,
@@ -233,7 +230,6 @@ class EditPugState extends State<EditPug> {
                       suffixIcon: IconButton(
                         icon: Icon(Icons.check, color: APPCOLOR),
                         onPressed: () {
-                          //TODO:test
                           if (textEditingController.text.isNotEmpty) {
                             addNewPugDetails(
                                 pugBasicPositionX,
@@ -247,7 +243,6 @@ class EditPugState extends State<EditPug> {
                           if (!currentFocus.hasPrimaryFocus) {
                             currentFocus.unfocus();
                           }
-                          // showEditor = false;
                         },
                       ))),
             ))
@@ -272,9 +267,9 @@ class EditPugState extends State<EditPug> {
                 Positioned(
                   child: ClipOval(
                     child: Material(
-                      color: APPCOLOR, // Button color
+                      color: APPCOLOR,
                       child: InkWell(
-                        splashColor: Colors.red, // Splash color
+                        splashColor: Colors.red,
                         onTap: () {
                           isTextVisible = true;
                           showEditor = true;
