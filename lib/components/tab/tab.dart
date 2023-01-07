@@ -1,12 +1,11 @@
 /// Flutter code sample for BottomNavigationBar
 
 
-import 'dart:developer';
 
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:mypug/actualityall/actualityall.dart';
+import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/chat/chatlist.dart';

@@ -1,9 +1,7 @@
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
@@ -22,8 +20,6 @@ import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../../util/config.dart';
 
 class Profile extends StatefulWidget {
 
@@ -50,6 +46,7 @@ class ProfileState extends State<Profile> {
   late bool hasBackButton = false;
   @override
   void initState() {
+    log("USERNAME :"+widget.username);
    fetchData();
     super.initState();
 
@@ -232,9 +229,12 @@ class ProfileState extends State<Profile> {
       _response = getAllPugsFromUser();
     }
     else{
-      _userResponse = getUserInfoFromUsername(widget.username);
+      // _userResponse = getUserInfoFromUsername(widget.username);
+      //
+      // _response = getAllPugsFromUsername(widget.username);
+      _userResponse = getUserInfo();
 
-      _response = getAllPugsFromUsername(widget.username);
+      _response = getAllPugsFromUser();
 
     }
     _refreshController.refreshCompleted();

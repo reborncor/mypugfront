@@ -1,8 +1,7 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mypug/actualityall/actualityall.dart';
+import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/features/auth/signup/signup.dart';

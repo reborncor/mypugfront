@@ -1,12 +1,10 @@
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
-import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
@@ -16,7 +14,6 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../util/config.dart';
 import 'api.dart';
 
 class ActualityAll extends StatefulWidget {

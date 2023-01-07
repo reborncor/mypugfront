@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 
-
 import 'package:http/http.dart'as http;
 import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
@@ -29,7 +28,6 @@ Future<UserPugResponse> getAllPugsFromUser() async{
 
   if(response.statusCode == 200) {
     print(json.decode(response.body));
-    print(response.contentLength);
 
     try {
       UserPugResponse data = UserPugResponse.fromJsonData(
@@ -74,9 +72,7 @@ Future<UserPugResponse> getAllPugsFromUsername(String username) async{
   }
 
   if(response.statusCode == 200) {
-    // print(json.decode(response.body));
-    print(response.contentLength);
-
+    print(json.decode(response.body));
     try {
       UserPugResponse data = UserPugResponse.fromJsonData(
           json.decode(response.body));
