@@ -1,30 +1,23 @@
 import 'dart:core';
 
-
-
-
-class UserModel{
-
+class UserModel {
   String id;
   String username;
   String password;
-  String email ;
+  String email;
+
   bool admin;
   String phoneNumber;
-  int following = 0 ;
+  int following = 0;
+
   int followers = 0;
   int pugs = 0;
 
-
-  UserModel({ required this.id,  required this.username,  required this.password,
-    required this.email,required this.admin, required this.phoneNumber});
-
-
-
-
-
-
-
+  UserModel(
+      {required this.id,
+      required this.username,
+      required this.password,
+      required this.email,
+      required this.admin,
+      required this.phoneNumber});
 }
-
-

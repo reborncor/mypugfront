@@ -16,7 +16,6 @@ class AssetThumbnail extends StatelessWidget {
   final AssetEntity asset;
   final Function callback;
 
-
   @override
   Widget build(BuildContext context) {
     // We're using a FutureBuilder since thumbData is a future
@@ -25,14 +24,16 @@ class AssetThumbnail extends StatelessWidget {
       builder: (_, snapshot) {
         final bytes = snapshot.data;
         // If we have no data, display a spinner
-        if (bytes == null) return CircularProgressIndicator(color: APPCOLOR,);
+        if (bytes == null)
+          return CircularProgressIndicator(
+            color: APPCOLOR,
+          );
         // If there's data, display it as an image
         return InkWell(
           onTap: () {
-            if(asset.type == AssetType.image ){
+            if (asset.type == AssetType.image) {
               callback(asset.file);
-            }
-            else{
+            } else {
               showSnackBar(context, 'Veuillez choisir une photo');
             }
           },
