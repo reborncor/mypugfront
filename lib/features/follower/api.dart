@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:mypug/response/followerresponse.dart';
-
-import '../../response/BaseResponse.dart';
 import 'package:http/http.dart'as http;
+import 'package:mypug/response/followerresponse.dart';
 
 import '../../util/config.dart';
 import '../../util/util.dart';

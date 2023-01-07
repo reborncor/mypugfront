@@ -1,12 +1,10 @@
 
-import 'dart:convert';
-import 'package:mypug/service/themenotifier.dart';
-import 'package:provider/provider.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
+import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
 

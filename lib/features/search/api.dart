@@ -1,13 +1,7 @@
 import 'dart:convert';
 
-
-
-import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
-import 'package:mypug/response/signinresponse.dart';
 import 'package:mypug/response/userfindresponse.dart';
-import 'package:mypug/response/userpugresponse.dart';
-import 'package:mypug/response/userresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 

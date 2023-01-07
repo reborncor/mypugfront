@@ -2,12 +2,10 @@
 
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
-import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/features/search/api.dart';
 import 'package:mypug/models/usersearchmodel.dart';
@@ -16,7 +14,6 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
 import '../../service/themenotifier.dart';
-import '../follower/api.dart';
 
 
 class Search extends StatefulWidget {

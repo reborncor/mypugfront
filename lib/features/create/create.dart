@@ -3,13 +3,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/assetthumbnail/assetthumbnail.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/editpug/editpug.dart';
-import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:photo_manager/photo_manager.dart';

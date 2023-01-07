@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:http/http.dart'as http;
 import 'package:mypug/response/commentresponse.dart';
 
 import '../../util/config.dart';
 import '../../util/util.dart';
-import 'package:http/http.dart'as http;
 
 Future<CommentResponse> getPugComment(String pugId, String username) async{
 

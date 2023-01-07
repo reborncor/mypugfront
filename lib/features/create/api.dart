@@ -1,16 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'package:http/http.dart'as http;
 import 'package:minio/io.dart';
 import 'package:minio/minio.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/response/baseresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-
-import 'dart:async';
-
 import 'package:simple_s3/simple_s3.dart';
 
 Future<BasicResponse> createPug(File file,String title, String imageDescription,List<PugDetailModel> details, bool isCrop, int height) async{

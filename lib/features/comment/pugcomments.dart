@@ -6,12 +6,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mypug/features/chat/chat.dart';
 import 'package:mypug/models/CommentModel.dart';
-
-import 'package:mypug/models/ConversationModel.dart';
 import 'package:mypug/response/commentresponse.dart';
-import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:http/http.dart'as http;
 import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
