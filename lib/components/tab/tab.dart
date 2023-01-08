@@ -92,7 +92,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
           DotNavigationBarItem(
             icon: (notification > 0)
                 ? Badge(
-                    badgeContent: Text(notification.toString()),
+                    badgeContent: Text(notification > 99 ? "99+" : notification.toString()),
                     badgeColor: APPCOLOR6,
                     child: const Icon(Icons.messenger),
                   )
