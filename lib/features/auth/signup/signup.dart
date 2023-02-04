@@ -1,3 +1,4 @@
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
@@ -23,6 +24,8 @@ class SignUpState extends State<SignUp> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  final countryPicker = const FlCountryCodePicker();
+  late String dialCode = '+33';
 
   @override
   void initState() {
@@ -60,29 +63,7 @@ class SignUpState extends State<SignUp> {
                         focusedBorder: setOutlineBorder(1.5, 20.0),
                         enabledBorder: setOutlineBorder(1.5, 20.0),
                         border: setOutlineBorder(1.5, 20.0),
-                        hintText: "Nom d'utilisateur",
-                      ),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: TextFormField(
-                      autofillHints: const <String>[
-                        AutofillHints.telephoneNumber
-                      ],
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      controller: phoneNumberController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Entre votre numéro de téléphone";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        focusedBorder: setOutlineBorder(1.5, 20.0),
-                        enabledBorder: setOutlineBorder(1.5, 20.0),
-                        border: setOutlineBorder(1.5, 20.0),
-                        hintText: "Numéro de téléphone",
+                        hintText: "Nom d'utilisateur *",
                       ),
                     )),
                 Padding(
@@ -93,7 +74,7 @@ class SignUpState extends State<SignUp> {
                       controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Entrer votre adresse email";
+                          return "Entre votre adresse email";
                         }
                         return null;
                       },
@@ -101,7 +82,61 @@ class SignUpState extends State<SignUp> {
                         focusedBorder: setOutlineBorder(1.5, 20.0),
                         enabledBorder: setOutlineBorder(1.5, 20.0),
                         border: setOutlineBorder(1.5, 20.0),
-                        hintText: "Adresse email",
+                        hintText: "Adresse email *",
+                      ),
+                    )),
+                Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          border: Border.all(
+                              width: 1.5,
+                              color: Colors.indigo[300] ?? Colors.indigo)),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              final code = await countryPicker.showPicker(
+
+                                scrollToDeviceLocale: true,
+
+                                  context: context);
+                              if (code != null) {
+                                print(code);
+                                dialCode = code.dialCode;
+                              }
+                              ;
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0, vertical: 8.0),
+                              margin:
+                                  const EdgeInsets.only(left: 8.0),
+                              decoration:  BoxDecoration(
+                                  color:Colors.indigo.shade300,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              child: Text(dialCode.toString(),
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                          Expanded(
+                              child: TextFormField(
+                            autofillHints: const <String>[
+                              AutofillHints.telephoneNumber
+                            ],
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            controller: phoneNumberController,
+
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Numéro de téléphone",
+                            ),
+                          ))
+                        ],
                       ),
                     )),
                 Padding(
@@ -159,7 +194,6 @@ class SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
       builder: (context, ThemeModel notifier, child) {
-        notifier.isDark = true;
         return Scaffold(
             appBar: AppBar(
               title: Text("Inscription"),

@@ -27,9 +27,8 @@ void main() {
   runApp(MyApp());
 }
 
-void httpCheck(){
+void httpCheck() {
   HttpOverrides.global = MyHttpOverrides();
-
 }
 
 class MyApp extends StatelessWidget {
@@ -37,55 +36,58 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
-        builder:(context, ThemeModel themeNotifier, child) {
+        builder: (context, ThemeModel themeNotifier, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
 
-        return MaterialApp(
-          debugShowCheckedModeBanner:false,
+            routes: {
+              '/actualityall': (context) => ActualityAll(),
+              '/actuality': (context) => Actuality(),
+              '/create': (context) => CreatePug(),
+              '/profile': (context) => Profile(),
+              '/setting': (context) => Setting(),
+              '/tabview': (context) => TabView(),
+              '/signin': (context) => SignIn(),
+              '/signup': (context) => SignUp(),
+              '/pug': (context) => Pug(),
+              '/search': (context) => Search(),
+              '/chatlist': (context) => ChatList(),
+              '/chat': (context) => Chat(),
+              '/pugscomments': (context) => PugComments(),
+              '/follower': (context) => FollowersView(),
+              '/following': (context) => FollowingView(),
+            },
 
-          routes: {
-            '/actualityall': (context) =>  ActualityAll(),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              primaryColorDark: Colors.black,
+              primaryColor: Colors.black54,
+              scaffoldBackgroundColor: Colors.black54,
+              bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.black54,
+                modalBackgroundColor: Colors.black54,
+              ),
+            ),
 
-            '/actuality': (context) =>  Actuality(),
-            '/create': (context) =>  CreatePug(),
-            '/profile': (context) => Profile(),
-            '/setting': (context) =>  Setting(),
-              '/tabview': (context) =>  TabView(),
-            '/signin': (context) =>  SignIn(),
-            '/signup': (context) =>  SignUp(),
-            '/pug': (context) =>  Pug(),
-            '/search': (context) =>  Search(),
-            '/chatlist': (context) =>  ChatList(),
-            '/chat': (context) => Chat(),
-            '/pugscomments': (context) =>  PugComments(),
-            '/follower': (context) =>  FollowersView(),
-            '/following': (context) =>  FollowingView(),
+            // theme: ThemeData(
+            //   bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black54,modalBackgroundColor: Colors.black54,),
+            //   brightness: Brightness.dark,
+            //   primaryColorDark: Colors.black,
+            //   primaryColor: Colors.black54,
+            //   scaffoldBackgroundColor: Colors.black54,
+            // ),
 
+            // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
-          },
+            themeMode: ThemeMode.dark,
 
-
-
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            primaryColorDark: Colors.black,
-            primaryColor: Colors.black54,
-            scaffoldBackgroundColor: Colors.black54
-
-          ),
-
-
-          // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
-
-          themeMode: ThemeMode.dark,
-
-          title: 'MyPUG',
-          home: const SplashScreen(),
-        );
-      },
+            title: 'MyPUG',
+            home: const SplashScreen(),
+          );
+        },
       ),
     );
   }
