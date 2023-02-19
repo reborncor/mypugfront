@@ -87,6 +87,7 @@ class PugItemState extends State<PugItem> {
 
   Widget imageContent() {
     return Container(
+      decoration: BoxDecoration(),
       child: ConstrainedBox(
         constraints: BoxConstraints(
             minHeight: 200,
@@ -137,7 +138,7 @@ class PugItemState extends State<PugItem> {
           onDoubleTap: () async {
             if (!isLiked) {
               final result = await likeOrUnlikePug(
-                  widget.model.id, widget.model.author, true);
+                  widget.model.id, widget.model.author.username, true);
               if (result.code == SUCCESS_CODE) {
                 imageLike += 1;
                 isLiked = !isLiked;
@@ -191,15 +192,15 @@ class PugItemState extends State<PugItem> {
                 IconButton(
                     onPressed: () async {
                       if (!isLiked) {
-                        final result = await likeOrUnlikePug(
-                            widget.model.id, widget.model.author, true);
+                        final result = await likeOrUnlikePug(widget.model.id,
+                            widget.model.author.username, true);
                         if (result.code == SUCCESS_CODE) {
                           imageLike += 1;
                           isLiked = !isLiked;
                         }
                       } else {
-                        final result = await likeOrUnlikePug(
-                            widget.model.id, widget.model.author, false);
+                        final result = await likeOrUnlikePug(widget.model.id,
+                            widget.model.author.username, false);
                         if (result.code == SUCCESS_CODE) {
                           imageLike -= 1;
                           isLiked = !isLiked;
@@ -233,7 +234,7 @@ class PugItemState extends State<PugItem> {
                   context,
                   PugComments.withData(
                       pugId: widget.model.id,
-                      username: widget.model.author,
+                      username: widget.model.author.username,
                       description: widget.model.imageDescription));
             },
             child: Container(
@@ -280,20 +281,23 @@ class PugItemState extends State<PugItem> {
                       )
                     : Row(
                         children: [
-                          const Image(
-                            image: AssetImage(
-                              'asset/images/user.png',
-                            ),
-                            width: 40,
-                            height: 40,
-                          ),
+                          widget.model.author.profilePicture.isNotEmpty
+                              ? Image.network(
+                                  widget.model.author.profilePicture,width: 40, height: 40,)
+                              : const Image(
+                                  image: AssetImage(
+                                    'asset/images/user.png',
+                                  ),
+                                  width: 40,
+                                  height: 40,
+                                ),
                           const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () {
                               navigateTo(
                                   context,
                                   Profile.fromUsername(
-                                      username: widget.model.author));
+                                      username: widget.model.author.username));
                             },
                             child: Container(
                                 padding: EdgeInsets.only(left: 10, right: 10),
@@ -302,7 +306,7 @@ class PugItemState extends State<PugItem> {
                                     color:
                                         Colors.grey.shade300.withOpacity(0.6)),
                                 child: Text(
-                                  widget.model.author,
+                                  widget.model.author.username,
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: notifier.isDark
@@ -353,7 +357,7 @@ class PugItemState extends State<PugItem> {
                   style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                   onPressed: () async {
                     final result = await deletePug(widget.model.id,
-                        widget.model.author, widget.model.imageURL);
+                        widget.model.author.username, widget.model.imageURL);
                     if (result.code == SUCCESS_CODE) {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);

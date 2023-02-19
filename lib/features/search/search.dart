@@ -35,7 +35,7 @@ class SearchState extends State<Search> {
   fetchData() async {
     if (searchController.text.isNotEmpty) {
       _response = await findAllUsers(searchController.text);
-      streamController.add(_response.usernames);
+      streamController.add(_response.users);
     }
   }
 
@@ -77,7 +77,7 @@ class SearchState extends State<Search> {
         }
 
         if (snapshot.hasData) {
-          List<UserSearchModel> data = _response.usernames;
+          List<UserSearchModel> data = _response.users;
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
@@ -89,7 +89,13 @@ class SearchState extends State<Search> {
                           Profile.fromUsername(username: data[index].username));
                     },
                     child: ListTile(
-                        leading: const Icon(Icons.account_circle),
+                        leading: data[index].profilePicture.isNotEmpty
+                            ? Image.network(
+                                data[index].profilePicture,
+                                width: 40,
+                                height: 40,
+                              )
+                            : Icon(Icons.account_circle),
                         title: Text(data[index].username),
                         trailing: OutlinedButton(
                             onPressed: () {

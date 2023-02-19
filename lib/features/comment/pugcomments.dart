@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/models/CommentModel.dart';
+import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/response/commentresponse.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,8 @@ class PugCommentsState extends State<PugComments> {
   TextEditingController searchController = TextEditingController();
   StreamController streamController = StreamController();
   late String _username;
+  late String _profilePicture;
+  late String _id;
   late CommentModel comment;
   TextEditingController textEditingController = TextEditingController();
   late List<CommentModel> comments = [];
@@ -44,7 +47,11 @@ class PugCommentsState extends State<PugComments> {
 
   @override
   void initState() {
-    getCurrentUsername().then((value) => _username = value);
+    getUserData().then((value) {
+      _username = value["username"];
+      _id = value["id"];
+      _profilePicture = value["profilePicture"];
+    });
     super.initState();
   }
 
@@ -68,7 +75,7 @@ class PugCommentsState extends State<PugComments> {
                 height: 40,
               ),
               Text(
-                model.author,
+                model.author.username,
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -160,7 +167,10 @@ class PugCommentsState extends State<PugComments> {
                           if (result.code == SUCCESS_CODE) {
                             comment = CommentModel(
                                 id: "",
-                                author: _username,
+                                author: UserFactory(
+                                    username: _username,
+                                    profilePicture: _profilePicture,
+                                    id: _id),
                                 content: textEditingController.text,
                                 date: "");
                             comments.add(comment);

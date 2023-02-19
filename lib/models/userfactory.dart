@@ -1,23 +1,28 @@
 import 'dart:core';
 
-class UserSearchModel {
+class UserFactory {
   String username;
   String profilePicture;
+  String id;
 
-  UserSearchModel({
+  UserFactory({
     required this.username,
     required this.profilePicture,
+    required this.id,
   });
 
-  UserSearchModel.jsonData({
+  UserFactory.jsonData({
     required this.username,
     required this.profilePicture,
+    required this.id,
   });
 
-  factory UserSearchModel.fromJsonData(Map<String, dynamic> json) {
-    return UserSearchModel.jsonData(
+  factory UserFactory.fromJsonData(Map<String, dynamic> json) {
+    return UserFactory.jsonData(
       username: json['username'],
       profilePicture: json['profilePicture'],
+      id: json['_id'],
+
     );
   }
 }

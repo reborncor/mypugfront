@@ -1,4 +1,4 @@
-import 'package:fl_country_code_picker/fl_country_code_picker.dart';
+import 'package:mypug/util/libs/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
@@ -99,10 +99,7 @@ class SignUpState extends State<SignUp> {
                           GestureDetector(
                             onTap: () async {
                               final code = await countryPicker.showPicker(
-
-                                scrollToDeviceLocale: true,
-
-                                  context: context);
+                                  scrollToDeviceLocale: true, context: context);
                               if (code != null) {
                                 print(code);
                                 dialCode = code.dialCode;
@@ -112,10 +109,9 @@ class SignUpState extends State<SignUp> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12.0, vertical: 8.0),
-                              margin:
-                                  const EdgeInsets.only(left: 8.0),
-                              decoration:  BoxDecoration(
-                                  color:Colors.indigo.shade300,
+                              margin: const EdgeInsets.only(left: 8.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.indigo.shade300,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0))),
                               child: Text(dialCode.toString(),
@@ -130,7 +126,6 @@ class SignUpState extends State<SignUp> {
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             controller: phoneNumberController,
-
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Numéro de téléphone",

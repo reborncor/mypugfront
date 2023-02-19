@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:mypug/response/userpugresponse.dart';
@@ -24,7 +25,6 @@ Future<UserPugResponse> getAllPugsFromUser() async {
   }
 
   if (response.statusCode == 200) {
-    print(json.decode(response.body));
 
     try {
       UserPugResponse data =
@@ -97,8 +97,8 @@ Future<UserResponse> getUserInfo() async {
       'Authorization': 'Bearer ' + token
     });
   } catch (e) {
+    log("Error");
     print(e.toString());
-
     return json.decode(response.body);
   }
 

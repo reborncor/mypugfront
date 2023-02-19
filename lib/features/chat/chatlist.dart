@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/chat/chat.dart';
 import 'package:mypug/models/ConversationModel.dart';
+import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/response/conversationsresponse.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -39,21 +41,22 @@ class ChatListState extends State<ChatList> {
   }
 
   Widget itemChat(ConversationModel model) {
-    String receiverUserame = model.members.first == _username
-        ? model.members.last
-        : model.members.first;
+    UserFactory receiverUserame = model.membersInfos
+        .firstWhere((element) => element.username == _username);
     bool seen = model.seen.contains(_username);
     return InkWell(
-      onTap: () => navigateTo(
-          context, Chat.withUsername(receiverUsername: receiverUserame)),
+      onTap: () => navigateTo(context,
+          Chat.withUsername(receiverUsername: receiverUserame.username)),
       child: ListTile(
-        leading: const Image(
-          image: AssetImage(
-            'asset/images/user.png',
-          ),
-          width: 40,
-          height: 40,
-        ),
+        leading: receiverUserame.profilePicture.isNotEmpty
+            ? Image.network(receiverUserame.profilePicture, width: 40, height: 40,)
+            : const Image(
+                image: AssetImage(
+                  'asset/images/user.png',
+                ),
+                width: 40,
+                height: 40,
+              ),
         trailing: seen
             ? Icon(
                 Icons.send,
@@ -67,7 +70,7 @@ class ChatListState extends State<ChatList> {
                   color: APPCOLOR,
                 )),
         title: Text(
-          receiverUserame,
+          receiverUserame.username,
           style: TextStyle(
               fontSize: 17,
               color: notifier.isDark ? Colors.black : Colors.black),
@@ -98,6 +101,7 @@ class ChatListState extends State<ChatList> {
             if (snapshot.hasData) {
               List<ConversationModel> result =
                   sortChatList(snapshot.data!.conversations);
+              print(snapshot.data!.conversations);
               if (snapshot.data!.conversations.isNotEmpty) {
                 return ListView.builder(
                   itemCount: snapshot.data!.conversations.length,

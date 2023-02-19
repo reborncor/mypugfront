@@ -100,7 +100,7 @@ class PugState extends State<Pug> {
             decoration: BoxGradient(),
             child: Container(
               child: PugItem.fromProfile(
-                currentUsername: widget.model!.author,
+                currentUsername: widget.model!.author.username,
                 model: widget.model!,
                 fromProfile: widget.isOwner,
               ),

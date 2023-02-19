@@ -38,6 +38,7 @@ class ProfileState extends State<Profile> {
   late Future<UserPugResponse> _response;
   late Future<UserResponse> _userResponse;
   late String username;
+  late String profilePicture;
   late bool isFollowing = false;
   late ThemeModel notifier;
   final RefreshController _refreshController = RefreshController();
@@ -47,7 +48,6 @@ class ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    log("USERNAME :" + widget.username);
     fetchData();
     super.initState();
   }
@@ -90,9 +90,10 @@ class ProfileState extends State<Profile> {
       builder: (context, AsyncSnapshot<UserResponse> snapshot) {
         if (snapshot.hasData) {
           username = snapshot.data!.username;
+          profilePicture = snapshot.data!.profilePicture;
+
           isFollowing = snapshot.data!.isFollowing ?? false;
           String textButton = isFollowing ? "Se désabonner" : "S'abonner";
-
           return Column(
             children: [
               Row(
@@ -100,20 +101,22 @@ class ProfileState extends State<Profile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(children: [
-                    const SizedBox(
+                    SizedBox(
                       height: 150,
                       width: 120,
                       child: CircleAvatar(
                         backgroundColor: Colors.transparent,
                         maxRadius: 100,
                         minRadius: 100,
-                        child: Image(
-                          image: AssetImage(
-                            'asset/images/user.png',
-                          ),
-                          width: 120,
-                          height: 120,
-                        ),
+                        child: profilePicture.isNotEmpty
+                            ? Image.network(snapshot.data!.profilePicture, width: 40, height: 40,)
+                            : const Image(
+                                image: AssetImage(
+                                  'asset/images/user.png',
+                                ),
+                                width: 120,
+                                height: 120,
+                              ),
                       ),
                     ),
                     Text(

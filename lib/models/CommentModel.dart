@@ -1,8 +1,10 @@
 import 'dart:core';
 
+import 'package:mypug/models/userfactory.dart';
+
 class CommentModel {
   String id;
-  String author;
+  UserFactory author;
   String content;
   String date;
 
@@ -21,7 +23,7 @@ class CommentModel {
   factory CommentModel.fromJsonData(Map<String, dynamic> json) {
     return CommentModel.jsonData(
       id: json['id'],
-      author: json['author'],
+      author: UserFactory.fromJsonData(json['author']),
       content: json['content'],
       date: json['date'],
     );

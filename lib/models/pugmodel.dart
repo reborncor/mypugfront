@@ -2,6 +2,7 @@ import 'dart:core';
 
 import 'package:mypug/models/CommentModel.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
+import 'package:mypug/models/userfactory.dart';
 
 class PugModel {
   String id;
@@ -14,7 +15,7 @@ class PugModel {
   late String? imageData;
   late int date;
   late bool isLiked;
-  late String author;
+  late UserFactory author;
   late List<CommentModel> comments;
   late bool isCrop;
   late int height;
@@ -54,7 +55,7 @@ class PugModel {
       imageDescription: json['imageDescription'],
       imageTitle: json['imageTitle'],
       isLiked: json['isLiked'],
-      author: json['author'],
+      author: UserFactory.fromJsonData(json['author']),
       isCrop: json['isCrop'],
       height: json['height'],
       numberOfComments: json['numberOfComments'],
