@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:mypug/response/followerresponse.dart';
@@ -28,9 +29,16 @@ Future<FollowerResponse> getUserFollowers(String username) async {
   }
 
   if (response.statusCode == 200) {
-    FollowerResponse data =
-        FollowerResponse.fromJsonData(json.decode(response.body));
-    return data;
+    try {
+      FollowerResponse data =
+          FollowerResponse.fromJsonData(json.decode(response.body));
+      return data;
+    } catch (e) {
+      log(e.toString());
+      return FollowerResponse(
+          code: json.decode(response.body)['code'],
+          message: json.decode(response.body)['message']);
+    }
   } else {
     return FollowerResponse(
         code: json.decode(response.body)['code'],

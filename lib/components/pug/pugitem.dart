@@ -282,8 +282,13 @@ class PugItemState extends State<PugItem> {
                     : Row(
                         children: [
                           widget.model.author.profilePicture.isNotEmpty
-                              ? Image.network(
-                                  widget.model.author.profilePicture,width: 40, height: 40,)
+                              ? ClipRRect(
+                              child: Image.network(
+                                widget.model.author.profilePicture,
+                                width: 40, height: 40,
+                                fit: BoxFit.contain,
+                              ),
+                              borderRadius: BorderRadius.circular(100))
                               : const Image(
                                   image: AssetImage(
                                     'asset/images/user.png',

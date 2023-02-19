@@ -43,7 +43,18 @@ class FollowersViewState extends State<FollowersView> {
       onTap: () =>
           navigateTo(context, Profile.fromUsername(username: model.username)),
       child: ListTile(
-        leading: const Icon(Icons.account_circle),
+        leading: model.username.isEmpty
+            ? ClipRRect(
+            child: Image.network(
+              model.username,
+              fit: BoxFit.contain,
+            ),
+            borderRadius: BorderRadius.circular(100))
+            : const Image(
+                image: AssetImage("asset/images/user.png"),
+                width: 40,
+                height: 40,
+              ),
         title: Text(model.username),
         trailing: OutlinedButton(
             onPressed: () {
@@ -61,11 +72,11 @@ class FollowersViewState extends State<FollowersView> {
       future: getUserFollowers(widget.userSearched),
       builder: (context, AsyncSnapshot<FollowerResponse> snapshot) {
         if (snapshot.hasData) {
-          log(snapshot.data!.usernames.length.toString());
+          log(snapshot.data!.users.length.toString());
           return ListView.builder(
-            itemCount: snapshot.data!.usernames.length,
+            itemCount: snapshot.data!.users.length,
             itemBuilder: (context, index) {
-              return itemChat(snapshot.data!.usernames[index]);
+              return itemChat(snapshot.data!.users[index]);
             },
           );
         }

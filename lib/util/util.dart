@@ -3,6 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypug/response/signinresponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../components/design/design.dart';
+import '../features/actuality/actuality.dart';
+import '../service/api/blockuser.dart';
 import '../service/socketservice.dart';
 
 int SUCCESS_CODE = 0;
@@ -106,3 +109,31 @@ getPhoneHeight(context) {
 }
 
 SocketService socketService = SocketService();
+
+void showMyDialogBlock(String username, context) {
+  showDialog(
+      context: context,
+      builder: (context) => Center(
+          child: AlertDialog(
+            title: Text("Bloquage utilisateur"),
+            content: Text("Vous vous appretez à bloquer "+username),
+            actions: [
+              ElevatedButton(
+                style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                onPressed: () async {
+                  final result = await blockUser(username);
+                  if (result.code == SUCCESS_CODE) {
+                    showSnackBar(context, result.message);
+                    Navigator.pop(context);
+                    navigateWithNamePop(context, const Actuality().routeName);
+                  }
+                },
+                child: const Text("Confirmer"),
+              ),
+              ElevatedButton(
+                  style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Annuler"))
+            ],
+          )));
+}

@@ -90,11 +90,13 @@ class SearchState extends State<Search> {
                     },
                     child: ListTile(
                         leading: data[index].profilePicture.isNotEmpty
-                            ? Image.network(
-                                data[index].profilePicture,
-                                width: 40,
-                                height: 40,
-                              )
+                            ?ClipRRect(
+                            child: Image.network(
+                              data[index].profilePicture,
+                              width: 40, height: 40,
+                              fit: BoxFit.contain,
+                            ),
+                            borderRadius: BorderRadius.circular(100))
                             : Icon(Icons.account_circle),
                         title: Text(data[index].username),
                         trailing: OutlinedButton(

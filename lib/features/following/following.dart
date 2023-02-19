@@ -41,7 +41,7 @@ class FollowingViewState extends State<FollowingView> {
   }
 
   Widget itemFollowing(UserSearchModel model, index) {
-    return FollowerItem(username: model.username);
+    return FollowerItem(user: model);
   }
 
   Widget content() {
@@ -49,15 +49,17 @@ class FollowingViewState extends State<FollowingView> {
       future: getUserFollowings(widget.userSearched),
       builder: (context, AsyncSnapshot<FollowerResponse> snapshot) {
         if (snapshot.hasData) {
-          listFollowing = snapshot.data!.usernames;
+          listFollowing = snapshot.data!.users;
           return ListView.builder(
-            itemCount: snapshot.data!.usernames.length,
+            itemCount: snapshot.data!.users.length,
             itemBuilder: (context, index) {
               return itemFollowing(listFollowing[index], index);
             },
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
+          print(snapshot.data);
+
           return const Center(
             child: Text("Aucune donnée"),
           );

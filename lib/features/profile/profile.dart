@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/components/pug/pug.dart';
+import 'package:mypug/features/actuality/actuality.dart';
+import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/chat/chat.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
@@ -15,6 +17,7 @@ import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
+import 'package:mypug/service/api/blockuser.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -91,7 +94,6 @@ class ProfileState extends State<Profile> {
         if (snapshot.hasData) {
           username = snapshot.data!.username;
           profilePicture = snapshot.data!.profilePicture;
-
           isFollowing = snapshot.data!.isFollowing ?? false;
           String textButton = isFollowing ? "Se désabonner" : "S'abonner";
           return Column(
@@ -106,16 +108,20 @@ class ProfileState extends State<Profile> {
                       width: 120,
                       child: CircleAvatar(
                         backgroundColor: Colors.transparent,
-                        maxRadius: 100,
-                        minRadius: 100,
+                        radius: 100,
                         child: profilePicture.isNotEmpty
-                            ? Image.network(snapshot.data!.profilePicture, width: 40, height: 40,)
+                            ? ClipRRect(
+                                child: Image.network(
+                                  snapshot.data!.profilePicture,
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                borderRadius: BorderRadius.circular(100))
                             : const Image(
+                                fit: BoxFit.contain,
                                 image: AssetImage(
                                   'asset/images/user.png',
                                 ),
-                                width: 120,
-                                height: 120,
                               ),
                       ),
                     ),
@@ -187,7 +193,6 @@ class ProfileState extends State<Profile> {
                               final result = await unFollowOrFollowUser(
                                   username, isFollowing);
                               if (result.code == SUCCESS_CODE) {
-                                log(result.message);
                                 isFollowing = !isFollowing;
                                 await fetchData();
                                 setState(() {});
@@ -305,6 +310,80 @@ class ProfileState extends State<Profile> {
     setState(() {});
   }
 
+  void showMyDialogBlock(String username) {
+    showDialog(
+        context: context,
+        builder: (context) => Center(
+            child: AlertDialog(
+              title: Text("Bloquage utilisateur"),
+              content: Text("Vous vous appretez à bloquer "+username),
+              actions: [
+                ElevatedButton(
+                  style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                  onPressed: () async {
+                    final result = await blockUser(username);
+                    if (result.code == SUCCESS_CODE) {
+                      showSnackBar(context, result.message);
+                      Navigator.pop(context);
+                      navigateWithNamePop(context, const Actuality().routeName);
+                    }
+                  },
+                  child: const Text("Confirmer"),
+                ),
+                ElevatedButton(
+                    style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Annuler"))
+              ],
+            )));
+  }
+
+  showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.20,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      child: const Text(
+                        "Signaler",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    )),
+                InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      child: const Text(
+                        "Bloquer l'utilisateur",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    )),InkWell(
+                    onTap: () {Navigator.pop(context);},
+                    child: Container(
+                      width: double.infinity,
+                      height: 50,
+                      child: const Text(
+                        "Fermer",
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                    )),
+              ],
+            ));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
@@ -318,7 +397,10 @@ class ProfileState extends State<Profile> {
             actions: [
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
-                  icon: const Icon(Icons.settings_rounded))
+                  icon: const Icon(Icons.settings_rounded)),
+              IconButton(
+                  onPressed: () => showBottomSheet(),
+                  icon: Icon(Icons.more_vert)),
             ],
           ),
           body: Container(

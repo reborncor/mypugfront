@@ -49,7 +49,12 @@ class ChatListState extends State<ChatList> {
           Chat.withUsername(receiverUsername: receiverUserame.username)),
       child: ListTile(
         leading: receiverUserame.profilePicture.isNotEmpty
-            ? Image.network(receiverUserame.profilePicture, width: 40, height: 40,)
+            ? ClipRRect(
+            child: Image.network(
+              receiverUserame.profilePicture,
+              fit: BoxFit.contain,
+            ),
+            borderRadius: BorderRadius.circular(100))
             : const Image(
                 image: AssetImage(
                   'asset/images/user.png',
@@ -101,7 +106,6 @@ class ChatListState extends State<ChatList> {
             if (snapshot.hasData) {
               List<ConversationModel> result =
                   sortChatList(snapshot.data!.conversations);
-              print(snapshot.data!.conversations);
               if (snapshot.data!.conversations.isNotEmpty) {
                 return ListView.builder(
                   itemCount: snapshot.data!.conversations.length,

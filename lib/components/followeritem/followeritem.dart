@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -9,11 +10,11 @@ import 'api.dart';
 
 class FollowerItem extends StatefulWidget {
   final routeName = '/pugitem';
-  final String username;
+  final UserSearchModel user;
 
   const FollowerItem({
     Key? key,
-    required this.username,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -37,15 +38,23 @@ class FollowerItemState extends State<FollowerItem> {
         notfier = notifier;
         return InkWell(
           onTap: () => navigateTo(
-              context, Profile.fromUsername(username: widget.username)),
+              context, Profile.fromUsername(username: widget.user.username)),
           child: ListTile(
-              leading: const Image(
-                image: AssetImage("asset/images/user.png"),
-                width: 40,
-                height: 40,
-              ),
+              leading: widget.user.username.isEmpty
+                  ? ClipRRect(
+                  child: Image.network(
+                    widget.user.username,
+                    fit: BoxFit.contain,
+                    width: 40, height: 40,
+                  ),
+                  borderRadius: BorderRadius.circular(100))
+                  : const Image(
+                      image: AssetImage("asset/images/user.png"),
+                      width: 40,
+                      height: 40,
+                    ),
               title: Text(
-                widget.username,
+                widget.user.username,
                 style: TextStyle(
                     color: this.notfier.isDark ? Colors.white : Colors.black),
               ),
@@ -53,7 +62,7 @@ class FollowerItemState extends State<FollowerItem> {
                 child: Text(text, style: const TextStyle(color: Colors.white)),
                 onPressed: () async {
                   final result =
-                      await unFollowOrFollowUser(widget.username, follow);
+                      await unFollowOrFollowUser(widget.user.username, follow);
                   if (result.code == SUCCESS_CODE) {
                     follow = !follow;
                     text = follow ? "Se désabonner" : "S'abonner";

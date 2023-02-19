@@ -1,10 +1,12 @@
 import 'dart:core';
 
+import 'package:mypug/models/pugmodel.dart';
+
 class MessageModel {
   String id;
   String senderUsername;
   String receiverUsername;
-  String content;
+  dynamic content;
   String time;
 
   MessageModel(
@@ -26,7 +28,7 @@ class MessageModel {
       id: json['id'],
       senderUsername: json['senderUsername'],
       receiverUsername: json['receiverUsername'],
-      content: json['content'],
+      content: json['content'] is String ? json['content'] : PugModel.fromJsonData(json['content']) ,
       time: json['time'],
     );
   }
@@ -36,7 +38,7 @@ class MessageModel {
       'id': id,
       'senderUsername': senderUsername,
       'receiverUsername': receiverUsername,
-      'content': content,
+      'content': content.toString(),
       'time': time,
     };
   }

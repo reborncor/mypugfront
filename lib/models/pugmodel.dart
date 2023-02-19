@@ -68,6 +68,8 @@ class PugModel {
     );
   }
 
+
+
   @override
   String toString() {
     return 'PugModel{id: $id, imageURL: $imageURL, imageTitle: $imageTitle, imageDescription: $imageDescription, details: $details, like: $like, imageData: $imageData, date: $date, isLiked: $isLiked, author: $author, comments: $comments, isCrop: $isCrop}';

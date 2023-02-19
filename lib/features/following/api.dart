@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mypug/response/followerresponse.dart';
 
@@ -23,14 +25,22 @@ Future<FollowerResponse> getUserFollowings(String username) async {
     });
   } catch (e) {
     print(e.toString());
-
     return json.decode(response.body);
   }
 
   if (response.statusCode == 200) {
-    FollowerResponse data =
-        FollowerResponse.fromJsonData(json.decode(response.body));
-    return data;
+    try {
+      print(response.body);
+      FollowerResponse data =
+      FollowerResponse.fromJsonData(json.decode(response.body));
+      return data;
+    } catch (e) {
+      log("ERROR");
+      print(e);
+      return FollowerResponse(
+          code: json.decode(response.body)['code'],
+          message: json.decode(response.body)['message']);
+    }
   } else {
     return FollowerResponse(
         code: json.decode(response.body)['code'],
