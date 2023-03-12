@@ -15,6 +15,7 @@ import 'package:mypug/features/profile/api.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
+import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
 import 'package:mypug/service/api/blockuser.dart';
@@ -92,6 +93,7 @@ class ProfileState extends State<Profile> {
       future: _userResponse,
       builder: (context, AsyncSnapshot<UserResponse> snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data!.code == BLOCKED_CODE) return SizedBox(width: 0, height: 0,);
           username = snapshot.data!.username;
           profilePicture = snapshot.data!.profilePicture;
           isFollowing = snapshot.data!.isFollowing ?? false;
@@ -209,7 +211,7 @@ class ProfileState extends State<Profile> {
                                   navigateTo(
                                       context,
                                       Chat.withUsername(
-                                          receiverUsername: username));
+                                          receiverUser: new UserFactory(username: username, profilePicture: profilePicture, id: "")));
                                 },
                                 child: const Text("Message",
                                     style: TextStyle(color: Colors.white)))),
@@ -259,6 +261,7 @@ class ProfileState extends State<Profile> {
       future: _response,
       builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data!.code == BLOCKED_CODE) return Text("Compte bloqué");
           list = snapshot.data!.pugs;
           return Container(
             child: GridView.builder(
@@ -314,9 +317,9 @@ class ProfileState extends State<Profile> {
     showDialog(
         context: context,
         builder: (context) => Center(
-            child: AlertDialog(
+                child: AlertDialog(
               title: Text("Bloquage utilisateur"),
-              content: Text("Vous vous appretez à bloquer "+username),
+              content: Text("Vous vous appretez à bloquer " + username),
               actions: [
                 ElevatedButton(
                   style: BaseButtonRoundedColor(60, 40, APPCOLOR),
@@ -338,52 +341,6 @@ class ProfileState extends State<Profile> {
             )));
   }
 
-  showBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SizedBox(
-            height: MediaQuery.of(context).size.height * 0.20,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: const Text(
-                        "Signaler",
-                        style: TextStyle(color: Colors.red, fontSize: 16),
-                      ),
-                    )),
-                InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: const Text(
-                        "Bloquer l'utilisateur",
-                        style: TextStyle(color: Colors.red, fontSize: 16),
-                      ),
-                    )),InkWell(
-                    onTap: () {Navigator.pop(context);},
-                    child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: const Text(
-                        "Fermer",
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
-                      ),
-                    )),
-              ],
-            ));
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
@@ -398,9 +355,15 @@ class ProfileState extends State<Profile> {
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
                   icon: const Icon(Icons.settings_rounded)),
-              IconButton(
-                  onPressed: () => showBottomSheet(),
-                  icon: Icon(Icons.more_vert)),
+              (widget.username == "")
+                  ? const SizedBox(
+                      width: 0,
+                      height: 0,
+                    )
+                  : IconButton(
+                      onPressed: () =>
+                          showBottomSheetSignal(context, widget.username, ""),
+                      icon: const Icon(Icons.more_vert)),
             ],
           ),
           body: Container(

@@ -17,7 +17,7 @@ Future<BasicResponse> blockUser(String username) async {
     response = await http.put(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer $token',
         },
         body: json.encode(data));
   } catch (e) {

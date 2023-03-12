@@ -105,7 +105,6 @@ class PugCommentsState extends State<PugComments> {
         if (snapshot.hasData) {
           log(snapshot.data!.comments.length.toString());
           comments = snapshot.data!.comments;
-          log("Decription :" + widget.description);
           return Column(
             children: [
               (widget.description.isEmpty)

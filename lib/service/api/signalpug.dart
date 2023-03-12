@@ -11,14 +11,14 @@ import '../../util/util.dart';
 Future<BasicResponse> signalPug(String username, SignalEnum reason, String pugId) async {
   String token = await getCurrentUserToken();
   late http.Response response;
-  String path = "/user/signal";
+  String path = "/pug/signal";
   Map data = {"username": username, "reason":reason.name, "pugId" : pugId};
   try {
     var url = Uri.parse(URL + path);
     response = await http.post(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer $token',
         },
         body: json.encode(data));
   } catch (e) {

@@ -24,4 +24,5 @@ class PugDetailModel {
         "positionX": positionX,
         "positionY": positionY,
       };
+
 }

@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/api.dart';
+import 'package:mypug/components/shareitem/shareitem.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
 import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
+import '../../features/following/api.dart';
 import '../../models/CommentModel.dart';
+import '../../response/followerresponse.dart';
 import '../../service/themenotifier.dart';
 
 class PugItem extends StatefulWidget {
@@ -19,11 +22,13 @@ class PugItem extends StatefulWidget {
   final PugModel model;
   final String currentUsername;
   final bool fromProfile;
+  final bool onShare;
 
   const PugItem(
       {Key? key,
       required this.model,
       required this.currentUsername,
+      this.onShare = false,
       this.fromProfile = false})
       : super(key: key);
 
@@ -31,7 +36,16 @@ class PugItem extends StatefulWidget {
       {Key? key,
       required this.model,
       required this.currentUsername,
-      this.fromProfile = true})
+      this.fromProfile = true,
+      this.onShare = false})
+      : super(key: key);
+
+  const PugItem.onShare(
+      {Key? key,
+      required this.model,
+      required this.currentUsername,
+      this.fromProfile = false,
+      this.onShare = true})
       : super(key: key);
 
   @override
@@ -87,36 +101,49 @@ class PugItemState extends State<PugItem> {
 
   Widget imageContent() {
     return Container(
-      decoration: BoxDecoration(),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-            minHeight: 200,
-            maxHeight: (widget.model.height > 200)
-                ? widget.model.height.toDouble()
-                : 300),
-        child: GestureDetector(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image(
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
+        decoration: BoxDecoration(),
+        height: widget.onShare? 400 : null,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+              minHeight: 200,
+              maxHeight: (widget.model.height > 200)
+                  ? widget.model.height.toDouble()
+                  : 300),
+          child: GestureDetector(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image(
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
 
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: APPCOLOR,
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: APPCOLOR,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  image: NetworkImage(widget.model.imageURL),
+                  fit: widget.model.isCrop ? BoxFit.cover : BoxFit.contain,
+                ),
+                Stack(children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: GestureDetector(
+                      onTap: () => showBottomSheetFollowing(
+                          context, widget.currentUsername, widget.model),
+                      child: const Image(
+                        image: AssetImage("asset/images/share-icon.png"),
+                        width: 40,
+                        height: 40,
+                      ),
                     ),
-                  );
-                },
-                image: NetworkImage(widget.model.imageURL),
-                fit: widget.model.isCrop ? BoxFit.fitWidth : BoxFit.contain,
-              ),
-              Stack(
-                  children: points
+                  ),
+                  ...points
                       .asMap()
                       .map((i, e) => MapEntry(
                           i,
@@ -132,32 +159,33 @@ class PugItemState extends State<PugItem> {
                                 ]),
                           )))
                       .values
-                      .toList())
-            ],
-          ),
-          onDoubleTap: () async {
-            if (!isLiked) {
-              final result = await likeOrUnlikePug(
-                  widget.model.id, widget.model.author.username, true);
-              if (result.code == SUCCESS_CODE) {
-                imageLike += 1;
-                isLiked = !isLiked;
+                      .toList()
+                ])
+              ],
+            ),
+            onDoubleTap: () async {
+              if (!isLiked) {
+                final result = await likeOrUnlikePug(
+                    widget.model.id, widget.model.author.username, true);
+                if (result.code == SUCCESS_CODE) {
+                  imageLike += 1;
+                  isLiked = !isLiked;
 
-                setState(() {});
+                  setState(() {});
+                }
               }
-            }
-          },
-          onTap: () {
-            isVisible = !isVisible;
-            setState(() {});
-          },
-        ),
-      ),
-    );
+            },
+            onTap: () {
+              isVisible = !isVisible;
+              setState(() {});
+            },
+          ),
+        ));
   }
 
   Widget imageInformation(String title, list) {
     return Container(
+      decoration: widget.onShare ? BoxDecoration(color: APPCOLOR5) : null,
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,7 +300,7 @@ class PugItemState extends State<PugItem> {
         return Column(
           children: [
             Container(
-              decoration: const BoxDecoration(),
+              decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
               child: Column(children: [
                 widget.fromProfile
                     ? SizedBox(
@@ -280,45 +308,63 @@ class PugItemState extends State<PugItem> {
                         height: 0,
                       )
                     : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          widget.model.author.profilePicture.isNotEmpty
-                              ? ClipRRect(
-                              child: Image.network(
-                                widget.model.author.profilePicture,
-                                width: 40, height: 40,
-                                fit: BoxFit.contain,
+                          Row(
+                            children: [
+                              widget.model.author.profilePicture.isNotEmpty
+                                  ? ClipRRect(
+                                      child: Image.network(
+                                        widget.model.author.profilePicture,
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      borderRadius: BorderRadius.circular(100))
+                                  : const Image(
+                                      image: AssetImage(
+                                        'asset/images/user.png',
+                                      ),
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                              const SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: () {
+                                  navigateTo(
+                                      context,
+                                      Profile.fromUsername(
+                                          username:
+                                              widget.model.author.username));
+                                },
+                                child: Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey.shade300
+                                            .withOpacity(0.6)),
+                                    child: Text(
+                                      widget.model.author.username,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: notifier.isDark
+                                              ? Colors.white
+                                              : Colors.black),
+                                    )),
                               ),
-                              borderRadius: BorderRadius.circular(100))
-                              : const Image(
-                                  image: AssetImage(
-                                    'asset/images/user.png',
-                                  ),
-                                  width: 40,
-                                  height: 40,
-                                ),
-                          const SizedBox(width: 10),
-                          GestureDetector(
-                            onTap: () {
-                              navigateTo(
-                                  context,
-                                  Profile.fromUsername(
-                                      username: widget.model.author.username));
-                            },
-                            child: Container(
-                                padding: EdgeInsets.only(left: 10, right: 10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:
-                                        Colors.grey.shade300.withOpacity(0.6)),
-                                child: Text(
-                                  widget.model.author.username,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: notifier.isDark
-                                          ? Colors.white
-                                          : Colors.black),
-                                )),
+                            ],
                           ),
+                          IconButton(
+                              onPressed: () => showBottomSheetSignal(
+                                  context,
+                                  widget.model.author.username,
+                                  widget.model.id),
+                              icon: Icon(
+                                Icons.more_vert,
+                                size: 30,
+                              ))
                         ],
                       )
               ]),
@@ -377,5 +423,38 @@ class PugItemState extends State<PugItem> {
                     child: Text("Annuler"))
               ],
             )));
+  }
+
+  showBottomSheetFollowing(context, username, PugModel pugModel) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.40,
+            child: FutureBuilder(
+              future: getUserFollowings(username),
+              builder: (context, AsyncSnapshot<FollowerResponse> snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.users.length,
+                    itemBuilder: (context, index) {
+                      return ShareItem(
+                          user: snapshot.data!.users[index],
+                          currentUsername: widget.currentUsername,
+                          pugModel: pugModel);
+                    },
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return const Center(
+                    child: Text("Aucune donnée"),
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ));
+      },
+    );
   }
 }

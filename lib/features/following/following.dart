@@ -35,7 +35,6 @@ class FollowingViewState extends State<FollowingView> {
 
   @override
   void initState() {
-    log("NAME : " + widget.userSearched);
     getCurrentUsername().then((value) => _username = value);
     super.initState();
   }

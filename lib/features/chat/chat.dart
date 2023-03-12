@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mypug/components/pug/pugitem.dart';
+import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -16,12 +18,11 @@ import 'api.dart';
 
 class Chat extends StatefulWidget {
   final routeName = '/chat';
-  String receiverUsername = "";
+  UserFactory receiverUser = UserFactory.NullValue();
 
   Chat({Key? key}) : super(key: key);
 
-  Chat.withUsername({Key? key, required this.receiverUsername})
-      : super(key: key);
+  Chat.withUsername({Key? key, required this.receiverUser}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -34,11 +35,13 @@ class _ChatState extends State<Chat> {
   List<MessageModel> messages = [];
   TextEditingController messageToSend = TextEditingController();
   late String username;
+  late String userProfilePicture;
   StreamController streamController = StreamController();
   late ScrollController scrollController;
   late MessageModel messageSent = MessageModel(
       id: "id",
       senderUsername: "senderUsername",
+      type: "text",
       receiverUsername: "receiverUsername",
       content: "content",
       time: "time");
@@ -96,12 +99,15 @@ class _ChatState extends State<Chat> {
   }
 
   fetchUsername() async {
-    username = await getCurrentUsername();
+    await getUserData().then((value) {
+      username = value["username"];
+      userProfilePicture = value["profilePicture"];
+    });
   }
 
   fetchOldMessage() async {
-    var data =
-        await getUserMessagePageable(widget.receiverUsername, startInd, endInd);
+    var data = await getUserMessagePageable(
+        widget.receiverUser.username, startInd, endInd);
     responseOldMessage = data;
     messages.addAll(responseOldMessage.oldmessages);
     startInd += 10;
@@ -110,7 +116,7 @@ class _ChatState extends State<Chat> {
   }
 
   fetchData() async {
-    var data = await getUserConversation(widget.receiverUsername);
+    var data = await getUserConversation(widget.receiverUser.username);
     response = data;
     messages = response.conversation.chat;
     streamController.add(data);
@@ -133,13 +139,11 @@ class _ChatState extends State<Chat> {
         "messagesuccess",
         (data) => {
               log("Nouveau message"),
-              if (data == "0")
+              if (data == '0_${widget.receiverUser.username}')
                 {
                   log(messageSent.content),
                   addMessageToList(messageSent),
                 }
-              else
-                {}
             });
 
     socket.on("seenCallback", (data) => {});
@@ -158,7 +162,8 @@ class _ChatState extends State<Chat> {
         time: "",
         content: message,
         senderUsername: username,
-        receiverUsername: widget.receiverUsername,
+        receiverUsername: widget.receiverUser.username,
+        type: 'text',
         id: "");
     socket.emit("message", messageSent.toJson());
   }
@@ -208,6 +213,7 @@ class _ChatState extends State<Chat> {
   }
 
   Widget itemMessage(MessageModel messageModel) {
+    log('TYPE : ${messageModel.content}');
     return Padding(
         padding: EdgeInsets.all(8),
         child: Align(
@@ -220,16 +226,53 @@ class _ChatState extends State<Chat> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        const Image(
-                          image: AssetImage(
-                            'asset/images/user.png',
-                          ),
-                          width: 30,
-                          height: 30,
-                        ),
+                        userProfilePicture.isNotEmpty
+                            ? ClipRRect(
+                                child: Image.network(
+                                  userProfilePicture,
+                                  fit: BoxFit.contain,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                borderRadius: BorderRadius.circular(100))
+                            : const Image(
+                                image: AssetImage(
+                                  'asset/images/user.png',
+                                ),
+                                width: 40,
+                                height: 40,
+                              ),
                         Flexible(
-                          child: Card(
-                            color: (messageModel.senderUsername == username)
+                            child: messageModel.type == 'text'
+                                ? Card(
+                                    color: (messageModel.senderUsername ==
+                                            username)
+                                        ? Colors.indigo[50]
+                                        : Colors.white70,
+                                    child: Padding(
+                                      child: Text(
+                                        messageModel.content,
+                                        style: TextStyle(
+                                            color: themeNotifier.isDark
+                                                ? Colors.black
+                                                : Colors.black),
+                                      ),
+                                      padding: const EdgeInsets.all(8),
+                                    ),
+                                  )
+                                : PugItem.onShare(
+                                    model: messageModel.content,
+                                    currentUsername: username))
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Flexible(
+                          child: messageModel.type == 'text'
+                              ? Card(
+                            color: (messageModel.senderUsername ==
+                                username)
                                 ? Colors.indigo[50]
                                 : Colors.white70,
                             child: Padding(
@@ -242,37 +285,27 @@ class _ChatState extends State<Chat> {
                               ),
                               padding: const EdgeInsets.all(8),
                             ),
-                          ),
-                        )
-                      ],
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Flexible(
-                          child: Card(
-                            color: (messageModel.senderUsername == username)
-                                ? Colors.indigo[50]
-                                : Colors.white70,
-                            child: Container(
-                              child: Padding(
-                                child: Text(messageModel.content,
-                                    style: TextStyle(
-                                        color: themeNotifier.isDark
-                                            ? Colors.black
-                                            : Colors.black)),
-                                padding: EdgeInsets.all(8),
+                          )
+                              : PugItem.onShare(
+                              model: messageModel.content,
+                              currentUsername: username),
+                        ),
+                        widget.receiverUser.profilePicture.isNotEmpty
+                            ? ClipRRect(
+                                child: Image.network(
+                                  widget.receiverUser.profilePicture,
+                                  fit: BoxFit.contain,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                borderRadius: BorderRadius.circular(100))
+                            : const Image(
+                                image: AssetImage(
+                                  'asset/images/user.png',
+                                ),
+                                width: 40,
+                                height: 40,
                               ),
-                            ),
-                          ),
-                        ),
-                        Image(
-                          image: AssetImage(
-                            'asset/images/user.png',
-                          ),
-                          width: 40,
-                          height: 40,
-                        ),
                       ],
                     ),
             )));
@@ -286,7 +319,7 @@ class _ChatState extends State<Chat> {
         return Scaffold(
             appBar: AppBar(
               backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-              title: Text(widget.receiverUsername),
+              title: Text(widget.receiverUser.username),
             ),
             body: Container(
               child: StreamBuilder(

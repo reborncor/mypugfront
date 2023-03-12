@@ -18,7 +18,7 @@ Future<BasicResponse> signalUser(String username, SignalEnum reason) async {
     response = await http.post(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer $token',
         },
         body: json.encode(data));
   } catch (e) {

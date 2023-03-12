@@ -35,12 +35,16 @@ Future<SignInResponse> signinUser(String username, String password) async{
   }
   else{
     var message;
+    int code = 1;
+
     try{
+      print(response.body);
       message = json.decode(response.body)['message'];
+      code = json.decode(response.body)['code'];
     }catch(e){
       message = "Une erreur est survenue";
     }
-    return SignInResponse(code: json.decode(response.body)['code'], message: message);
+    return SignInResponse(code: code, message: message);
   }
 
 

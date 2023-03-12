@@ -16,7 +16,7 @@ Future<UserPugResponse> getAllPugsFromUser() async {
     var url = Uri.parse(URL + path);
     response = await http.get(url, headers: {
       "Content-type": "application/json",
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer $token',
     });
   } catch (e) {
     print(e.toString());
@@ -25,10 +25,9 @@ Future<UserPugResponse> getAllPugsFromUser() async {
   }
 
   if (response.statusCode == 200) {
-
     try {
       UserPugResponse data =
-          UserPugResponse.fromJsonData(json.decode(response.body));
+      UserPugResponse.fromJsonData(json.decode(response.body));
       return data;
     } catch (e) {
       print("ERREUR");
@@ -57,7 +56,7 @@ Future<UserPugResponse> getAllPugsFromUsername(String username) async {
 
     response = await http.get(url, headers: {
       "Content-type": "application/json",
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer $token',
     });
   } catch (e) {
     print(e.toString());
@@ -66,10 +65,9 @@ Future<UserPugResponse> getAllPugsFromUsername(String username) async {
   }
 
   if (response.statusCode == 200) {
-    print(json.decode(response.body));
     try {
       UserPugResponse data =
-          UserPugResponse.fromJsonData(json.decode(response.body));
+      UserPugResponse.fromJsonData(json.decode(response.body));
       return data;
     } catch (e) {
       print("ERREUR");
@@ -94,7 +92,7 @@ Future<UserResponse> getUserInfo() async {
     var url = Uri.parse(URL + path);
     response = await http.get(url, headers: {
       "Content-type": "application/json",
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer $token',
     });
   } catch (e) {
     log("Error");
@@ -136,7 +134,13 @@ Future<UserResponse> getUserInfoFromUsername(String username) async {
   if (response.statusCode == 200) {
     UserResponse data = UserResponse.fromJsonData(json.decode(response.body));
     return data;
-  } else {
+  }
+  if (response.statusCode == 400 && json.decode(response.body)['code'] == BLOCKED_CODE) {
+    return UserResponse(
+        code: json.decode(response.body)['code'],
+        message: json.decode(response.body)['message']);
+  }
+  else {
     return UserResponse(
         code: json.decode(response.body)['code'],
         message: json.decode(response.body)['message']);

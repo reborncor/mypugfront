@@ -169,7 +169,7 @@ class ActualityState extends State<Actuality> {
                       itemCount: list.length,
                       itemBuilder: (context, index) {
                         return pugItem(list[index]);
-                      })
+                      }),
                 ]))
               ]));
         } else {

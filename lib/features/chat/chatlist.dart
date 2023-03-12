@@ -41,20 +41,20 @@ class ChatListState extends State<ChatList> {
   }
 
   Widget itemChat(ConversationModel model) {
-    UserFactory receiverUserame = model.membersInfos
-        .firstWhere((element) => element.username == _username);
-    bool seen = model.seen.contains(_username);
+    UserFactory receiverUser = model.membersInfos
+        .firstWhere((element) => element.username != _username);
+    bool seen = !model.seen.contains(receiverUser);
     return InkWell(
-      onTap: () => navigateTo(context,
-          Chat.withUsername(receiverUsername: receiverUserame.username)),
+      onTap: () =>
+          navigateTo(context, Chat.withUsername(receiverUser: receiverUser)),
       child: ListTile(
-        leading: receiverUserame.profilePicture.isNotEmpty
+        leading: receiverUser.profilePicture.isNotEmpty
             ? ClipRRect(
-            child: Image.network(
-              receiverUserame.profilePicture,
-              fit: BoxFit.contain,
-            ),
-            borderRadius: BorderRadius.circular(100))
+                child: Image.network(
+                  receiverUser.profilePicture,
+                  fit: BoxFit.contain,
+                ),
+                borderRadius: BorderRadius.circular(100))
             : const Image(
                 image: AssetImage(
                   'asset/images/user.png',
@@ -75,13 +75,17 @@ class ChatListState extends State<ChatList> {
                   color: APPCOLOR,
                 )),
         title: Text(
-          receiverUserame.username,
+          receiverUser.username,
           style: TextStyle(
               fontSize: 17,
               color: notifier.isDark ? Colors.black : Colors.black),
         ),
         subtitle: Text(
-          (model.chat.isEmpty ? "" : model.chat.first.content),
+          (model.chat.isEmpty
+              ? ""
+              : model.chat.first.type == "text"
+                  ? model.chat.first.content
+                  : "A partagé un pug"),
           style:
               TextStyle(color: notifier.isDark ? Colors.black : Colors.black),
         ),

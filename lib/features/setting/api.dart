@@ -16,7 +16,7 @@ Future<BasicResponse> deleteAccount() async {
     response = await http.delete(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer $token',
         },
         );
   } catch (e) {

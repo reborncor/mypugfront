@@ -40,10 +40,10 @@ class FollowerItemState extends State<FollowerItem> {
           onTap: () => navigateTo(
               context, Profile.fromUsername(username: widget.user.username)),
           child: ListTile(
-              leading: widget.user.username.isEmpty
+              leading: widget.user.profilePicture.isNotEmpty
                   ? ClipRRect(
                   child: Image.network(
-                    widget.user.username,
+                    widget.user.profilePicture,
                     fit: BoxFit.contain,
                     width: 40, height: 40,
                   ),

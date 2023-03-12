@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:mypug/components/design/design.dart';
+import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+
+import 'api.dart';
 
 class Setting extends StatefulWidget {
   final routeName = 'setting';
@@ -98,11 +102,19 @@ class SettingState extends State<Setting> {
                                             60, 40, APPCOLOR),
                                         onPressed: () => disconnectUser(),
                                         child: Text("Deconnexion"))),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 8),
+                                child: ElevatedButton(
+                                    style: BaseButtonRoundedColor(
+                                        60, 40, Colors.redAccent),
+                                    onPressed: () => showDeleteDialog(),
+                                    child: Text("Supprimer son compte")),
                               )
                             ],
                           );
                         } else {
-                          return Text("No data");
+                          return Text("Aucune donnée");
                         }
                       },
                     )),
@@ -112,4 +124,38 @@ class SettingState extends State<Setting> {
       },
     );
   }
+
+  void showDeleteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => Center(
+            child: AlertDialog(
+              title: Text("Suppression de compte"),
+              content: Text("Vous êtes sur le point de supprimer votre compte êtes vous sur ?"),
+              actionsAlignment: MainAxisAlignment.spaceAround,
+              actions: [
+                ElevatedButton(
+                  style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                  onPressed: () async {
+                    final result = await deleteAccount();
+                    if (result.code == SUCCESS_CODE) {
+                      showSnackBar(context, result.message);
+                      Navigator.pop(context);
+                      navigateWithNamePop(context, const SignIn().routeName);
+                    }
+                    else{
+                      showSnackBar(context, result.message);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Confirmer"),
+                ),
+                ElevatedButton(
+                    style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Annuler"))
+              ],
+            )));
+  }
+
 }

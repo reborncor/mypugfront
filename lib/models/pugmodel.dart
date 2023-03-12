@@ -68,7 +68,25 @@ class PugModel {
     );
   }
 
-
+  Map<String, dynamic> toJson() {
+    final listedDetails = details?.map((e) => e.toJson()).toList();
+    return {
+      'id': id,
+      'imageURL': imageURL,
+      'imageTitle': imageTitle,
+      'imageDescription': imageDescription,
+      'details': listedDetails,
+      'like': like,
+      'imageData': "",
+      'date': date,
+      'isLiked': isLiked,
+      'author': author.toJson(),
+      'comments': [],
+      'isCrop': isCrop,
+      'height': height,
+      'numberOfComments': numberOfComments,
+    };
+  }
 
   @override
   String toString() {

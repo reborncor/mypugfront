@@ -20,7 +20,7 @@ Future<UserFindResponse> findAllUsers(String username) async {
 
     response = await http.get(url, headers: {
       "Content-type": "application/json",
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer $token',
     });
   } catch (e) {
     print(e.toString());
@@ -60,7 +60,7 @@ Future<BasicResponse> followUser(String username) async {
     response = await http.put(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer $token',
         },
         body: json.encode(data));
   } catch (e) {
