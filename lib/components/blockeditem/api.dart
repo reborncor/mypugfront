@@ -1,24 +1,25 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:mypug/models/signalenum.dart';
 
 import '../../response/BaseResponse.dart';
 import '../../util/config.dart';
 import '../../util/util.dart';
 
-
-Future<BasicResponse> signalPug(String username, String reason, String pugId) async {
+Future<BasicResponse> deblockOrBlockUser(
+    String username, bool isBlocked) async {
   String token = await getCurrentUserToken();
   late http.Response response;
-  String path = "/pug/signal";
-  Map data = {"username": username, "reason":reason, "pugId" : pugId};
+  String path = isBlocked? "/user/deblock" : "/user/block" ;
+  Map data = {"username": username};
+
   try {
     var url = Uri.parse(URL + path);
-    response = await http.post(url,
+    response = await http.put(url,
         headers: {
           "Content-type": "application/json",
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ' + token
         },
         body: json.encode(data));
   } catch (e) {

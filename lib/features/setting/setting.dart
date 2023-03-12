@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
+import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +95,14 @@ class SettingState extends State<Setting> {
                               itemData(data['username']),
                               itemData(data['phoneNumber']),
                               itemData(data['email']),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 8),
+                                child: ElevatedButton(
+                                    style: BaseButtonRoundedColor(
+                                        60, 40, APPCOLOR2),
+                                    onPressed: () => navigateWithName(context, UsersBlockedView().routeName),
+                                    child: Text("Utilisateurs bloqués")),
+                              ),
                               Expanded(
                                 child: Align(
                                     alignment: Alignment.center,
@@ -129,9 +138,10 @@ class SettingState extends State<Setting> {
     showDialog(
         context: context,
         builder: (context) => Center(
-            child: AlertDialog(
+                child: AlertDialog(
               title: Text("Suppression de compte"),
-              content: Text("Vous êtes sur le point de supprimer votre compte êtes vous sur ?"),
+              content: Text(
+                  "Vous êtes sur le point de supprimer votre compte êtes vous sur ?"),
               actionsAlignment: MainAxisAlignment.spaceAround,
               actions: [
                 ElevatedButton(
@@ -142,8 +152,7 @@ class SettingState extends State<Setting> {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);
                       navigateWithNamePop(context, const SignIn().routeName);
-                    }
-                    else{
+                    } else {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);
                     }
@@ -157,5 +166,4 @@ class SettingState extends State<Setting> {
               ],
             )));
   }
-
 }

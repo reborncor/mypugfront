@@ -34,8 +34,8 @@ Future<BasicResponse> createPug(
 
     final encryptedFileName = utf8.fuse(base64).encode(username + file.path);
     await minio.fPutObject(
-        AWS_BUCKETNAME, 'uploads/$encryptedFileName.png', file.path);
-    final imageUrl = '$AWS_URL/uploads/$encryptedFileName.png';
+        AWS_BUCKETNAME, 'uploads/$username/$encryptedFileName.png', file.path);
+    final imageUrl = '$AWS_URL/uploads/$username/$encryptedFileName.png';
 
     Map<String, String> headers = {
       "Content-type": "application/json",

@@ -217,17 +217,17 @@ showBottomSheetSignalReason(context, String username, String pugId) {
           height: MediaQuery.of(context).size.height * 0.40,
           child: ListView(
             children: <Widget>[
+              const SizedBox(height: 20,width: 0,),
               ...getSignalReasons().map((reason) => InkWell(
                   onTap: () async {
                     var result;
-                    if(pugId == ""){
-                      final result = await signalUser(username, reason['en']);
-                    }
-                    else{
-                      final result = await signalPug(username, reason['en'], pugId);
+                    if (pugId == "") {
+                      result = await signalUser(username, reason['en']);
+                    } else {
+                      result = await signalPug(username, reason['en'], pugId);
                     }
                     if (result.code == SUCCESS_CODE) {
-                      showSnackBar(context, result.message);
+                      _showToastSignal(context);
                       Navigator.pop(context);
                     }
                   },
@@ -265,4 +265,47 @@ List<dynamic> getSignalReasons() {
   reasons.add({"en": "WEAPON_CONTENT", "fr": "armes"});
   reasons.add({"en": "FAKE_ACCOUNT", "fr": "faux compte"});
   return reasons;
+}
+
+_showToastSignal(context) {
+  FToast fToast;
+  fToast = FToast();
+  // if you want to use context from globally instead of content we need to pass navigatorKey.currentContext!
+  fToast.init(context);
+
+  Widget toast = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(25.0),
+      color: APPCOLOR,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        Text("Signalement effectué"),
+        SizedBox(
+          width: 12.0,
+        ),
+        Icon(Icons.check),
+      ],
+    ),
+  );
+
+  fToast.showToast(
+    child: toast,
+    gravity: ToastGravity.CENTER,
+    toastDuration: Duration(seconds: 2),
+  );
+
+  // Custom Toast Position
+  fToast.showToast(
+      child: toast,
+      toastDuration: Duration(seconds: 2),
+      positionedToastBuilder: (context, child) {
+        return Positioned(
+          child: child,
+          top: 16.0,
+          left: 16.0,
+        );
+      });
 }

@@ -15,12 +15,13 @@ class UserResponse extends BasicResponse{
   late int following;
   late int pugs;
   late bool? isFollowing;
+  late String? description;
 
   UserResponse({ code,  message, payload}) : super(code: code, message:message, payload: payload);
 
 
   UserResponse.jsonData({ code,  message, payload, required this.username,  required this.email, required this.phoneNumber, required this.admin,
-    required this.followers, required this.following, required this.pugs, required this.isFollowing, required this.profilePicture}) :super(code: code, message: message, payload: payload);
+    required this.followers, required this.following, required this.pugs, required this.isFollowing, required this.profilePicture, required this.description,}) :super(code: code, message: message, payload: payload);
 
 
   factory UserResponse.fromJsonData(Map<String,  dynamic> json){
@@ -36,12 +37,13 @@ class UserResponse extends BasicResponse{
       following: json['payload']['following'],
       isFollowing: json['payload']['isFollowing'],
       profilePicture: json['payload']['profilePicture'],
+      description: json['payload']['description'],
 
     );
   }
   @override
   String toString() {
-    return 'UserResponse{username: $username, email: $email, phoneNumber: $phoneNumber, profilePicture: $profilePicture, admin: $admin, followers: $followers, following: $following, pugs: $pugs, isFollowing: $isFollowing}';
+    return 'UserResponse{username: $username, email: $email, phoneNumber: $phoneNumber, profilePicture: $profilePicture, admin: $admin, followers: $followers, following: $following, pugs: $pugs, isFollowing: $isFollowing, description: $description}';
   }
 
 }

@@ -8,6 +8,7 @@ import '../../../components/design/design.dart';
 import '../../../components/tab/tab.dart';
 import '../../../service/themenotifier.dart';
 import '../../../util/util.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
   final routeName = '/signup';
@@ -26,10 +27,20 @@ class SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   final countryPicker = const FlCountryCodePicker();
   late String dialCode = '+33';
+  bool userCondition = false;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  _launchURL() async {
+    Uri _url = Uri.parse('https://www.google.com');
+    if (await launchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw "Impossible d' ouvrir le lien $_url";
+    }
   }
 
   Widget userForm() {
@@ -52,6 +63,7 @@ class SignUpState extends State<SignUp> {
                     child: TextFormField(
                       autofillHints: const <String>[AutofillHints.username],
                       textAlign: TextAlign.center,
+                      maxLength: 25,
                       controller: usernameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -146,6 +158,7 @@ class SignUpState extends State<SignUp> {
                       return null;
                     },
                     controller: passwordController,
+                    maxLength: 50,
                     obscureText: true,
                     enableSuggestions: false,
                     autocorrect: false,
@@ -157,12 +170,77 @@ class SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
+                FormField<bool>(
+                  builder: (state) {
+                    return Column(
+                      children: <Widget>[
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "J'accaptes les ",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: APPCOLOR,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: _launchURL,
+                              child: Text(
+                                "conditions d'utiliation",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: APPCOLOR,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              " de l'application.",
+                              maxLines: 3,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: APPCOLOR,
+                              ),
+                            ),
+                            Checkbox(
+                                side: MaterialStateBorderSide.resolveWith(
+                                      (states) =>
+                                      BorderSide(width: 2.0, color: APPCOLOR),
+                                ),
+                                activeColor: APPCOLOR,
+                                value: userCondition,
+                                onChanged: (value) {
+                                  userCondition = value!;
+                                  setState(() {
+
+                                  });
+                                })
+                          ],
+                        ),
+                        Text(
+                          state.errorText ?? '',
+                          style: TextStyle(
+                            color: Theme.of(context).errorColor,
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                  validator: (value) {
+                    if (!userCondition) {
+                      return "Acceptez les termes de l'application";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
                 Padding(
                   padding: EdgeInsets.all(12),
                   child: ElevatedButton(
                     style: BaseButtonRoundedColor(60, 40, Colors.indigo[300]),
                     onPressed: () async {
-                      if (_formkey.currentState!.validate()) {
+                      if (_formkey.currentState!.validate() && userCondition) {
                         var result = await signUpUSer(
                             usernameController.text,
                             passwordController.text,

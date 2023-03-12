@@ -8,11 +8,11 @@ import '../../util/config.dart';
 import '../../util/util.dart';
 
 
-Future<BasicResponse> signalUser(String username, SignalEnum reason) async {
+Future<BasicResponse> signalUser(String username, String reason) async {
   String token = await getCurrentUserToken();
   late http.Response response;
   String path = "/user/signal";
-  Map data = {"username": username, "reason":reason.name};
+  Map data = {"username": username, "reason":reason};
   try {
     var url = Uri.parse(URL + path);
     response = await http.post(url,

@@ -13,6 +13,7 @@ import 'package:mypug/features/following/following.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
+import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
               '/pugscomments': (context) => PugComments(),
               '/follower': (context) => FollowersView(),
               '/following': (context) => FollowingView(),
+              '/usersblocked': (context) => UsersBlockedView(),
             },
 
             darkTheme: ThemeData(

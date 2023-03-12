@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/components/pug/pug.dart';
@@ -42,13 +44,20 @@ class ProfileState extends State<Profile> {
   late Future<UserPugResponse> _response;
   late Future<UserResponse> _userResponse;
   late String username;
-  late String profilePicture;
   late bool isFollowing = false;
   late ThemeModel notifier;
+  late String description = "";
+  late TextEditingController descriptionController = TextEditingController();
+  late String formerDescription;
+  bool isModificated = false;
+  late String formerProfilePicture;
   final RefreshController _refreshController = RefreshController();
   late ScrollController scrollController =
       ScrollController(initialScrollOffset: 200);
   late bool hasBackButton = false;
+  final ImagePicker _picker = ImagePicker();
+  File? imageFile;
+  bool onUpdateMode = false;
 
   @override
   void initState() {
@@ -66,6 +75,15 @@ class ProfileState extends State<Profile> {
       hasBackButton = true;
       setState(() {});
     }
+  }
+
+  _imgFromGallery() async {
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      imageFile = File(image!.path);
+    });
   }
 
   Widget itemProfile(int data, String text) {
@@ -93,9 +111,14 @@ class ProfileState extends State<Profile> {
       future: _userResponse,
       builder: (context, AsyncSnapshot<UserResponse> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.code == BLOCKED_CODE) return SizedBox(width: 0, height: 0,);
+          if (snapshot.data!.code == BLOCKED_CODE)
+            return SizedBox(
+              width: 0,
+              height: 0,
+            );
           username = snapshot.data!.username;
-          profilePicture = snapshot.data!.profilePicture;
+          formerProfilePicture = snapshot.data!.profilePicture;
+          formerDescription = snapshot.data!.description!;
           isFollowing = snapshot.data!.isFollowing ?? false;
           String textButton = isFollowing ? "Se désabonner" : "S'abonner";
           return Column(
@@ -105,27 +128,60 @@ class ProfileState extends State<Profile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(children: [
-                    SizedBox(
-                      height: 150,
-                      width: 120,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 100,
-                        child: profilePicture.isNotEmpty
-                            ? ClipRRect(
-                                child: Image.network(
-                                  snapshot.data!.profilePicture,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                borderRadius: BorderRadius.circular(100))
-                            : const Image(
-                                fit: BoxFit.contain,
-                                image: AssetImage(
-                                  'asset/images/user.png',
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        SizedBox(
+                          height: 150,
+                          width: 120,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 100,
+                            child: snapshot.data!.profilePicture.isNotEmpty
+                                ? ClipRRect(
+
+                                    child: imageFile == null
+                                        ? Image.network(
+                                            snapshot.data!.profilePicture,
+                                            width: 100,
+                                            height: 100,
+                                          )
+                                        : Image.file(imageFile!,
+                                            width: 100,
+                                            height: 100,
+
+                                            fit: BoxFit.cover),
+                                    borderRadius: BorderRadius.circular(100))
+                                : imageFile == null
+                                    ? const Image(
+                                        fit: BoxFit.contain,
+                                        image:
+                                            AssetImage('asset/images/user.png'),
+                                      )
+                                    : Image.file(imageFile!,
+                                        fit: BoxFit.cover),
+                          ),
+                        ),
+                        Visibility(
+                            visible: onUpdateMode,
+                            child: InkWell(
+                              onTap: _imgFromGallery,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 25,
+                                  width: 25,
+                                  decoration: BoxDecoration(color: APPCOLOR),
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                      ),
+                            ))
+                      ],
                     ),
                     Text(
                       username,
@@ -180,10 +236,76 @@ class ProfileState extends State<Profile> {
                   ),
                 ],
               ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 40, right: 40, top: 5, bottom: 5),
+                child: onUpdateMode
+                    ? TextField(
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              description = descriptionController.text;
+                              isModificated = true;
+                              onUpdateMode = !onUpdateMode;
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              setState(() {});
+                            },
+                            iconSize: 20,
+                            color: APPCOLOR,
+                            icon: Icon(Icons.check),
+                          ),
+                          focusedBorder: setOutlineBorder(0.0, 20.0),
+                          enabledBorder: setOutlineBorder(0.0, 20.0),
+                          border: setOutlineBorder(1.5, 20.0),
+                        ),
+                        controller: descriptionController,
+                        textInputAction: TextInputAction.newline,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 2,
+                        maxLength: 180,
+                      )
+                    : Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          description != ""
+                              ? description
+                              : snapshot.data!.description!,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color:
+                                notifier.isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               (widget.username == "")
-                  ? SizedBox(
-                      width: 0,
-                      height: 0,
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          style: BaseButtonSize(250, 30, APPCOLOR),
+                          onPressed: () {
+                            onUpdateMode = !onUpdateMode;
+                            setState(() {});
+                          },
+                          child: Text(onUpdateMode ? "Fermer" : "Modifier",
+                              style: const TextStyle(color: Colors.white)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8),
+                          child: IconButton(
+                              onPressed: () async {
+                                await updateUserInfo(description, snapshot.data!.profilePicture, imageFile == null, imageFile!);
+                              },
+                              iconSize: 30,
+                              color: APPCOLOR,
+                              icon: Icon(Icons.check)),
+                        )
+                      ],
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -211,7 +333,10 @@ class ProfileState extends State<Profile> {
                                   navigateTo(
                                       context,
                                       Chat.withUsername(
-                                          receiverUser: new UserFactory(username: username, profilePicture: profilePicture, id: "")));
+                                          receiverUser: UserFactory(
+                                              username: username,
+                                              profilePicture: snapshot.data!.profilePicture,
+                                              id: "")));
                                 },
                                 child: const Text("Message",
                                     style: TextStyle(color: Colors.white)))),
@@ -299,10 +424,12 @@ class ProfileState extends State<Profile> {
 
   Future<void> refreshData() async {
     if (widget.username == "") {
+      imageFile = null;
       _userResponse = getUserInfo();
 
       _response = getAllPugsFromUser();
     } else {
+      imageFile = null;
       _userResponse = getUserInfo();
 
       _response = getAllPugsFromUser();
@@ -404,7 +531,7 @@ class ProfileState extends State<Profile> {
                 Container(
                   child: profileHeader(),
                   width: getPhoneWidth(context),
-                  height: 250,
+                  height: onUpdateMode ? 700 : 350,
                 ),
                 newProfileContent()
               ],
