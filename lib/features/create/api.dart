@@ -36,7 +36,6 @@ Future<BasicResponse> createPug(
     await minio.fPutObject(
         AWS_BUCKETNAME, 'uploads/$username/$encryptedFileName.png', file.path);
     final imageUrl = '$AWS_URL/uploads/$username/$encryptedFileName.png';
-
     Map<String, String> headers = {
       "Content-type": "application/json",
       'Authorization': 'Bearer $token'

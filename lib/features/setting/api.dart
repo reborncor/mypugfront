@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:minio/minio.dart';
+import 'package:simple_s3/simple_s3.dart';
 
 
 import '../../response/BaseResponse.dart';
@@ -8,7 +10,7 @@ import '../../util/config.dart';
 import '../../util/util.dart';
 
 
-Future<BasicResponse> deleteAccount() async {
+Future<BasicResponse> deleteAccount(String formerImage) async {
   String token = await getCurrentUserToken();
   late http.Response response;
   String path = "/user/delete";
@@ -30,6 +32,15 @@ Future<BasicResponse> deleteAccount() async {
     print(response.contentLength);
 
     try {
+        final minio = Minio(
+          endPoint: 's3.amazonaws.com',
+          accessKey: AWS_ACCESSKEY,
+          secretKey: AWS_SECRETKEY,
+          region: AWSRegions.euWest3.region,
+        );
+        await minio.removeObject(AWS_BUCKETNAME, formerImage);
+
+
       BasicResponse data =
       BasicResponse.fromJsonData(json.decode(response.body));
       return data;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypug/response/signinresponse.dart';
@@ -315,4 +317,23 @@ _showToastSignal(context) {
           left: 16.0,
         );
       });
+}
+
+renderProfilePicture(String path, bool exist, double size ){
+  log("PATH : $exist");
+  return exist ? ClipRRect(
+      child: Image.network(
+        path,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+      ),
+      borderRadius: BorderRadius.circular(100))
+  : Image(
+  image: AssetImage(
+      'asset/images/user.png',
+  ),
+  width: size,
+  height: size,
+  );
 }

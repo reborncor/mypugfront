@@ -43,18 +43,7 @@ class FollowersViewState extends State<FollowersView> {
       onTap: () =>
           navigateTo(context, Profile.fromUsername(username: model.username)),
       child: ListTile(
-        leading: model.username.isEmpty
-            ? ClipRRect(
-            child: Image.network(
-              model.username,
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.circular(100))
-            : const Image(
-                image: AssetImage("asset/images/user.png"),
-                width: 40,
-                height: 40,
-              ),
+        leading: renderProfilePicture(model.profilePicture, model.profilePicture.isNotEmpty, 40),
         title: Text(model.username),
         trailing: OutlinedButton(
             onPressed: () {

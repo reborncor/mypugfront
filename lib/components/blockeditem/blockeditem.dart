@@ -40,19 +40,7 @@ class BlockedItemState extends State<BlockedItem> {
           onTap: () => navigateTo(
               context, Profile.fromUsername(username: widget.user.username)),
           child: ListTile(
-              leading: widget.user.profilePicture.isNotEmpty
-                  ? ClipRRect(
-                  child: Image.network(
-                    widget.user.profilePicture,
-                    fit: BoxFit.cover,
-                    width: 40, height: 40,
-                  ),
-                  borderRadius: BorderRadius.circular(100))
-                  : const Image(
-                      image: AssetImage("asset/images/user.png"),
-                      width: 40,
-                      height: 40,
-                    ),
+              leading:  renderProfilePicture(widget.user.profilePicture, widget.user.profilePicture.isNotEmpty, 40),
               title: Text(
                 widget.user.username,
                 style: TextStyle(

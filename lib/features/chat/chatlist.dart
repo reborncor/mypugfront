@@ -48,20 +48,7 @@ class ChatListState extends State<ChatList> {
       onTap: () =>
           navigateTo(context, Chat.withUsername(receiverUser: receiverUser)),
       child: ListTile(
-        leading: receiverUser.profilePicture.isNotEmpty
-            ? ClipRRect(
-                child: Image.network(
-                  receiverUser.profilePicture,
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(100))
-            : const Image(
-                image: AssetImage(
-                  'asset/images/user.png',
-                ),
-                width: 40,
-                height: 40,
-              ),
+        leading: renderProfilePicture(receiverUser.profilePicture, receiverUser.profilePicture.isNotEmpty, 50),
         trailing: seen
             ? Icon(
                 Icons.send,

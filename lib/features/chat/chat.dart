@@ -225,22 +225,7 @@ class _ChatState extends State<Chat> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        widget.receiverUser.profilePicture.isNotEmpty
-                            ? ClipRRect(
-                                child: Image.network(
-                                  widget.receiverUser.profilePicture,
-                                  fit: BoxFit.cover,
-                                  width: 40,
-                                  height: 40,
-                                ),
-                                borderRadius: BorderRadius.circular(100))
-                            : const Image(
-                                image: AssetImage(
-                                  'asset/images/user.png',
-                                ),
-                                width: 40,
-                                height: 40,
-                              ),
+                        renderProfilePicture(widget.receiverUser.profilePicture, widget.receiverUser.profilePicture.isNotEmpty, 40),
                         Flexible(
                             child: messageModel.type == 'text'
                                 ? Card(
@@ -266,6 +251,7 @@ class _ChatState extends State<Chat> {
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Flexible(
                           child: messageModel.type == 'text'
@@ -289,22 +275,7 @@ class _ChatState extends State<Chat> {
                                   model: messageModel.content,
                                   currentUsername: username),
                         ),
-                        userProfilePicture.isNotEmpty
-                            ? ClipRRect(
-                                child: Image.network(
-                                  userProfilePicture,
-                                  fit: BoxFit.cover,
-                                  width: 40,
-                                  height: 40,
-                                ),
-                                borderRadius: BorderRadius.circular(100))
-                            : const Image(
-                                image: AssetImage(
-                                  'asset/images/user.png',
-                                ),
-                                width: 40,
-                                height: 40,
-                              ),
+                        renderProfilePicture(userProfilePicture, userProfilePicture.isNotEmpty, 40),
                       ],
                     ),
             )));

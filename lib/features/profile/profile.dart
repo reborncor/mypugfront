@@ -303,7 +303,8 @@ class ProfileState extends State<Profile> {
                                           description,
                                           snapshot.data!.profilePicture,
                                           imageFile != null,
-                                          imageFile);
+                                          imageFile,
+                                      formerProfilePicture);
                                       if(result.code == SUCCESS_CODE){
                                         refreshData();
                                         saveUserProfilePicture(result.profilePicture);

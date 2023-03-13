@@ -21,7 +21,7 @@ class Setting extends StatefulWidget {
 
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
-
+  late Map data;
   @override
   void initState() {
     super.initState();
@@ -81,17 +81,11 @@ class SettingState extends State<Setting> {
                       future: getUserData(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          final data = snapshot.data as Map;
+                          data = snapshot.data as Map;
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Image(
-                                image: AssetImage(
-                                  'asset/images/user.png',
-                                ),
-                                width: 100,
-                                height: 100,
-                              ),
+                              renderProfilePicture(data['profilePicture'], data['profilePicure'] != "", 100),
                               itemData(data['username']),
                               itemData(data['phoneNumber']),
                               itemData(data['email']),
@@ -147,7 +141,7 @@ class SettingState extends State<Setting> {
                 ElevatedButton(
                   style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                   onPressed: () async {
-                    final result = await deleteAccount();
+                    final result = await deleteAccount(data['profilePicture']);
                     if (result.code == SUCCESS_CODE) {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);

@@ -313,22 +313,7 @@ class PugItemState extends State<PugItem> {
                         children: [
                           Row(
                             children: [
-                              widget.model.author.profilePicture.isNotEmpty
-                                  ? ClipRRect(
-                                      child: Image.network(
-                                        widget.model.author.profilePicture,
-                                        width: 40,
-                                        height: 40,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.circular(100))
-                                  : const Image(
-                                      image: AssetImage(
-                                        'asset/images/user.png',
-                                      ),
-                                      width: 40,
-                                      height: 40,
-                                    ),
+                              renderProfilePicture( widget.model.author.profilePicture,  widget.model.author.profilePicture.isNotEmpty, 40),
                               const SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {

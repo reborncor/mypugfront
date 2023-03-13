@@ -156,6 +156,7 @@ Future<UserResponse> updateUserInfo(
   String profilePicture,
   bool newPicture,
   File? file,
+    String formerImage,
 ) async {
   String token = await getCurrentUserToken();
   String username = await getCurrentUsername();
@@ -172,6 +173,7 @@ Future<UserResponse> updateUserInfo(
         region: AWSRegions.euWest3.region,
       );
 
+      await minio.removeObject(AWS_BUCKETNAME, formerImage);
       final encryptedFileName = utf8.fuse(base64).encode(username + file!.path);
       await minio.fPutObject(AWS_BUCKETNAME,
           'uploads/$username/$encryptedFileName.png', file.path);
