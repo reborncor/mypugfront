@@ -292,7 +292,7 @@ class SignUpState extends State<SignUp> {
         return Scaffold(
             appBar: AppBar(
               title: Text("Inscription"),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor: Colors.black,
             ),
             body: Container(
                 decoration: BoxGradient(),
@@ -301,7 +301,7 @@ class SignUpState extends State<SignUp> {
                     child: Container(
                       child: userForm(),
                       decoration: BoxDecoration(
-                        color: notifier.isDark ? Colors.black : Colors.white70,
+                        color: Colors.black,
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ))));
