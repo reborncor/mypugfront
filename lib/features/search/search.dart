@@ -94,7 +94,7 @@ class SearchState extends State<Search> {
                             child: Image.network(
                               data[index].profilePicture,
                               width: 40, height: 40,
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(100))
                             : Icon(Icons.account_circle),

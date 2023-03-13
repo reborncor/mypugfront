@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mypug/util/libs/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ class SignUpState extends State<SignUp> {
   final countryPicker = const FlCountryCodePicker();
   late String dialCode = '+33';
   bool userCondition = false;
+  final focus = FocusNode();
 
   @override
   void initState() {
@@ -61,6 +64,11 @@ class SignUpState extends State<SignUp> {
                 Padding(
                     padding: const EdgeInsets.all(16),
                     child: TextFormField(
+                      onEditingComplete: () {
+                        FocusScope.of(context).nextFocus();
+                      },
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
                       autofillHints: const <String>[AutofillHints.username],
                       textAlign: TextAlign.center,
                       maxLength: 25,
@@ -81,9 +89,14 @@ class SignUpState extends State<SignUp> {
                 Padding(
                     padding: const EdgeInsets.all(16),
                     child: TextFormField(
+                        onEditingComplete: (){
+                          FocusScope.of(context).nextFocus();
+                        },
+                      textInputAction: TextInputAction.next,
                       autofillHints: const <String>[AutofillHints.email],
                       textAlign: TextAlign.center,
                       controller: emailController,
+
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Entre votre adresse email";
@@ -113,7 +126,6 @@ class SignUpState extends State<SignUp> {
                               final code = await countryPicker.showPicker(
                                   scrollToDeviceLocale: true, context: context);
                               if (code != null) {
-                                print(code);
                                 dialCode = code.dialCode;
                               }
                               ;
@@ -132,12 +144,23 @@ class SignUpState extends State<SignUp> {
                           ),
                           Expanded(
                               child: TextFormField(
-                            autofillHints: const <String>[
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const <String>[
                               AutofillHints.telephoneNumber
                             ],
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             controller: phoneNumberController,
+                            onEditingComplete: () {
+                              if (phoneNumberController.text.startsWith("0")) {
+                                phoneNumberController.text =
+                                    phoneNumberController.text.substring(1);
+                                setState(() {});
+
+                              }
+                              FocusScope.of(context).nextFocus();
+
+                            },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Numéro de téléphone",
@@ -149,6 +172,7 @@ class SignUpState extends State<SignUp> {
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
+                    textInputAction: TextInputAction.next,
                     autofillHints: const <String>[AutofillHints.password],
                     textAlign: TextAlign.center,
                     validator: (value) {
@@ -205,16 +229,14 @@ class SignUpState extends State<SignUp> {
                             ),
                             Checkbox(
                                 side: MaterialStateBorderSide.resolveWith(
-                                      (states) =>
+                                  (states) =>
                                       BorderSide(width: 2.0, color: APPCOLOR),
                                 ),
                                 activeColor: APPCOLOR,
                                 value: userCondition,
                                 onChanged: (value) {
                                   userCondition = value!;
-                                  setState(() {
-
-                                  });
+                                  setState(() {});
                                 })
                           ],
                         ),
@@ -242,10 +264,10 @@ class SignUpState extends State<SignUp> {
                     onPressed: () async {
                       if (_formkey.currentState!.validate() && userCondition) {
                         var result = await signUpUSer(
-                            usernameController.text,
+                            usernameController.text.trim(),
                             passwordController.text,
-                            phoneNumberController.text,
-                            emailController.text);
+                            '$dialCode${phoneNumberController.text.trim()}',
+                            emailController.text.trim());
                         print(result);
                         if (result.code == SUCCESS_CODE) {
                           navigateWithName(context, const TabView().routeName);

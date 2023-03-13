@@ -155,15 +155,15 @@ Future<UserResponse> updateUserInfo(
   String description,
   String profilePicture,
   bool newPicture,
-  File file,
+  File? file,
 ) async {
   String token = await getCurrentUserToken();
   String username = await getCurrentUsername();
   late http.Response response;
   String path = "/user/info";
 
-
   try {
+    log("NEW PICTURE : $newPicture");
     if (newPicture) {
       final minio = Minio(
         endPoint: 's3.amazonaws.com',
@@ -172,9 +172,9 @@ Future<UserResponse> updateUserInfo(
         region: AWSRegions.euWest3.region,
       );
 
-      final encryptedFileName = utf8.fuse(base64).encode(username + file.path);
-      await minio.fPutObject(
-          AWS_BUCKETNAME, 'uploads/$username/$encryptedFileName.png', file.path);
+      final encryptedFileName = utf8.fuse(base64).encode(username + file!.path);
+      await minio.fPutObject(AWS_BUCKETNAME,
+          'uploads/$username/$encryptedFileName.png', file.path);
       profilePicture = '$AWS_URL/uploads/$username/$encryptedFileName.png';
     }
 
@@ -192,7 +192,6 @@ Future<UserResponse> updateUserInfo(
         body: json.encode(data));
   } catch (e) {
     print(e.toString());
-
     return json.decode(response.body);
   }
 
@@ -206,6 +205,7 @@ Future<UserResponse> updateUserInfo(
       print("ERREUR");
       print(e);
     }
+    log(response.body);
     return UserResponse(
         code: json.decode(response.body)['code'],
         message: json.decode(response.body)['message'],

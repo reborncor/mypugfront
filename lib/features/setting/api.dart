@@ -11,7 +11,7 @@ import '../../util/util.dart';
 Future<BasicResponse> deleteAccount() async {
   String token = await getCurrentUserToken();
   late http.Response response;
-  String path = "/user/block";
+  String path = "/user/delete";
   try {
     var url = Uri.parse(URL + path);
     response = await http.delete(url,

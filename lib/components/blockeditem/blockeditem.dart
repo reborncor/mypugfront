@@ -44,7 +44,7 @@ class BlockedItemState extends State<BlockedItem> {
                   ? ClipRRect(
                   child: Image.network(
                     widget.user.profilePicture,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                     width: 40, height: 40,
                   ),
                   borderRadius: BorderRadius.circular(100))

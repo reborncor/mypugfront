@@ -213,7 +213,6 @@ class _ChatState extends State<Chat> {
   }
 
   Widget itemMessage(MessageModel messageModel) {
-    log('TYPE : ${messageModel.content}');
     return Padding(
         padding: EdgeInsets.all(8),
         child: Align(
@@ -226,11 +225,11 @@ class _ChatState extends State<Chat> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        userProfilePicture.isNotEmpty
+                        widget.receiverUser.profilePicture.isNotEmpty
                             ? ClipRRect(
                                 child: Image.network(
-                                  userProfilePicture,
-                                  fit: BoxFit.contain,
+                                  widget.receiverUser.profilePicture,
+                                  fit: BoxFit.cover,
                                   width: 40,
                                   height: 40,
                                 ),
@@ -271,30 +270,30 @@ class _ChatState extends State<Chat> {
                         Flexible(
                           child: messageModel.type == 'text'
                               ? Card(
-                            color: (messageModel.senderUsername ==
-                                username)
-                                ? Colors.indigo[50]
-                                : Colors.white70,
-                            child: Padding(
-                              child: Text(
-                                messageModel.content,
-                                style: TextStyle(
-                                    color: themeNotifier.isDark
-                                        ? Colors.black
-                                        : Colors.black),
-                              ),
-                              padding: const EdgeInsets.all(8),
-                            ),
-                          )
+                                  color:
+                                      (messageModel.senderUsername == username)
+                                          ? Colors.indigo[50]
+                                          : Colors.white70,
+                                  child: Padding(
+                                    child: Text(
+                                      messageModel.content,
+                                      style: TextStyle(
+                                          color: themeNotifier.isDark
+                                              ? Colors.black
+                                              : Colors.black),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                  ),
+                                )
                               : PugItem.onShare(
-                              model: messageModel.content,
-                              currentUsername: username),
+                                  model: messageModel.content,
+                                  currentUsername: username),
                         ),
-                        widget.receiverUser.profilePicture.isNotEmpty
+                        userProfilePicture.isNotEmpty
                             ? ClipRRect(
                                 child: Image.network(
-                                  widget.receiverUser.profilePicture,
-                                  fit: BoxFit.contain,
+                                  userProfilePicture,
+                                  fit: BoxFit.cover,
                                   width: 40,
                                   height: 40,
                                 ),

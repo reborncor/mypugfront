@@ -52,7 +52,7 @@ class ChatListState extends State<ChatList> {
             ? ClipRRect(
                 child: Image.network(
                   receiverUser.profilePicture,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(100))
             : const Image(

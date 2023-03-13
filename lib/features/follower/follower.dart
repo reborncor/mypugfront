@@ -47,7 +47,7 @@ class FollowersViewState extends State<FollowersView> {
             ? ClipRRect(
             child: Image.network(
               model.username,
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(100))
             : const Image(

@@ -319,7 +319,7 @@ class PugItemState extends State<PugItem> {
                                         widget.model.author.profilePicture,
                                         width: 40,
                                         height: 40,
-                                        fit: BoxFit.contain,
+                                        fit: BoxFit.cover,
                                       ),
                                       borderRadius: BorderRadius.circular(100))
                                   : const Image(

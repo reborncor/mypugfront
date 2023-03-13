@@ -57,6 +57,13 @@ Future<void> saveUserData(SignInResponse data) async {
   sharedPreferences.setString("phoneNumber", data.phoneNumber);
 }
 
+Future<void> saveUserProfilePicture(String profilePicture) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+  sharedPreferences.setString("profilePicture", profilePicture);
+
+}
+
 Future<void> saveUserFirstUse() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   sharedPreferences.setString("firstUse", "firstUse");

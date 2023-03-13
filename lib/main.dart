@@ -41,7 +41,9 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
-          return MaterialApp(
+          return Container(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child:  MaterialApp(
             debugShowCheckedModeBanner: false,
 
             routes: {
@@ -88,7 +90,7 @@ class MyApp extends StatelessWidget {
 
             title: 'MyPUG',
             home: const SplashScreen(),
-          );
+          ));
         },
       ),
     );
