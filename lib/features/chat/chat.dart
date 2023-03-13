@@ -224,8 +224,10 @@ class _ChatState extends State<Chat> {
               child: (messageModel.senderUsername != username)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        renderProfilePicture(widget.receiverUser.profilePicture, widget.receiverUser.profilePicture.isNotEmpty, 40),
+                        renderProfilePicture(widget.receiverUser.profilePicture,
+                            widget.receiverUser.profilePicture.isNotEmpty, 40),
                         Flexible(
                             child: messageModel.type == 'text'
                                 ? Card(
@@ -275,7 +277,8 @@ class _ChatState extends State<Chat> {
                                   model: messageModel.content,
                                   currentUsername: username),
                         ),
-                        renderProfilePicture(userProfilePicture, userProfilePicture.isNotEmpty, 40),
+                        renderProfilePicture(userProfilePicture,
+                            userProfilePicture.isNotEmpty, 40),
                       ],
                     ),
             )));
