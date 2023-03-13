@@ -306,9 +306,12 @@ class ProfileState extends State<Profile> {
                                           imageFile,
                                       formerProfilePicture);
                                       if(result.code == SUCCESS_CODE){
-                                        refreshData();
+                                        refreshUserInfo();
                                         saveUserProfilePicture(result.profilePicture);
                                         showToast(context, "modification utilisateur effectuée");
+                                        setState(() {
+
+                                        });
                                       }
                                     },
                                     iconSize: 30,
@@ -440,12 +443,12 @@ class ProfileState extends State<Profile> {
     description = "";
     isModificated = false;
     _userResponse = getUserInfo();
-    _response = getAllPugsFromUser();
   }
 
   Future<void> refreshData() async {
     if (widget.username == "") {
         refreshUserInfo();
+        _response = getAllPugsFromUser();
     } else {
       _userResponse = getUserInfo();
       _response = getAllPugsFromUser();

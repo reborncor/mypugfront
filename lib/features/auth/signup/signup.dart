@@ -202,7 +202,7 @@ class SignUpState extends State<SignUp> {
                           alignment: WrapAlignment.center,
                           children: <Widget>[
                             Text(
-                              "J'accaptes les ",
+                              "J'accepte les ",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: APPCOLOR,
@@ -211,7 +211,7 @@ class SignUpState extends State<SignUp> {
                             InkWell(
                               onTap: _launchURL,
                               child: Text(
-                                "conditions d'utiliation",
+                                "conditions d'utilisation",
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: APPCOLOR,
