@@ -90,7 +90,8 @@ class SignInState extends State<SignIn> {
                 onPressed: () async {
                   if (_formkey.currentState!.validate()) {
                     var result = await signinUser(
-                        usernameController.text, passwordController.text);
+                        usernameController.text.trim(),
+                        passwordController.text);
                     print(result);
                     if (result.code == SUCCESS_CODE) {
                       this.notifier.isDark = true;

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
@@ -117,23 +118,15 @@ class PugItemState extends State<PugItem> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image(
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
+                ExtendedImage.network(widget.model.imageURL,
+                    fit: BoxFit.cover,
+                    cache: true,
+                    retries: 3,
+                    timeRetry: const Duration(milliseconds: 100),
 
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: APPCOLOR,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                  image: NetworkImage(widget.model.imageURL),
-                  fit: widget.model.isCrop ? BoxFit.cover : BoxFit.contain,
-                ),
+
+                    //cancelToken: cancellationToken,
+                    ),
                 Stack(children: [
                   Align(
                     alignment: Alignment.bottomLeft,
@@ -152,7 +145,7 @@ class PugItemState extends State<PugItem> {
                       .map((i, e) => MapEntry(
                           i,
                           Positioned(
-                            left: widget.onShare ?  e.dx  : e.dx,
+                            left: widget.onShare ? e.dx : e.dx,
                             top: widget.onShare
                                 ? (widget.model.height > 200)
                                     ? e.dy * 400 / widget.model.height

@@ -29,7 +29,7 @@ class UserFactory {
     return UserFactory.jsonData(
       username: json['username'],
       profilePicture: json['profilePicture'],
-      id: json['_id'],
+      id: json['_id'] ?? "",
     );
   }
 

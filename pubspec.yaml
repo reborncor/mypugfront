@@ -58,6 +58,7 @@ dependencies:
   encrypt: ^5.0.1
   fl_country_code_picker: ^0.0.3
   url_launcher: ^6.1.8
+  extended_image: ^6.1.0
 
 
 flutter_icons:
