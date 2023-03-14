@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/api.dart';
+import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/components/shareitem/shareitem.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
 import 'package:mypug/features/profile/profile.dart';
@@ -118,15 +119,15 @@ class PugItemState extends State<PugItem> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                ExtendedImage.network(widget.model.imageURL,
-                    fit: BoxFit.cover,
-                    cache: true,
-                    retries: 3,
-                    timeRetry: const Duration(milliseconds: 100),
+                ExtendedImage.network(
+                  widget.model.imageURL,
+                  fit: BoxFit.cover,
+                  cache: true,
+                  retries: 3,
+                  timeRetry: const Duration(milliseconds: 100),
 
-
-                    //cancelToken: cancellationToken,
-                    ),
+                  //cancelToken: cancellationToken,
+                ),
                 Stack(children: [
                   Align(
                     alignment: Alignment.bottomLeft,
@@ -177,8 +178,16 @@ class PugItemState extends State<PugItem> {
               }
             },
             onTap: () {
-              isVisible = !isVisible;
-              setState(() {});
+              if (widget.onShare) {
+                navigateTo(
+                    context,
+                    Pug.withPugModelFromOtherUser(
+                        model: widget.model,
+                        username: widget.model.author.username));
+              } else {
+                isVisible = !isVisible;
+                setState(() {});
+              }
             },
           ),
         ));
