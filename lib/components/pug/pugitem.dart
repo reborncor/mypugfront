@@ -102,7 +102,11 @@ class PugItemState extends State<PugItem> {
   Widget imageContent() {
     return Container(
         decoration: BoxDecoration(),
-        height: widget.onShare? 400 : null,
+        height: widget.onShare
+            ? (widget.model.height > 200)
+                ? 400
+                : 300
+            : null,
         child: ConstrainedBox(
           constraints: BoxConstraints(
               minHeight: 200,
@@ -148,8 +152,12 @@ class PugItemState extends State<PugItem> {
                       .map((i, e) => MapEntry(
                           i,
                           Positioned(
-                            left: e.dx,
-                            top: e.dy,
+                            left: widget.onShare ?  e.dx  : e.dx,
+                            top: widget.onShare
+                                ? (widget.model.height > 200)
+                                    ? e.dy * 400 / widget.model.height
+                                    : e.dy
+                                : e.dy,
                             child: Wrap(
                                 direction: Axis.vertical,
                                 spacing: 1,
@@ -300,7 +308,8 @@ class PugItemState extends State<PugItem> {
         return Column(
           children: [
             Container(
-              decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
+              decoration:
+                  widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
               child: Column(children: [
                 widget.fromProfile
                     ? SizedBox(
@@ -313,7 +322,10 @@ class PugItemState extends State<PugItem> {
                         children: [
                           Row(
                             children: [
-                              renderProfilePicture( widget.model.author.profilePicture,  widget.model.author.profilePicture.isNotEmpty, 40),
+                              renderProfilePicture(
+                                  widget.model.author.profilePicture,
+                                  widget.model.author.profilePicture.isNotEmpty,
+                                  40),
                               const SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {

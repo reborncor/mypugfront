@@ -48,7 +48,8 @@ class ChatListState extends State<ChatList> {
       onTap: () =>
           navigateTo(context, Chat.withUsername(receiverUser: receiverUser)),
       child: ListTile(
-        leading: renderProfilePicture(receiverUser.profilePicture, receiverUser.profilePicture.isNotEmpty, 50),
+        leading: renderProfilePicture(receiverUser.profilePicture,
+            receiverUser.profilePicture.isNotEmpty, 50),
         trailing: seen
             ? Icon(
                 Icons.send,
@@ -72,7 +73,9 @@ class ChatListState extends State<ChatList> {
               ? ""
               : model.chat.first.type == "text"
                   ? model.chat.first.content
-                  : "A partagé un pug"),
+                  : model.chat.first.senderUsername == _username
+                      ? "Vous avez partagé un pug"
+                      : "A partagé un pug"),
           style:
               TextStyle(color: notifier.isDark ? Colors.black : Colors.black),
         ),

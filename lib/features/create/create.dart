@@ -140,7 +140,7 @@ class CreatePugState extends State<CreatePug> {
               child: AspectRatio(
                 aspectRatio: 4 / 5,
                 child: Image.file(imageFile!,
-                    fit: isCrop ? BoxFit.fitWidth : BoxFit.contain),
+                    fit: isCrop ? BoxFit.cover : BoxFit.contain),
               ),
             );
           }
