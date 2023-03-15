@@ -71,7 +71,11 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
+
       bottomNavigationBar: DotNavigationBar(
+        
+
+
         items: <DotNavigationBarItem>[
           DotNavigationBarItem(
             icon: const Icon(Icons.home),
