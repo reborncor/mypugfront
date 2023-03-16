@@ -122,7 +122,8 @@ class SignInState extends State<SignIn> {
     return Consumer<ThemeModel>(
       builder: (context, notifier, child) {
         this.notifier = notifier;
-        return Scaffold(body: Center(child: userForm()));
+        return Scaffold(
+            resizeToAvoidBottomInset: false, body: Center(child: userForm()));
       },
     );
   }

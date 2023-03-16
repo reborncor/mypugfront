@@ -320,7 +320,6 @@ _showToastSignal(context) {
 }
 
 renderProfilePicture(String path, bool exist, double size ){
-  log("PATH : $exist");
   return exist ? ClipRRect(
       child: Image.network(
         path,

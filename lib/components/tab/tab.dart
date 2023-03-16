@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -66,16 +68,22 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallDevice = MediaQuery.of(context).size.width < 355;
     return Scaffold(
       extendBody: true,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-
       bottomNavigationBar: DotNavigationBar(
-        
-
-
+        itemPadding: isSmallDevice
+            ? const EdgeInsets.symmetric(vertical: 5, horizontal: 10)
+            : const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        marginR: isSmallDevice
+            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
+            : const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+        paddingR: isSmallDevice
+            ? const EdgeInsets.symmetric(vertical: 2)
+            : const EdgeInsets.only(bottom: 5, top: 10),
         items: <DotNavigationBarItem>[
           DotNavigationBarItem(
             icon: const Icon(Icons.home),
@@ -96,7 +104,8 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
           DotNavigationBarItem(
             icon: (notification > 0)
                 ? Badge(
-                    badgeContent: Text(notification > 99 ? "99+" : notification.toString()),
+                    badgeContent: Text(
+                        notification > 99 ? "99+" : notification.toString()),
                     badgeColor: APPCOLOR6,
                     child: const Icon(Icons.messenger),
                   )

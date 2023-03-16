@@ -121,7 +121,7 @@ class PugItemState extends State<PugItem> {
               children: [
                 ExtendedImage.network(
                   widget.model.imageURL,
-                  fit: widget.model.isCrop ? BoxFit.fitWidth: BoxFit.contain,
+                  fit: widget.model.isCrop ? BoxFit.cover: BoxFit.contain,
                   cache: true,
                   retries: 3,
                   timeRetry: const Duration(milliseconds: 100),

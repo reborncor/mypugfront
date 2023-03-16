@@ -59,9 +59,13 @@ class ProfileState extends State<Profile> {
   final ImagePicker _picker = ImagePicker();
   File? imageFile;
   bool onUpdateMode = false;
+  late bool isSmallDevice = false;
 
   @override
   void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      isSmallDevice = MediaQuery.of(context).size.width < 355;
+    });
     fetchData();
     super.initState();
   }
@@ -133,8 +137,8 @@ class ProfileState extends State<Profile> {
                       alignment: Alignment.bottomCenter,
                       children: [
                         SizedBox(
-                          height: 150,
-                          width: 120,
+                          height: isSmallDevice ? 75 : 150,
+                          width: isSmallDevice ? 75 : 120,
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             radius: 100,
@@ -304,14 +308,14 @@ class ProfileState extends State<Profile> {
                                           snapshot.data!.profilePicture,
                                           imageFile != null,
                                           imageFile,
-                                      formerProfilePicture);
-                                      if(result.code == SUCCESS_CODE){
+                                          formerProfilePicture);
+                                      if (result.code == SUCCESS_CODE) {
                                         refreshUserInfo();
-                                        saveUserProfilePicture(result.profilePicture);
-                                        showToast(context, "modification utilisateur effectuée");
-                                        setState(() {
-
-                                        });
+                                        saveUserProfilePicture(
+                                            result.profilePicture);
+                                        showToast(context,
+                                            "modification utilisateur effectuée");
+                                        setState(() {});
                                       }
                                     },
                                     iconSize: 30,
@@ -438,7 +442,8 @@ class ProfileState extends State<Profile> {
       },
     );
   }
-  refreshUserInfo(){
+
+  refreshUserInfo() {
     imageFile = null;
     description = "";
     isModificated = false;
@@ -447,8 +452,8 @@ class ProfileState extends State<Profile> {
 
   Future<void> refreshData() async {
     if (widget.username == "") {
-        refreshUserInfo();
-        _response = getAllPugsFromUser();
+      refreshUserInfo();
+      _response = getAllPugsFromUser();
     } else {
       _userResponse = getUserInfo();
       _response = getAllPugsFromUser();
