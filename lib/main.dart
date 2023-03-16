@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/actuality/actuality.dart';
+import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
 import 'package:mypug/features/chat/chatlist.dart';
@@ -41,56 +41,58 @@ class MyApp extends StatelessWidget {
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
         builder: (context, ThemeModel themeNotifier, child) {
-          return Container(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child:  MaterialApp(
-            debugShowCheckedModeBanner: false,
+          return Align(
+            child: Container(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
 
-            routes: {
-              '/actualityall': (context) => ActualityAll(),
-              '/actuality': (context) => Actuality(),
-              '/create': (context) => CreatePug(),
-              '/profile': (context) => Profile(),
-              '/setting': (context) => Setting(),
-              '/tabview': (context) => TabView(),
-              '/signin': (context) => SignIn(),
-              '/signup': (context) => SignUp(),
-              '/pug': (context) => Pug(),
-              '/search': (context) => Search(),
-              '/chatlist': (context) => ChatList(),
-              '/chat': (context) => Chat(),
-              '/pugscomments': (context) => PugComments(),
-              '/follower': (context) => FollowersView(),
-              '/following': (context) => FollowingView(),
-              '/usersblocked': (context) => UsersBlockedView(),
-            },
+                  routes: {
+                    '/actualityall': (context) => ActualityAll(),
+                    '/actuality': (context) => Actuality(),
+                    '/create': (context) => CreatePug(),
+                    '/profile': (context) => Profile(),
+                    '/setting': (context) => Setting(),
+                    '/tabview': (context) => TabView(),
+                    '/signin': (context) => SignIn(),
+                    '/signup': (context) => SignUp(),
+                    '/pug': (context) => Pug(),
+                    '/search': (context) => Search(),
+                    '/chatlist': (context) => ChatList(),
+                    '/chat': (context) => Chat(),
+                    '/pugscomments': (context) => PugComments(),
+                    '/follower': (context) => FollowersView(),
+                    '/following': (context) => FollowingView(),
+                    '/usersblocked': (context) => UsersBlockedView(),
+                  },
 
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              primaryColorDark: Colors.black,
-              primaryColor: Colors.black54,
-              scaffoldBackgroundColor: Colors.black54,
-              bottomSheetTheme: BottomSheetThemeData(
-                backgroundColor: Colors.black54,
-                modalBackgroundColor: Colors.black54,
-              ),
-            ),
+                  darkTheme: ThemeData(
+                    brightness: Brightness.dark,
+                    primaryColorDark: Colors.black,
+                    primaryColor: Colors.black54,
+                    scaffoldBackgroundColor: Colors.black54,
+                    bottomSheetTheme: BottomSheetThemeData(
+                      backgroundColor: Colors.black54,
+                      modalBackgroundColor: Colors.black54,
+                    ),
+                  ),
 
-            // theme: ThemeData(
-            //   bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black54,modalBackgroundColor: Colors.black54,),
-            //   brightness: Brightness.dark,
-            //   primaryColorDark: Colors.black,
-            //   primaryColor: Colors.black54,
-            //   scaffoldBackgroundColor: Colors.black54,
-            // ),
+                  // theme: ThemeData(
+                  //   bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black54,modalBackgroundColor: Colors.black54,),
+                  //   brightness: Brightness.dark,
+                  //   primaryColorDark: Colors.black,
+                  //   primaryColor: Colors.black54,
+                  //   scaffoldBackgroundColor: Colors.black54,
+                  // ),
 
-            // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
+                  // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
-            themeMode: ThemeMode.dark,
+                  themeMode: ThemeMode.dark,
 
-            title: 'MyPUG',
-            home: const SplashScreen(),
-          ));
+                  title: 'MyPUG',
+                  home: const SplashScreen(),
+                )),
+          );
         },
       ),
     );

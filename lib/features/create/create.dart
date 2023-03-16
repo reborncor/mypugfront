@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -62,7 +61,6 @@ class CreatePugState extends State<CreatePug> {
       );
 
       getUserFirstUse().then((value) => {
-            log("EMPTY :" + value),
             if (value.isNotEmpty && value.length < 5) {tooltip.show(context)}
           });
     });
