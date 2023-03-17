@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/models/MessageModel.dart';
@@ -49,7 +48,12 @@ class ShareItemState extends State<ShareItem> {
                 {
                   notSend = false,
                   text = notSend ? "Envoyer" : "Envoyé",
-                  setState(() {})
+                  if (this.mounted)
+                    {
+                      setState(() {
+                        // Your state change code goes here
+                      })
+                    }
                 }
             });
   }
@@ -74,7 +78,8 @@ class ShareItemState extends State<ShareItem> {
           onTap: () => navigateTo(
               context, Profile.fromUsername(username: widget.user.username)),
           child: ListTile(
-              leading: renderProfilePicture(widget.user.profilePicture, widget.user.profilePicture.isNotEmpty, 40),
+              leading: renderProfilePicture(widget.user.profilePicture,
+                  widget.user.profilePicture.isNotEmpty, 40),
               title: Text(
                 widget.user.username,
                 style: TextStyle(

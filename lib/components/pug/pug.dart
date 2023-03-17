@@ -15,9 +15,11 @@ class Pug extends StatefulWidget {
   final routeName = '/pug';
   final PugModel? model;
   final String? username;
+
+
   final bool isOwner;
 
-  const Pug({Key? key, this.model, this.username, this.isOwner = false})
+  const Pug({Key? key, this.model, this.username,this.isOwner = false})
       : super(key: key);
 
   const Pug.withPugModel(
@@ -103,6 +105,7 @@ class PugState extends State<Pug> {
                 currentUsername: widget.model!.author.username,
                 model: widget.model!,
                 fromProfile: widget.isOwner,
+                profileView: true,
               ),
               decoration: BoxCircular(notifier),
             ),
