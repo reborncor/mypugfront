@@ -164,7 +164,6 @@ Future<UserResponse> updateUserInfo(
   String path = "/user/info";
 
   try {
-    log("NEW PICTURE : $newPicture");
     if (newPicture) {
       final minio = Minio(
         endPoint: 's3.amazonaws.com',
@@ -173,7 +172,7 @@ Future<UserResponse> updateUserInfo(
         region: AWSRegions.euWest3.region,
       );
 
-      await minio.removeObject(AWS_BUCKETNAME, formerImage);
+      await minio.removeObject(AWS_BUCKETNAME, formerImage.replaceAll('$AWS_URL/uploads/$username/', ''));
       final encryptedFileName = utf8.fuse(base64).encode(username + file!.path);
       await minio.fPutObject(AWS_BUCKETNAME,
           'uploads/$username/$encryptedFileName.png', file.path);
