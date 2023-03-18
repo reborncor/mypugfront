@@ -132,6 +132,7 @@ class PugItemState extends State<PugItem> {
                   retries: 3,
                   timeRetry: const Duration(milliseconds: 100),
 
+
                   //cancelToken: cancellationToken,
                 ),
                 Stack(children: [
@@ -347,10 +348,13 @@ class PugItemState extends State<PugItem> {
                       children: [
                         Row(
                           children: [
-                            renderProfilePicture(
-                                widget.model.author.profilePicture,
-                                widget.model.author.profilePicture.isNotEmpty,
-                                40),
+                            !widget.onShare
+                                ? renderProfilePicture(
+                                    widget.model.author.profilePicture,
+                                    widget
+                                        .model.author.profilePicture.isNotEmpty,
+                                    40)
+                                : const SizedBox(width: 0),
                             const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
@@ -377,13 +381,20 @@ class PugItemState extends State<PugItem> {
                             ),
                           ],
                         ),
-                        IconButton(
-                            onPressed: () => showBottomSheetSignal(context,
-                                widget.model.author.username, widget.model.id),
-                            icon: Icon(
-                              Icons.more_vert,
-                              size: 30,
-                            ))
+                        widget.currentUsername == widget.model.author.username
+                            ? SizedBox(
+                                width: 0,
+                                height: 0,
+                              )
+                            : IconButton(
+                                onPressed: () => showBottomSheetSignal(
+                                    context,
+                                    widget.model.author.username,
+                                    widget.model.id),
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  size: 30,
+                                ))
                       ],
                     )
             ]),

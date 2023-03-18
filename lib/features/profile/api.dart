@@ -173,7 +173,7 @@ Future<UserResponse> updateUserInfo(
       );
       try {
         await minio.removeObject(AWS_BUCKETNAME,
-            formerImage.replaceAll('$AWS_URL/uploads/$username/', ''));
+            formerImage.replaceAll('$AWS_URL/', ''));
       } catch (e) {}
 
       final encryptedFileName = utf8.fuse(base64).encode(username + file!.path);

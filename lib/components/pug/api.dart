@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:minio/minio.dart';
 import 'package:mypug/models/pugmodel.dart';
-import 'package:mypug/response/baseresponse.dart';import 'package:mypug/util/config.dart';
+import 'package:mypug/response/baseresponse.dart';
+import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 import 'package:simple_s3/simple_s3.dart';
 
@@ -120,9 +121,10 @@ Future<BasicResponse> deletePug(
         accessKey: AWS_ACCESSKEY,
         secretKey: AWS_SECRETKEY,
         region: AWSRegions.euWest3.region);
-
-    await minio.removeObject('bucketmypug',
-        'uploads/' + imageUrl.replaceAll(AWS_URL + "/uploads/", ""));
+    try {
+      await minio.removeObject(
+          AWS_BUCKETNAME, imageUrl.replaceAll('$AWS_URL/', ''));
+    } catch (e) {}
   } catch (e) {
     print(e.toString());
 

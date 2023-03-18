@@ -162,10 +162,14 @@ class ProfileState extends State<Profile> {
                                         image:
                                             AssetImage('asset/images/user.png'),
                                       )
-                                    : ClipRRect(borderRadius: BorderRadius.circular(100), child:  Image.file(imageFile!,
-                                height: isSmallDevice ? 75 : 100,
-                                width: isSmallDevice ? 75 : 100,
-                                fit: BoxFit.cover),),
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.file(imageFile!,
+                                            height: isSmallDevice ? 75 : 100,
+                                            width: isSmallDevice ? 75 : 100,
+                                            fit: BoxFit.cover),
+                                      ),
                           ),
                         ),
                         Visibility(
@@ -386,18 +390,17 @@ class ProfileState extends State<Profile> {
   Widget imageItemBuffer(PugModel model) {
     return InkWell(
       child: Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          child:
-          ExtendedImage.network(
-            model.imageURL,
-            fit: BoxFit.fitWidth,
-            cache: true,
-            retries: 3,
-            timeRetry: const Duration(milliseconds: 100),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: ExtendedImage.network(
+          model.imageURL,
+          fit: BoxFit.fitWidth,
+          cache: true,
+          retries: 3,
+          timeRetry: const Duration(milliseconds: 100),
 
-            //cancelToken: cancellationToken,
-          ),
-         ),
+
+        ),
+      ),
       onTap: () {
         if (widget.username == "") {
           navigateTo(context, Pug.withPugModel(model: model));
@@ -543,11 +546,9 @@ class ProfileState extends State<Profile> {
         : "asset/images/logo-header-light.png";
 
     return NestedScrollView(
-
-          controller: scrollController,
-          headerSliverBuilder: (context, innerBoxScrolled) => [
+      controller: scrollController,
+      headerSliverBuilder: (context, innerBoxScrolled) => [
         SliverAppBar(
-
           collapsedHeight: 120,
           automaticallyImplyLeading: false,
           backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
@@ -559,17 +560,16 @@ class ProfileState extends State<Profile> {
             background: Image.asset(
               pathImage,
               fit: BoxFit.fitWidth,
-
             ),
           ),
         ),
-        ],
-        body : SmartRefresher(
-          controller: _refreshController,
-          onRefresh: refreshData,
-          child: SingleChildScrollView(
+      ],
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: refreshData,
+        child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child:  Column(
+            child: Column(
               children: [
                 Container(
                   child: profileHeader(),
@@ -578,9 +578,8 @@ class ProfileState extends State<Profile> {
                 ),
                 newProfileContent()
               ],
-            )
-          ),
-        ),
-      );
+            )),
+      ),
+    );
   }
 }

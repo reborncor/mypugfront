@@ -158,14 +158,17 @@ class _ChatState extends State<Chat> {
   }
 
   sendMessage(String message) {
-    messageSent = MessageModel(
-        time: "",
-        content: message,
-        senderUsername: username,
-        receiverUsername: widget.receiverUser.username,
-        type: 'text',
-        id: "");
-    socket.emit("message", messageSent.toJson());
+    if(!message.trim().isEmpty){
+      messageSent = MessageModel(
+          time: "",
+          content: message,
+          senderUsername: username,
+          receiverUsername: widget.receiverUser.username,
+          type: 'text',
+          id: "");
+      socket.emit("message", messageSent.toJson());
+    }
+
   }
 
   sendMessageSeen() {
