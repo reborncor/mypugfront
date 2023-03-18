@@ -84,9 +84,9 @@ class ActualityAllState extends State<ActualityAll> {
     list = _response.pugs;
     streamController.add("event");
     _refreshController.refreshCompleted();
-    scrollController.animateTo(200,
-        duration: Duration(milliseconds: 1000), curve: Curves.ease);
-    this.scrollPagePhysique = false;
+    scrollController.animateTo(151,
+        duration: const Duration(milliseconds: 700), curve: Curves.ease);
+    scrollPagePhysique = false;
     setState(() {});
   }
 
