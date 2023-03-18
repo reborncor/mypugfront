@@ -16,10 +16,11 @@ import 'api.dart';
 class FollowersView extends StatefulWidget {
   final routeName = '/follower';
   String userSearched = "";
+  bool isOwner = false;
 
   FollowersView({Key? key}) : super(key: key);
 
-  FollowersView.withName({Key? key, required this.userSearched})
+  FollowersView.withName({Key? key, required this.userSearched, required this.isOwner})
       : super(key: key);
 
   @override

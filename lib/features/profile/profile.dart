@@ -223,7 +223,10 @@ class ProfileState extends State<Profile> {
                               navigateTo(
                                   context,
                                   FollowersView.withName(
+                                    isOwner: widget.username.isEmpty,
+
                                     userSearched: username,
+
                                   ));
                             },
                           ),
@@ -237,6 +240,7 @@ class ProfileState extends State<Profile> {
                               navigateTo(
                                   context,
                                   FollowingView.withName(
+                                    isOwner: widget.username.isEmpty,
                                       userSearched: username));
                             },
                           ),

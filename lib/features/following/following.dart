@@ -11,15 +11,18 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
 import '../../service/themenotifier.dart';
+import '../profile/profile.dart';
 import 'api.dart';
 
 class FollowingView extends StatefulWidget {
   final routeName = '/following';
   String userSearched = "";
+  bool isOwner = false;
 
   FollowingView({Key? key}) : super(key: key);
 
-  FollowingView.withName({Key? key, required this.userSearched})
+  FollowingView.withName(
+      {Key? key, required this.userSearched, required this.isOwner})
       : super(key: key);
 
   @override
@@ -40,7 +43,28 @@ class FollowingViewState extends State<FollowingView> {
   }
 
   Widget itemFollowing(UserSearchModel model, index) {
-    return FollowerItem(user: model);
+    if (widget.isOwner) {
+      return FollowerItem(user: model);
+
+    }else{
+      return InkWell(
+        onTap: () =>
+            navigateTo(context, Profile.fromUsername(username: model.username)),
+        child: ListTile(
+          leading: renderProfilePicture(
+              model.profilePicture, model.profilePicture.isNotEmpty, 40),
+          title: Text(model.username),
+          trailing: OutlinedButton(
+              onPressed: () {
+                navigateTo(
+                    context, Profile.fromUsername(username: model.username));
+              },
+              child: const Text("Consulter",
+                  style: TextStyle(color: Colors.white))),
+        ),
+      );
+    }
+
   }
 
   Widget content() {
