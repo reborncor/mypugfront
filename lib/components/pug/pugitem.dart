@@ -132,7 +132,6 @@ class PugItemState extends State<PugItem> {
                   retries: 3,
                   timeRetry: const Duration(milliseconds: 100),
 
-
                   //cancelToken: cancellationToken,
                 ),
                 Stack(children: [
@@ -215,66 +214,82 @@ class PugItemState extends State<PugItem> {
     return Container(
       decoration: widget.onShare ? BoxDecoration(color: APPCOLOR5) : null,
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 50,
-              alignment: Alignment.center,
-              child: Text(
-                widget.model.numberOfComments.toString(),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+        widget.onShare
+            ? const SizedBox(
+                height: 5,
+                width: 0,
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 50,
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.model.numberOfComments.toString(),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: 30,
+                    child: Text(
+                      imageLike.toString(),
+                      style: TextStyle(
+                          color: APPCOLOR,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Container(
-              width: 30,
-              child: Text(
-                imageLike.toString(),
-                style: TextStyle(
-                    color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             imageCommentaire(list),
-            Column(
-              children: [
-                IconButton(
-                    onPressed: () async {
-                      if (!isLiked) {
-                        final result = await likeOrUnlikePug(widget.model.id,
-                            widget.model.author.username, true);
-                        if (result.code == SUCCESS_CODE) {
-                          imageLike += 1;
-                          isLiked = !isLiked;
-                        }
-                      } else {
-                        final result = await likeOrUnlikePug(widget.model.id,
-                            widget.model.author.username, false);
-                        if (result.code == SUCCESS_CODE) {
-                          imageLike -= 1;
-                          isLiked = !isLiked;
-                        }
-                      }
-                      setState(() {});
-                    },
-                    icon: (isLiked)
-                        ? Icon(
-                            Icons.favorite,
-                            color: APPCOLOR,
-                          )
-                        : Icon(
-                            Icons.favorite_border,
-                            color: APPCOLOR,
-                          )),
-              ],
-            )
+            widget.onShare
+                ? const SizedBox(
+                    height: 0,
+                    width: 0,
+                  )
+                : Column(
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            if (!isLiked) {
+                              final result = await likeOrUnlikePug(
+                                  widget.model.id,
+                                  widget.model.author.username,
+                                  true);
+                              if (result.code == SUCCESS_CODE) {
+                                imageLike += 1;
+                                isLiked = !isLiked;
+                              }
+                            } else {
+                              final result = await likeOrUnlikePug(
+                                  widget.model.id,
+                                  widget.model.author.username,
+                                  false);
+                              if (result.code == SUCCESS_CODE) {
+                                imageLike -= 1;
+                                isLiked = !isLiked;
+                              }
+                            }
+                            setState(() {});
+                          },
+                          icon: (isLiked)
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: APPCOLOR,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  color: APPCOLOR,
+                                )),
+                    ],
+                  )
           ],
         )
       ]),
@@ -282,7 +297,9 @@ class PugItemState extends State<PugItem> {
   }
 
   Widget imageCommentaire(List<CommentModel> list) {
-    return Column(
+    return Padding(padding: EdgeInsets.only(left: widget.onShare ? 10 : 0),child:Column(
+
+
       children: [
         GestureDetector(
             onTap: () {
@@ -294,7 +311,8 @@ class PugItemState extends State<PugItem> {
                       description: widget.model.imageDescription));
             },
             child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+              padding:
+              EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey.shade300.withOpacity(0.5)),
@@ -305,9 +323,11 @@ class PugItemState extends State<PugItem> {
                     fontSize: 19,
                     color: isDarkMode ? Colors.white : Colors.black),
               ),
-            ))
+            )),
+        SizedBox(height: widget.onShare ? 5 : 0,)
       ],
-    );
+
+    ),);
   }
 
   Widget imageDetail(String detail) {

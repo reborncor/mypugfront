@@ -68,7 +68,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final isSmallDevice = MediaQuery.of(context).size.width < 355;
+    bool isSmallDevice = MediaQuery.of(context).size.width < 370 || MediaQuery.of(context).devicePixelRatio < 2.7;
     return Scaffold(
       extendBody: true,
       body: Center(
@@ -76,7 +76,7 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
       ),
       bottomNavigationBar: DotNavigationBar(
         itemPadding: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 5, horizontal: 10)
+            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
             : const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         marginR: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)

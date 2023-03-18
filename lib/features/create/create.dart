@@ -134,10 +134,11 @@ class CreatePugState extends State<CreatePug> {
           } else {
             return SizedBox(
               width: 500,
-              height: 500,
+              height: MediaQuery.of(context).size.height < 600 ? 300 : 500 ,
               child: AspectRatio(
                 aspectRatio: 4 / 5,
                 child: Image.file(imageFile!,
+
                     fit: isCrop ? BoxFit.cover : BoxFit.contain),
               ),
             );

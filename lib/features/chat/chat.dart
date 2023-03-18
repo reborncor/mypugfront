@@ -158,7 +158,7 @@ class _ChatState extends State<Chat> {
   }
 
   sendMessage(String message) {
-    if(!message.trim().isEmpty){
+    if(message.trim().isNotEmpty){
       messageSent = MessageModel(
           time: "",
           content: message,

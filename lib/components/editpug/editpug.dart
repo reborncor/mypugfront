@@ -291,7 +291,7 @@ class EditPugState extends State<EditPug> {
       height: PUGSIZE,
       width: 100,
       decoration: BoxDecoration(
-          color: Colors.red,
+          color: Colors.transparent,
           image: DecorationImage(
             image: FileImage(image),
             fit: widget.isCrop ? BoxFit.cover : BoxFit.contain,
