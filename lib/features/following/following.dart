@@ -49,7 +49,7 @@ class FollowingViewState extends State<FollowingView> {
     }else{
       return InkWell(
         onTap: () =>
-            navigateTo(context, Profile.fromUsername(username: model.username)),
+            model.username == _username ? navigateWithName(context, Profile().routeName) : navigateTo(context, Profile.fromUsername(username: model.username)),
         child: ListTile(
           leading: renderProfilePicture(
               model.profilePicture, model.profilePicture.isNotEmpty, 40),
