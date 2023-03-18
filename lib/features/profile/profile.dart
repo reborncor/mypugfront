@@ -52,7 +52,6 @@ class ProfileState extends State<Profile> {
   bool isModificated = false;
   late String formerProfilePicture;
   final RefreshController _refreshController = RefreshController();
-  final RefreshController _refreshController2 = RefreshController();
   late ScrollController scrollController =
       ScrollController(initialScrollOffset: 200);
   late bool hasBackButton = false;

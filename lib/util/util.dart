@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mypug/response/signinresponse.dart';
@@ -321,11 +322,12 @@ _showToastSignal(context) {
 
 renderProfilePicture(String path, bool exist, double size ){
   return exist ? ClipRRect(
-      child: Image.network(
+      child: ExtendedImage.network(
         path,
         width: size,
         height: size,
         fit: BoxFit.cover,
+        cache: true,
       ),
       borderRadius: BorderRadius.circular(100))
   : Image(

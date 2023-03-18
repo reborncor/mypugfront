@@ -351,10 +351,26 @@ class EditPugState extends State<EditPug> {
           valueListenable: _isLoadingNotifier,
           builder: (context, _isLoading, _) {
             log("INFOPUG ${_isLoading.toString()}");
-            return ElevatedButton(
-                style: BaseButtonRoundedColor(40, 40, APPCOLOR),
-                onPressed: !(_isLoading as bool) ? functionCreate : null,
-                child: Text("Envoyer"));
+            return Column(
+              children: [
+                Visibility(
+                    visible: (_isLoading as bool),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: APPCOLOR,
+                        ),
+                      ),
+                    )),
+                ElevatedButton(
+                    style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+                    onPressed: !(_isLoading) ? functionCreate : null,
+                    child: Text("Envoyer")),
+              ],
+            );
           },
         )
       ],
@@ -380,7 +396,6 @@ class EditPugState extends State<EditPug> {
       showSnackBar(context, "Veuillez ajouter au moins une référence");
     }
     _isLoadingNotifier.value = false;
-
   }
 
   @override
