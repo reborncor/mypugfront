@@ -29,28 +29,31 @@ class PugItem extends StatefulWidget {
   final bool onShare;
   final bool profileView;
 
-  const PugItem({Key? key,
-    required this.model,
-    required this.currentUsername,
-    this.onShare = false,
-    this.profileView = false,
-    this.fromProfile = false})
+  const PugItem(
+      {Key? key,
+      required this.model,
+      required this.currentUsername,
+      this.onShare = false,
+      this.profileView = false,
+      this.fromProfile = false})
       : super(key: key);
 
-  const PugItem.fromProfile({Key? key,
-    required this.model,
-    required this.currentUsername,
-    this.fromProfile = true,
-    this.profileView = false,
-    this.onShare = false})
+  const PugItem.fromProfile(
+      {Key? key,
+      required this.model,
+      required this.currentUsername,
+      this.fromProfile = true,
+      this.profileView = false,
+      this.onShare = false})
       : super(key: key);
 
-  const PugItem.onShare({Key? key,
-    required this.model,
-    required this.currentUsername,
-    this.fromProfile = false,
-    this.profileView = false,
-    this.onShare = true})
+  const PugItem.onShare(
+      {Key? key,
+      required this.model,
+      required this.currentUsername,
+      this.fromProfile = false,
+      this.profileView = false,
+      this.onShare = true})
       : super(key: key);
 
   @override
@@ -75,7 +78,6 @@ class PugItemState extends State<PugItem> {
   @override
   void initState() {
     super.initState();
-    print("DATAW"+widget.profileView.toString());
     imageURL = widget.model.imageURL;
     imageTitle = widget.model.imageTitle!;
     imageDescription = widget.model.imageDescription;
@@ -94,15 +96,15 @@ class PugItemState extends State<PugItem> {
   Widget _typer(String text, isVisible) {
     return Container(
         child: AnimatedOpacity(
-          opacity: isVisible ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 200),
-          child: text.isNotEmpty
-              ? Center(
+      opacity: isVisible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 200),
+      child: text.isNotEmpty
+          ? Center(
               child: InstagramMention(text: text, color: APP_COMMENT_COLOR))
-              : SizedBox(
-            width: 0,
-          ),
-        ));
+          : SizedBox(
+              width: 0,
+            ),
+    ));
   }
 
   Widget imageContent() {
@@ -110,8 +112,8 @@ class PugItemState extends State<PugItem> {
         decoration: BoxDecoration(),
         height: widget.onShare
             ? (widget.model.height > 200)
-            ? 400
-            : 300
+                ? 400
+                : 300
             : null,
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -135,37 +137,37 @@ class PugItemState extends State<PugItem> {
                 Stack(children: [
                   !widget.onShare
                       ? Align(
-                    alignment: Alignment.bottomLeft,
-                    child: GestureDetector(
-                      onTap: () =>
-                          showBottomSheetFollowing(
-                              context, widget.currentUsername, widget.model),
-                      child: Transform.rotate(
-                        angle: -pi / 8,
-                        child: const Image(
-                          image:
-                          AssetImage("asset/images/share-icon.png"),
-                          width: 40,
-                          height: 40,
-                        ),
-                      ),
-                    ),
-                  )
+                          alignment: Alignment.bottomLeft,
+                          child: GestureDetector(
+                              onTap: () => showBottomSheetFollowing(context,
+                                  widget.currentUsername, widget.model),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10, bottom: 10),
+                                child: Transform.rotate(
+                                  angle: -pi / 8,
+                                  child: const Image(
+                                    image: AssetImage(
+                                        "asset/images/share-icon.png"),
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
+                              )),
+                        )
                       : const SizedBox(
-                    width: 0,
-                    height: 0,
-                  ),
+                          width: 0,
+                          height: 0,
+                        ),
                   ...points
                       .asMap()
-                      .map((i, e) =>
-                      MapEntry(
+                      .map((i, e) => MapEntry(
                           i,
                           Positioned(
                             left: widget.onShare ? e.dx : e.dx,
                             top: widget.onShare
                                 ? (widget.model.height > 200)
-                                ? e.dy * 400 / widget.model.height
-                                : e.dy
+                                    ? e.dy * 400 / widget.model.height
+                                    : e.dy
                                 : e.dy,
                             child: Wrap(
                                 direction: Axis.vertical,
@@ -263,13 +265,13 @@ class PugItemState extends State<PugItem> {
                     },
                     icon: (isLiked)
                         ? Icon(
-                      Icons.favorite,
-                      color: APPCOLOR,
-                    )
+                            Icons.favorite,
+                            color: APPCOLOR,
+                          )
                         : Icon(
-                      Icons.favorite_border,
-                      color: APPCOLOR,
-                    )),
+                            Icons.favorite_border,
+                            color: APPCOLOR,
+                          )),
               ],
             )
           ],
@@ -323,7 +325,6 @@ class PugItemState extends State<PugItem> {
       builder: (context, ThemeModel notifier, child) {
         isDarkMode = notifier.isDark;
         return content(notifier);
-
       },
     );
   }
@@ -333,63 +334,58 @@ class PugItemState extends State<PugItem> {
       return Column(
         children: [
           Container(
-            decoration:
-            widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
+            decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
             child: Column(children: [
               widget.fromProfile
                   ? SizedBox(
-                width: 0,
-                height: 0,
-              )
+                      width: 0,
+                      height: 0,
+                    )
                   : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      renderProfilePicture(
-                          widget.model.author.profilePicture,
-                          widget.model.author.profilePicture.isNotEmpty,
-                          40),
-                      const SizedBox(width: 10),
-                      GestureDetector(
-                        onTap: () {
-                          navigateTo(
-                              context,
-                              Profile.fromUsername(
-                                  username:
-                                  widget.model.author.username));
-                        },
-                        child: Container(
-                            padding:
-                            EdgeInsets.only(left: 10, right: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade300
-                                    .withOpacity(0.6)),
-                            child: Text(
-                              widget.model.author.username,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: notifier.isDark
-                                      ? Colors.white
-                                      : Colors.black),
-                            )),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                      onPressed: () =>
-                          showBottomSheetSignal(
-                              context,
-                              widget.model.author.username,
-                              widget.model.id),
-                      icon: Icon(
-                        Icons.more_vert,
-                        size: 30,
-                      ))
-                ],
-              )
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            renderProfilePicture(
+                                widget.model.author.profilePicture,
+                                widget.model.author.profilePicture.isNotEmpty,
+                                40),
+                            const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    Profile.fromUsername(
+                                        username:
+                                            widget.model.author.username));
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade300
+                                          .withOpacity(0.6)),
+                                  child: Text(
+                                    widget.model.author.username,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: notifier.isDark
+                                            ? Colors.white
+                                            : Colors.black),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                            onPressed: () => showBottomSheetSignal(context,
+                                widget.model.author.username, widget.model.id),
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 30,
+                            ))
+                      ],
+                    )
             ]),
           ),
           // ListView(children: [],),
@@ -397,87 +393,81 @@ class PugItemState extends State<PugItem> {
           imageInformation(imageTitle, widget.model.comments),
           widget.fromProfile
               ? Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    showMyDialogDelete("Suppréssion",
-                        "Vous êtes sur le point de supprimer un pug");
-                  },
-                  child: Text("Supprimer"),
-                  style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
-            ),
-          )
+                  padding: EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          showMyDialogDelete("Suppréssion",
+                              "Vous êtes sur le point de supprimer un pug");
+                        },
+                        child: Text("Supprimer"),
+                        style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
+                  ),
+                )
               : SizedBox(
-            width: 0,
-            height: 0,
-          )
+                  width: 0,
+                  height: 0,
+                )
         ],
       );
-    }
-    else {
+    } else {
       return ListView(
         children: [
           Container(
-            decoration:
-            widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
+            decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
             child: Column(children: [
               widget.fromProfile
                   ? SizedBox(
-                width: 0,
-                height: 0,
-              )
+                      width: 0,
+                      height: 0,
+                    )
                   : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      renderProfilePicture(
-                          widget.model.author.profilePicture,
-                          widget.model.author.profilePicture.isNotEmpty,
-                          40),
-                      const SizedBox(width: 10),
-                      GestureDetector(
-                        onTap: () {
-                          navigateTo(
-                              context,
-                              Profile.fromUsername(
-                                  username:
-                                  widget.model.author.username));
-                        },
-                        child: Container(
-                            padding:
-                            EdgeInsets.only(left: 10, right: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade300
-                                    .withOpacity(0.6)),
-                            child: Text(
-                              widget.model.author.username,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: notifier.isDark
-                                      ? Colors.white
-                                      : Colors.black),
-                            )),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                      onPressed: () =>
-                          showBottomSheetSignal(
-                              context,
-                              widget.model.author.username,
-                              widget.model.id),
-                      icon: Icon(
-                        Icons.more_vert,
-                        size: 30,
-                      ))
-                ],
-              )
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            renderProfilePicture(
+                                widget.model.author.profilePicture,
+                                widget.model.author.profilePicture.isNotEmpty,
+                                40),
+                            const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: () {
+                                navigateTo(
+                                    context,
+                                    Profile.fromUsername(
+                                        username:
+                                            widget.model.author.username));
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade300
+                                          .withOpacity(0.6)),
+                                  child: Text(
+                                    widget.model.author.username,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: notifier.isDark
+                                            ? Colors.white
+                                            : Colors.black),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                            onPressed: () => showBottomSheetSignal(context,
+                                widget.model.author.username, widget.model.id),
+                            icon: Icon(
+                              Icons.more_vert,
+                              size: 30,
+                            ))
+                      ],
+                    )
             ]),
           ),
           // ListView(children: [],),
@@ -485,23 +475,23 @@ class PugItemState extends State<PugItem> {
           imageInformation(imageTitle, widget.model.comments),
           widget.fromProfile
               ? Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    showMyDialogDelete("Suppréssion",
-                        "Vous êtes sur le point de supprimer un pug");
-                  },
-                  child: Text("Supprimer"),
-                  style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
-            ),
-          )
+                  padding: EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          showMyDialogDelete("Suppréssion",
+                              "Vous êtes sur le point de supprimer un pug");
+                        },
+                        child: Text("Supprimer"),
+                        style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
+                  ),
+                )
               : SizedBox(
-            width: 0,
-            height: 0,
-          )
+                  width: 0,
+                  height: 0,
+                )
         ],
       );
     }
@@ -510,32 +500,30 @@ class PugItemState extends State<PugItem> {
   void showMyDialogDelete(String title, String text) {
     showDialog(
         context: context,
-        builder: (context) =>
-            Center(
+        builder: (context) => Center(
                 child: AlertDialog(
-                  title: Text(title),
-                  content: Text(text),
-                  actions: [
-                    ElevatedButton(
-                      style: BaseButtonRoundedColor(60, 40, APPCOLOR),
-                      onPressed: () async {
-                        final result = await deletePug(widget.model.id,
-                            widget.model.author.username,
-                            widget.model.imageURL);
-                        if (result.code == SUCCESS_CODE) {
-                          showSnackBar(context, result.message);
-                          Navigator.pop(context);
-                          navigateWithNamePop(context, Profile().routeName);
-                        }
-                      },
-                      child: const Text("Confirmer"),
-                    ),
-                    ElevatedButton(
-                        style: BaseButtonRoundedColor(60, 40, APPCOLOR),
-                        onPressed: () => Navigator.pop(context),
-                        child: Text("Annuler"))
-                  ],
-                )));
+              title: Text(title),
+              content: Text(text),
+              actions: [
+                ElevatedButton(
+                  style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                  onPressed: () async {
+                    final result = await deletePug(widget.model.id,
+                        widget.model.author.username, widget.model.imageURL);
+                    if (result.code == SUCCESS_CODE) {
+                      showSnackBar(context, result.message);
+                      Navigator.pop(context);
+                      navigateWithNamePop(context, Profile().routeName);
+                    }
+                  },
+                  child: const Text("Confirmer"),
+                ),
+                ElevatedButton(
+                    style: BaseButtonRoundedColor(60, 40, APPCOLOR),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Annuler"))
+              ],
+            )));
   }
 
   showBottomSheetFollowing(context, username, PugModel pugModel) {
@@ -543,10 +531,7 @@ class PugItemState extends State<PugItem> {
       context: context,
       builder: (context) {
         return SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.40,
+            height: MediaQuery.of(context).size.height * 0.40,
             child: FutureBuilder(
               future: getUserFollowings(username),
               builder: (context, AsyncSnapshot<FollowerResponse> snapshot) {

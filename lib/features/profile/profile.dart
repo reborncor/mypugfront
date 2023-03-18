@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,7 +10,6 @@ import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/followeritem/api.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/features/actuality/actuality.dart';
-import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/chat/chat.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
@@ -53,6 +52,7 @@ class ProfileState extends State<Profile> {
   bool isModificated = false;
   late String formerProfilePicture;
   final RefreshController _refreshController = RefreshController();
+  final RefreshController _refreshController2 = RefreshController();
   late ScrollController scrollController =
       ScrollController(initialScrollOffset: 200);
   late bool hasBackButton = false;
@@ -145,15 +145,15 @@ class ProfileState extends State<Profile> {
                             child: snapshot.data!.profilePicture.isNotEmpty
                                 ? ClipRRect(
                                     child: imageFile == null
-                                        ? Image.network(
+                                        ? ExtendedImage.network(
                                             snapshot.data!.profilePicture,
-                                            width: 100,
-                                            height: 100,
+                                            height: isSmallDevice ? 75 : 100,
+                                            width: isSmallDevice ? 75 : 100,
                                             fit: BoxFit.cover,
                                           )
                                         : Image.file(imageFile!,
-                                            width: 100,
-                                            height: 100,
+                                            height: isSmallDevice ? 75 : 100,
+                                            width: isSmallDevice ? 75 : 100,
                                             fit: BoxFit.cover),
                                     borderRadius: BorderRadius.circular(100))
                                 : imageFile == null
@@ -162,7 +162,10 @@ class ProfileState extends State<Profile> {
                                         image:
                                             AssetImage('asset/images/user.png'),
                                       )
-                                    : Image.file(imageFile!, fit: BoxFit.cover),
+                                    : ClipRRect(borderRadius: BorderRadius.circular(100), child:  Image.file(imageFile!,
+                                height: isSmallDevice ? 75 : 100,
+                                width: isSmallDevice ? 75 : 100,
+                                fit: BoxFit.cover),),
                           ),
                         ),
                         Visibility(
@@ -384,11 +387,17 @@ class ProfileState extends State<Profile> {
     return InkWell(
       child: Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          child: FadeInImage.assetNetwork(
-            image: model.imageURL,
+          child:
+          ExtendedImage.network(
+            model.imageURL,
             fit: BoxFit.fitWidth,
-            placeholder: "asset/images/empty.png",
-          )),
+            cache: true,
+            retries: 3,
+            timeRetry: const Duration(milliseconds: 100),
+
+            //cancelToken: cancellationToken,
+          ),
+         ),
       onTap: () {
         if (widget.username == "") {
           navigateTo(context, Pug.withPugModel(model: model));
@@ -454,13 +463,15 @@ class ProfileState extends State<Profile> {
     if (widget.username == "") {
       refreshUserInfo();
       _response = getAllPugsFromUser();
+      hasBackButton = false;
     } else {
-      _userResponse = getUserInfo();
-      _response = getAllPugsFromUser();
+      _userResponse = getUserInfoFromUsername(widget.username);
+      _response = getAllPugsFromUsername(widget.username);
+      hasBackButton = true;
     }
     _refreshController.refreshCompleted();
     scrollController.animateTo(200,
-        duration: Duration(milliseconds: 1000), curve: Curves.ease);
+        duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
     setState(() {});
   }
 
@@ -531,26 +542,34 @@ class ProfileState extends State<Profile> {
         ? "asset/images/logo-header-dark.png"
         : "asset/images/logo-header-light.png";
 
-    return SmartRefresher(
-      controller: _refreshController,
-      onRefresh: refreshData,
-      child: CustomScrollView(controller: scrollController, slivers: [
+    return NestedScrollView(
+
+          controller: scrollController,
+          headerSliverBuilder: (context, innerBoxScrolled) => [
         SliverAppBar(
-          expandedHeight: 150,
+
+          collapsedHeight: 120,
           automaticallyImplyLeading: false,
           backgroundColor: notifier.isDark ? Colors.black : Colors.transparent,
+          floating: true,
           pinned: false,
+          stretch: true,
+          forceElevated: true,
           flexibleSpace: FlexibleSpaceBar(
             background: Image.asset(
               pathImage,
               fit: BoxFit.fitWidth,
+
             ),
           ),
         ),
-        SliverFillRemaining(
+        ],
+        body : SmartRefresher(
+          controller: _refreshController,
+          onRefresh: refreshData,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Column(
+            child:  Column(
               children: [
                 Container(
                   child: profileHeader(),
@@ -559,10 +578,9 @@ class ProfileState extends State<Profile> {
                 ),
                 newProfileContent()
               ],
-            ),
+            )
           ),
         ),
-      ]),
-    );
+      );
   }
 }
