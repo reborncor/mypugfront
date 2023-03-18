@@ -61,6 +61,7 @@ class EditPugState extends State<EditPug> {
   bool showEditor = true;
   late ThemeModel notifier;
   late SuperTooltip tooltip;
+  final ValueNotifier _isLoadingNotifier = ValueNotifier(false);
 
   @override
   void initState() {
@@ -81,20 +82,20 @@ class EditPugState extends State<EditPug> {
             color: Colors.transparent,
             child: Center(
                 child: Text(
-                  "Indiquer au moins une référécence",
-                  style: TextStyle(color: Colors.black),
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                ))),
+              "Indiquer au moins une référécence",
+              style: TextStyle(color: Colors.black),
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ))),
       );
 
       getUserFirstUse().then((value) => {
-        if (value.isNotEmpty && value.length < 5)
-          {
-            tooltip.show(context),
-            saveUserFirstUse().then((value) => null),
-          }
-      });
+            if (value.isNotEmpty && value.length < 5)
+              {
+                tooltip.show(context),
+                saveUserFirstUse().then((value) => null),
+              }
+          });
     });
 
     details.clear();
@@ -102,10 +103,10 @@ class EditPugState extends State<EditPug> {
     Image image = Image.file(file);
     image.image.resolve(const ImageConfiguration()).addListener(
       ImageStreamListener(
-            (ImageInfo image, bool synchronousCall) {
+        (ImageInfo image, bool synchronousCall) {
           var myImage = image.image;
           imageHeight =
-          (myImage.height > PUGSIZE) ? PUGSIZE.toInt() : myImage.height;
+              (myImage.height > PUGSIZE) ? PUGSIZE.toInt() : myImage.height;
         },
       ),
     );
@@ -132,34 +133,34 @@ class EditPugState extends State<EditPug> {
     return Stack(
         children: details
             .map((e) => Positioned(
-          left: e.positionX.toDouble(),
-          top: e.positionY.toDouble(),
-          child: Draggable(
-              onDragEnd: (detailsDrag) {
-                e.positionX = detailsDrag.offset.dx.toInt();
-                e.positionY = detailsDrag.offset.dy.toInt() -
-                    appBar.preferredSize.height.toInt() -
-                    MediaQuery.of(context).padding.top.toInt();
-                setState(() {});
-              },
-              childWhenDragging: const SizedBox(
-                width: 0,
-                height: 0,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  details.remove(e);
-                  setState(() {});
-                },
-                child: Badge(
-                  badgeContent: Text('X'),
-                  child: Center(
-                      child: InstagramMention(
-                          text: e.text, color: APP_COMMENT_COLOR)),
-                ),
-              ),
-              feedback: draggablePugDetailItem(e.text)),
-        ))
+                  left: e.positionX.toDouble(),
+                  top: e.positionY.toDouble(),
+                  child: Draggable(
+                      onDragEnd: (detailsDrag) {
+                        e.positionX = detailsDrag.offset.dx.toInt();
+                        e.positionY = detailsDrag.offset.dy.toInt() -
+                            appBar.preferredSize.height.toInt() -
+                            MediaQuery.of(context).padding.top.toInt();
+                        setState(() {});
+                      },
+                      childWhenDragging: const SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          details.remove(e);
+                          setState(() {});
+                        },
+                        child: Badge(
+                          badgeContent: Text('X'),
+                          child: Center(
+                              child: InstagramMention(
+                                  text: e.text, color: APP_COMMENT_COLOR)),
+                        ),
+                      ),
+                      feedback: draggablePugDetailItem(e.text)),
+                ))
             .toList());
   }
 
@@ -253,40 +254,40 @@ class EditPugState extends State<EditPug> {
   Widget imageContent(File image) {
     return Container(
       child: Container(
-      height: PUGSIZE,
-      child: Stack(
-        children: [
-          textPugEditor(),
-          Visibility(
-            visible: isVisible,
-            child: dataTagDetails(),
-          ),
-          Positioned(
-            child: ClipOval(
-              child: Material(
-                color: APPCOLOR,
-                child: InkWell(
-                  splashColor: Colors.red,
-                  onTap: () {
-                    isTextVisible = true;
-                    showEditor = true;
-                    x = 280.00;
-                    y = 550.00;
-                    setState(() {});
-                  },
-                  child: SizedBox(
-                      width: 50, height: 50, child: Icon(Icons.add)),
+        height: PUGSIZE,
+        child: Stack(
+          children: [
+            textPugEditor(),
+            Visibility(
+              visible: isVisible,
+              child: dataTagDetails(),
+            ),
+            Positioned(
+              child: ClipOval(
+                child: Material(
+                  color: APPCOLOR,
+                  child: InkWell(
+                    splashColor: Colors.red,
+                    onTap: () {
+                      isTextVisible = true;
+                      showEditor = true;
+                      x = 280.00;
+                      y = 550.00;
+                      setState(() {});
+                    },
+                    child:
+                        SizedBox(width: 50, height: 50, child: Icon(Icons.add)),
+                  ),
                 ),
               ),
-            ),
-            width: 50,
-            height: 50,
-            left: getPhoneWidth(context) - 75,
-            top: 550,
-          )
-        ],
+              width: 50,
+              height: 50,
+              left: getPhoneWidth(context) - 75,
+              top: 550,
+            )
+          ],
+        ),
       ),
-    ),
       height: PUGSIZE,
       width: 100,
       decoration: BoxDecoration(
@@ -327,7 +328,7 @@ class EditPugState extends State<EditPug> {
           width: 600,
           child: TextField(
             style:
-            TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+                TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
             controller: textDescriptionController,
             keyboardType: TextInputType.multiline,
             textInputAction: TextInputAction.newline,
@@ -346,34 +347,40 @@ class EditPugState extends State<EditPug> {
           width: 0,
           height: 20,
         ),
-        ElevatedButton(
-            style: BaseButtonRoundedColor(40, 40, APPCOLOR),
-            onPressed: () async {
-              if (details.length >= 1) {
-                var result = await createPug(
-                    file,
-                    textTitleController.text,
-                    textDescriptionController.text,
-                    details,
-                    widget.isCrop,
-                    imageHeight);
-
-                log(result.code.toString() + " " + result.message);
-                if (result.code == SUCCESS_CODE) {
-                  showSnackBar(context, result.message);
-                  navigateWithNamePop(context,
-                      const TabView.withIndex(initialIndex: 3).routeName);
-                } else {
-                  showSnackBar(context, "Erreur lors de la création du pug");
-                }
-              } else {
-                showSnackBar(
-                    context, "Veuillez ajouter au moins une référence");
-              }
-            },
-            child: Text("Envoyer"))
+        ValueListenableBuilder(
+          valueListenable: _isLoadingNotifier,
+          builder: (context, _isLoading, _) {
+            log("INFOPUG ${_isLoading.toString()}");
+            return ElevatedButton(
+                style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+                onPressed: !(_isLoading as bool) ? functionCreate : null,
+                child: Text("Envoyer"));
+          },
+        )
       ],
     );
+  }
+
+  void functionCreate() async {
+    _isLoadingNotifier.value = true;
+
+    if (details.length >= 1) {
+      var result = await createPug(file, textTitleController.text,
+          textDescriptionController.text, details, widget.isCrop, imageHeight);
+
+      log(result.code.toString() + " " + result.message);
+      if (result.code == SUCCESS_CODE) {
+        showSnackBar(context, result.message);
+        navigateWithNamePop(
+            context, const TabView.withIndex(initialIndex: 3).routeName);
+      } else {
+        showSnackBar(context, "Erreur lors de la création du pug");
+      }
+    } else {
+      showSnackBar(context, "Veuillez ajouter au moins une référence");
+    }
+    _isLoadingNotifier.value = false;
+
   }
 
   @override
