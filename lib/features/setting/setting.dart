@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
+import 'package:mypug/features/profile/api.dart';
 import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
+import '../../response/userresponse.dart';
 import 'api.dart';
 
 class Setting extends StatefulWidget {
@@ -78,23 +79,26 @@ class SettingState extends State<Setting> {
                 child: Container(
                     child: Center(
                         child: FutureBuilder(
-                      future: getUserData(),
-                      builder: (context, snapshot) {
+                      future: getUserInfo(),
+                      builder: (context, AsyncSnapshot<UserResponse> snapshot) {
                         if (snapshot.hasData) {
-                          data = snapshot.data as Map;
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              renderProfilePicture(data['profilePicture'], data['profilePicure'] != "", 100),
-                              itemData(data['username']),
-                              itemData(data['phoneNumber']),
-                              itemData(data['email']),
+                              renderProfilePicture(
+                                  snapshot.data!.profilePicture,
+                                  snapshot.data!.profilePicture.isNotEmpty,
+                                  100),
+                              itemData(snapshot.data!.username),
+                              itemData(snapshot.data!.phoneNumber),
+                              itemData(snapshot.data!.email),
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8),
                                 child: ElevatedButton(
                                     style: BaseButtonRoundedColor(
                                         60, 40, APPCOLOR2),
-                                    onPressed: () => navigateWithName(context, UsersBlockedView().routeName),
+                                    onPressed: () => navigateWithName(
+                                        context, UsersBlockedView().routeName),
                                     child: Text("Utilisateurs bloqués")),
                               ),
                               Expanded(

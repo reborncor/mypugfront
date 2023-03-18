@@ -138,7 +138,6 @@ class _ChatState extends State<Chat> {
     socket.on(
         "messagesuccess",
         (data) => {
-              log("Nouveau message"),
               if (data == '0_${widget.receiverUser.username}')
                 {
                   log(messageSent.content),

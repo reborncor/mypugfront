@@ -68,7 +68,9 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    bool isSmallDevice = MediaQuery.of(context).size.width < 370 || MediaQuery.of(context).devicePixelRatio < 2.7;
+    bool isSmallDevice = MediaQuery.of(context).size.width < 370 ||
+        MediaQuery.of(context).devicePixelRatio < 2.7;
+    log("CUSTOM HEIGHT ${MediaQuery.of(context).size}");
     return Scaffold(
       extendBody: true,
       body: Center(

@@ -115,11 +115,18 @@ class ProfileState extends State<Profile> {
       future: _userResponse,
       builder: (context, AsyncSnapshot<UserResponse> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.code == BLOCKED_CODE)
-            return SizedBox(
+          if (snapshot.data!.code == BLOCKED_CODE) {
+            return const SizedBox(
               width: 0,
               height: 0,
             );
+          }
+          if (snapshot.data!.code == ERROR_CODE) {
+            return const Center(
+              child: Text("Utilisateur introuvable"),
+            );
+          }
+
           username = snapshot.data!.username;
           formerProfilePicture = snapshot.data!.profilePicture;
           formerDescription = snapshot.data!.description!;
@@ -422,7 +429,8 @@ class ProfileState extends State<Profile> {
       future: _response,
       builder: (context, AsyncSnapshot<UserPugResponse> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!.code == BLOCKED_CODE) return Text("Compte bloqué");
+          if (snapshot.data!.code == BLOCKED_CODE)
+            return Text("Utilisateur introuvable");
           list = snapshot.data!.pugs;
           return Container(
             child: GridView.builder(
