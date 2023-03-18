@@ -58,6 +58,7 @@ class _ChatState extends State<Chat> {
     }
     if (scrollController.offset <= scrollController.position.minScrollExtent &&
         !scrollController.position.outOfRange) {
+      sendMessageSeen();
       setState(() {
         log("reach the Bottom");
       });

@@ -23,6 +23,7 @@ class Setting extends StatefulWidget {
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
   late Map data;
+
   @override
   void initState() {
     super.initState();
@@ -120,8 +121,16 @@ class SettingState extends State<Setting> {
                               )
                             ],
                           );
+                        }
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return const Center(
+                            child: Text("Aucune donnée"),
+                          );
                         } else {
-                          return Text("Aucune donnée");
+                          return Center(
+                              child: CircularProgressIndicator(
+                            color: APPCOLOR,
+                          ));
                         }
                       },
                     )),
