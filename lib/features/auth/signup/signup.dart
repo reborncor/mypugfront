@@ -1,16 +1,14 @@
-import 'dart:developer';
-
-import 'package:mypug/util/libs/fl_country_code_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
+import 'package:mypug/util/libs/fl_country_code_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../components/design/design.dart';
 import '../../../components/tab/tab.dart';
 import '../../../service/themenotifier.dart';
 import '../../../util/util.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
   final routeName = '/signup';
@@ -29,6 +27,7 @@ class SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   final countryPicker = const FlCountryCodePicker();
   late String dialCode = '+33';
+  late String phoneRegion = 'FR';
   bool userCondition = false;
   final focus = FocusNode();
 
@@ -99,7 +98,7 @@ class SignUpState extends State<SignUp> {
 
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Entre votre adresse email";
+                          return "Entrez votre adresse email";
                         }
                         return null;
                       },
@@ -127,6 +126,7 @@ class SignUpState extends State<SignUp> {
                                   scrollToDeviceLocale: true, context: context);
                               if (code != null) {
                                 dialCode = code.dialCode;
+                                phoneRegion = code.code;
                               }
                               ;
                             },
@@ -145,23 +145,22 @@ class SignUpState extends State<SignUp> {
                           Expanded(
                               child: TextFormField(
                                 textInputAction: TextInputAction.next,
-                                autofillHints: const <String>[
+                            autofillHints: const <String>[
                               AutofillHints.telephoneNumber
                             ],
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
                             controller: phoneNumberController,
                             onEditingComplete: () {
-                              if (phoneNumberController.text.startsWith("0")) {
-                                phoneNumberController.text =
-                                    phoneNumberController.text.substring(1);
-                                setState(() {});
-
-                              }
                               FocusScope.of(context).nextFocus();
-
                             },
-                            decoration: InputDecoration(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Entrez votre numéro de télephone";
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Numéro de téléphone",
                             ),
@@ -266,8 +265,9 @@ class SignUpState extends State<SignUp> {
                         var result = await signUpUSer(
                             usernameController.text.trim(),
                             passwordController.text,
-                            '$dialCode${phoneNumberController.text.trim()}',
-                            emailController.text.trim());
+                            phoneNumberController.text.trim(),
+                            emailController.text.trim(),
+                            phoneRegion);
                         print(result);
                         if (result.code == SUCCESS_CODE) {
                           navigateWithName(context, const TabView().routeName);

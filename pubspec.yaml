@@ -59,6 +59,8 @@ dependencies:
   fl_country_code_picker: ^0.0.3
   url_launcher: ^6.1.8
   extended_image: ^6.1.0
+  phone_number: ^0.12.0+2
+  email_validator: ^2.1.17
 
 
 flutter_icons:

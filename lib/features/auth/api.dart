@@ -41,24 +41,25 @@ Future<SignInResponse> signinUser(String username, String password) async{
       print(response.body);
       message = json.decode(response.body)['message'];
       code = json.decode(response.body)['code'];
-    }catch(e){
+    } catch (e) {
       message = "Une erreur est survenue";
     }
     return SignInResponse(code: code, message: message);
   }
-
-
 }
-Future<SignInResponse> signUpUSer(String username, String password, String phoneNumber, String email) async{
+
+Future<SignInResponse> signUpUSer(String username, String password,
+    String phoneNumber, String email, String phoneRegion) async {
   http.Response response;
 
   const String path = "/user/signup";
 
-  Map data =  {
-    'username' : username.toLowerCase(),
-    'password' : password,
-    'phoneNumber' : phoneNumber,
-    'email' : email
+  Map data = {
+    'username': username.toLowerCase(),
+    'password': password,
+    'phoneNumber': phoneNumber,
+    'email': email,
+    'phoneRegion': phoneRegion,
   };
   try {
 
