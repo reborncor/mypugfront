@@ -393,7 +393,7 @@ class ProfileState extends State<Profile> {
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
         child: ExtendedImage.network(
           model.imageURL,
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.cover,
           cache: true,
           retries: 3,
           timeRetry: const Duration(milliseconds: 100),

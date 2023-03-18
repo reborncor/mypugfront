@@ -43,7 +43,7 @@ class ChatListState extends State<ChatList> {
   Widget itemChat(ConversationModel model) {
     UserFactory receiverUser = model.membersInfos
         .firstWhere((element) => element.username != _username);
-    bool seen = !model.seen.contains(receiverUser);
+    bool seen = model.seen.contains(_username);
     return InkWell(
       onTap: () =>
           navigateTo(context, Chat.withUsername(receiverUser: receiverUser)),

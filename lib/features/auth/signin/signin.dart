@@ -23,6 +23,7 @@ class SignInState extends State<SignIn> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   late ThemeModel notifier;
+  late String _errorText = "";
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class SignInState extends State<SignIn> {
                       hintText: "Nom d'utilisateur",
                     ))),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(bottom: 8, top: 16, left: 16, right: 16),
               child: TextFormField(
                 autofillHints: const <String>[AutofillHints.password],
                 textAlign: TextAlign.center,
@@ -84,6 +85,18 @@ class SignInState extends State<SignIn> {
               ),
             ),
             Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Visibility(
+                visible: !_errorText.isEmpty,
+                child: Text(
+                  _errorText,
+                  style: TextStyle(
+                    color: Theme.of(context).errorColor,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
               padding: EdgeInsets.only(top: 4),
               child: ElevatedButton(
                 style: BaseButtonRoundedColor(60, 40, Colors.indigo[300]),
@@ -97,7 +110,10 @@ class SignInState extends State<SignIn> {
                       this.notifier.isDark = true;
                       navigateWithNamePop(context, const TabView().routeName);
                     } else {
-                      showSnackBar(context, result.message);
+                      // showSnackBar(context, result.message);
+                      setState(() {
+                        _errorText = result.message;
+                      });
                     }
                   }
                 },
