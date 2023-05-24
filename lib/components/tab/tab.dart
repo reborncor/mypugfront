@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +68,6 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     bool isSmallDevice = MediaQuery.of(context).size.width < 370 ||
         MediaQuery.of(context).devicePixelRatio < 2.7;
-    log("CUSTOM HEIGHT ${MediaQuery.of(context).size}");
     return Scaffold(
       extendBody: true,
       body: Center(
