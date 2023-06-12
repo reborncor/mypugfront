@@ -8,6 +8,7 @@ import 'package:mypug/features/auth/signup/signup.dart';
 import 'package:mypug/features/chat/chatlist.dart';
 import 'package:mypug/features/comment/pugcomments.dart';
 import 'package:mypug/features/competition/competition.dart';
+import 'package:mypug/features/competition/competitionpayment.dart';
 import 'package:mypug/features/create/create.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
                     '/following': (context) => FollowingView(),
                     '/usersblocked': (context) => UsersBlockedView(),
                     '/competition': (context) => Competition(),
+                    '/competitionPayment': (context) => CompetitionPayment(),
                   },
 
                   darkTheme: ThemeData(
