@@ -1,16 +1,18 @@
 import 'dart:async';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/competition/api.dart';
 import 'package:mypug/features/search/api.dart';
-import 'package:mypug/models/CompetitionModel.dart';
 import 'package:mypug/response/competitionresponse.dart';
 import 'package:mypug/response/userfindresponse.dart';
+import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/SelectedParticipantModel.dart';
 import '../../models/pugmodel.dart';
 import '../../response/userpugresponse.dart';
 import '../../service/themenotifier.dart';
@@ -19,11 +21,10 @@ import '../profile/api.dart';
 class CompetitionPayment extends StatefulWidget {
   final routeName = '/competitionPayment';
   final double amount;
-  final CompetitionModel? competitionModel;
 
-  const CompetitionPayment({Key? key, this.amount = 0, this.competitionModel}) : super(key: key);
+  const CompetitionPayment({Key? key, this.amount = 0}) : super(key: key);
 
-  const CompetitionPayment.WithAmount({Key? key, required this.amount, this.competitionModel})
+  const CompetitionPayment.WithAmount({Key? key, required this.amount})
       : super(key: key);
 
   @override
@@ -81,23 +82,60 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
     );
   }
 
-  Widget PayForCompetition() {
+  Widget displayRowVote(List<SelectedParticipant> participants){
+
+
+    return Row(children: [
+      Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: ExtendedImage.network(
+          participants[0].pugPicture,
+          fit: BoxFit.cover,
+          cache: true,
+          retries: 3,
+          timeRetry: const Duration(milliseconds: 100),
+
+        ),
+      ),
+      Image.asset(
+        "asset/images/vs.png",
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+      ),
+
+
+      Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: ExtendedImage.network(
+          participants[1].pugPicture,
+          fit: BoxFit.cover,
+          cache: true,
+          retries: 3,
+          timeRetry: const Duration(milliseconds: 100),
+
+        ),
+      ),
+
+
+
+    ],);
+
+  }
+
+
+  Widget DisplayParticipants() {
     return Visibility(
         visible: step == 0,
         child: ListView(
           children: [
-            const Text("Votre selection est prête"),
-            const Text("Terminer l'incription et envoyer sur la liste"),
-            OutlinedButton(
-                onPressed: () {
-                  makePayment(widget.amount);
-                },
-                child: Text("Payer ${widget.amount}€")),
+            const Text("Concours meilleur pug"),
+
           ],
         ));
   }
 
-  Widget SelectionDone() {
+  Widget VoteForParticipants() {
     return Visibility(
         visible: step == 1,
         child: ListView(
@@ -120,14 +158,14 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
 
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: result.payload["paymentIntent"],
-          applePay: Stripe.instance.isApplePaySupported.value,
-          googlePay: true,
-          style: ThemeMode.dark,
-          testEnv: true,
-          merchantCountryCode: 'FR',
-          merchantDisplayName: 'MyPug',
-        ));
+      paymentIntentClientSecret: result.payload["paymentIntent"],
+      applePay: Stripe.instance.isApplePaySupported.value,
+      googlePay: true,
+      style: ThemeMode.dark,
+      testEnv: true,
+      merchantCountryCode: 'FR',
+      merchantDisplayName: 'MyPug',
+    ));
     setState(() {});
     displayPaymentStripe(result.payload["paymentIntent"]);
   }
@@ -140,13 +178,10 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
       setState(() {});
       await Stripe.instance
           .retrievePaymentIntent(clientSecret)
-          .then((value) =>
-      {
-        if (value.status == PaymentIntentsStatus.Succeeded)
-          {step = 1,
-            setState(() {})
-          }
-      });
+          .then((value) => {
+                if (value.status == PaymentIntentsStatus.Succeeded)
+                  {step = 1, setState(() {})}
+              });
     } catch (e) {
       print(e);
     }
@@ -158,14 +193,14 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-          body: Container(
-              child: Stack(
-                children: [
-                  PayForCompetition(),
-                  SelectionDone(),
-                ],
-              ),
-              decoration: BoxCircular(notifier),
+            body: Container(
+          child: Stack(
+            children: [
+              DisplayParticipants(),
+              VoteForParticipants(),
+            ],
+          ),
+          decoration: BoxCircular(notifier),
         ));
       },
     );

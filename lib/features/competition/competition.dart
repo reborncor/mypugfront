@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/competition/api.dart';
+import 'package:mypug/features/competition/competitionpayment.dart';
 import 'package:mypug/features/search/api.dart';
+import 'package:mypug/models/CompetitionModel.dart';
 import 'package:mypug/response/competitionresponse.dart';
 import 'package:mypug/response/userfindresponse.dart';
 import 'package:mypug/util/util.dart';
@@ -31,8 +33,10 @@ class CompetitionState extends State<Competition> {
   StreamController streamController = StreamController();
   late UserFindResponse _response;
   int step = 0;
+  double selectedAmount = 0.0;
   List<PugModel> list = [];
   List<PugModel> selectedPugs = [];
+
   late final Future<UserPugResponse> pugResponse = getAllPugsFromUser();
   late final Future<CompetitionReponse> competitionResponse = findCompetiton();
 
@@ -135,7 +139,16 @@ class CompetitionState extends State<Competition> {
         ));
   }
 
-  Widget renderCompetition() {
+  void setSelectedAmount(){
+    if(selectedPugs.length == 1){
+      selectedAmount = 0.60;
+    }if(selectedPugs.length == 2){
+      selectedAmount = 0.80;
+    }if(selectedPugs.length == 3){
+      selectedAmount = 1.0;
+    }
+  }
+  Widget renderCompetition( CompetitionModel model) {
     return Visibility(
         visible: step == 2,
         child: ListView(
@@ -175,6 +188,7 @@ class CompetitionState extends State<Competition> {
                             if (selectedPugs.length >= 3) return;
                             selectedPugs.add(list[index]);
                           }
+                          setSelectedAmount();
                           setState(() {});
                         },
                         child: Container(
@@ -258,7 +272,12 @@ class CompetitionState extends State<Competition> {
                         },
                       ),
                     ),
-                    ElevatedButton(onPressed: () {}, child: Text("Oui"))
+                    ElevatedButton(
+                        onPressed: () {
+                          navigateTo(
+                              context, CompetitionPayment(amount: selectedAmount, competitionModel: model ,));
+                        },
+                        child: const Text("Oui"))
                   ],
                 )),
             IconButton(
@@ -287,7 +306,7 @@ class CompetitionState extends State<Competition> {
                 children: [
                   FirstExplication(),
                   SecondExplanation(),
-                  renderCompetition()
+                  renderCompetition(snapshot.data!.competition)
                 ],
               );
             },

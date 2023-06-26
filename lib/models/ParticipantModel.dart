@@ -5,6 +5,8 @@ class ParticipantModel {
   String pugId;
   String userId;
   String sex;
+  String pugPicture;
+  String username;
 
   // String username;
 
@@ -12,22 +14,27 @@ class ParticipantModel {
       {required this.date,
       required this.pugId,
       required this.sex,
-      // required this.username,
+      required this.pugPicture,
+      required this.username,
       required this.userId});
 
   ParticipantModel.jsonData(
       {required this.date,
       required this.pugId,
       required this.sex,
+      required this.username,
+      required this.pugPicture,
+
       // required this.username,
       required this.userId});
 
   factory ParticipantModel.fromJsonData(Map<String, dynamic> json) {
     return ParticipantModel.jsonData(
       date: json['date'],
-      sex: json['sex'] ?? "test",
+      sex: json['sex'],
       pugId: json['pugId'],
-      // username: json['username'] ?? "test",
+      pugPicture: json['pugPicture'],
+      username: json['username'],
       userId: json['userId'],
     );
   }
@@ -38,12 +45,13 @@ class ParticipantModel {
       'pugId': pugId,
       'sex': sex,
       'date': date,
+      'pugPicture': pugPicture,
       // 'username': username,
     };
   }
 
   @override
   String toString() {
-    return 'ParticipantModel{date: $date, pugId: $pugId, userId: $userId, sex: $sex}';
+    return 'ParticipantModel{date: $date, pugId: $pugId, userId: $userId, sex: $sex, pugPicture :$pugPicture}';
   }
 }

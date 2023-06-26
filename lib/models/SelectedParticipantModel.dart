@@ -5,21 +5,24 @@ import 'package:mypug/models/ParticipantModel.dart';
 class SelectedParticipant extends ParticipantModel {
   int vote;
 
-  SelectedParticipant({required this.vote, username, date, pugId, userId, sex})
+  SelectedParticipant(
+      {required this.vote, username, date, pugId, userId, sex, pugPicture})
       : super(
-            // username: username,
+            username: username,
             date: date,
             pugId: pugId,
             sex: sex,
+            pugPicture: pugPicture,
             userId: userId);
 
   SelectedParticipant.jsonData(
-      {required this.vote, username, date, pugId, userId, sex})
+      {required this.vote, username, date, pugId, userId, sex, pugPicture})
       : super(
-            // username: username,
+            username: username,
             date: date,
             pugId: pugId,
             sex: sex,
+            pugPicture: pugPicture,
             userId: userId);
 
   factory SelectedParticipant.fromJsonData(Map<String, dynamic> json) {
@@ -39,7 +42,7 @@ class SelectedParticipant extends ParticipantModel {
       'pugId': pugId,
       'sex': sex,
       'date': date,
-      // 'username': username,
+      'username': username,
       'vote': vote,
     };
   }

@@ -4,17 +4,17 @@ import 'package:mypug/models/ParticipantModel.dart';
 import 'package:mypug/models/SelectedParticipantModel.dart';
 
 class CompetitionModel {
-  String id;
-  int startDate;
-  int endDate;
-  int endVotingDate;
-  List<ParticipantModel> participants;
-  List<SelectedParticipant> selectedParticipants;
-  String winnerMan;
+  late String id;
+  late int startDate;
+  late int endDate;
+  late int endVotingDate;
+  late List<ParticipantModel> participants;
+  late List<SelectedParticipant> selectedParticipants;
+  late String winnerMan;
 
-  String pugWinnerMan;
-  String winnerWoman;
-  String pugWinnerWoman;
+  late String pugWinnerMan;
+  late String winnerWoman;
+  late String pugWinnerWoman;
 
   CompetitionModel({
     required this.id,
@@ -28,6 +28,8 @@ class CompetitionModel {
     required this.winnerWoman,
     required this.pugWinnerWoman,
   });
+
+  CompetitionModel.noData();
 
   CompetitionModel.jsonData({
     required this.id,
