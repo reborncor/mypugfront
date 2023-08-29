@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,8 +17,9 @@ import 'api.dart';
 
 class ChatList extends StatefulWidget {
   final routeName = '/chatlist';
+  VoidCallback? onChatlistEvent;
 
-  const ChatList({Key? key}) : super(key: key);
+  ChatList({Key? key, this.onChatlistEvent}) : super(key: key);
 
   @override
   ChatListState createState() => ChatListState();
@@ -45,8 +46,18 @@ class ChatListState extends State<ChatList> {
         .firstWhere((element) => element.username != _username);
     bool seen = model.seen.contains(_username);
     return InkWell(
-      onTap: () =>
-          navigateTo(context, Chat.withUsername(receiverUser: receiverUser)),
+      onTap: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Chat.withUsername(receiverUser: receiverUser, seen: seen)),
+        ).then((res) => {
+              log("DATA $notificationNumber"),
+              widget.onChatlistEvent!(),
+              onRefresh()
+            });
+      },
       child: ListTile(
         leading: renderProfilePicture(receiverUser.profilePicture,
             receiverUser.profilePicture.isNotEmpty, 50),
@@ -122,7 +133,7 @@ class ChatListState extends State<ChatList> {
               }
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return loaderImage();
+              return loaderCircle();
             }
             return const Center(
               child: Text("Aucune Conversation"),

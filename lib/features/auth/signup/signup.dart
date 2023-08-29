@@ -23,7 +23,6 @@ class SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   final countryPicker = const FlCountryCodePicker();
   late String dialCode = '+33';
@@ -142,29 +141,6 @@ class SignUpState extends State<SignUp> {
                                   style: TextStyle(color: Colors.white)),
                             ),
                           ),
-                          Expanded(
-                              child: TextFormField(
-                                textInputAction: TextInputAction.next,
-                            autofillHints: const <String>[
-                              AutofillHints.telephoneNumber
-                            ],
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            controller: phoneNumberController,
-                            onEditingComplete: () {
-                              FocusScope.of(context).nextFocus();
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Entrez votre numéro de télephone";
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Numéro de téléphone",
-                            ),
-                          ))
                         ],
                       ),
                     )),
@@ -265,7 +241,7 @@ class SignUpState extends State<SignUp> {
                         var result = await signUpUSer(
                             usernameController.text.trim(),
                             passwordController.text,
-                            phoneNumberController.text.trim(),
+                            // phoneNumberController.text.trim(),
                             emailController.text.trim(),
                             phoneRegion);
                         print(result);

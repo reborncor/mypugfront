@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -22,38 +24,42 @@ class TabView extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<TabView> createState() => _TabViewState();
+  State<TabView> createState() => TabViewState();
 }
 
-class _TabViewState extends State<TabView> with WidgetsBindingObserver {
+class TabViewState extends State<TabView> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   late Future<ConversationsResponse> _response;
   late int notification = 0;
-  static final List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _widgetOptions = <Widget>[
     const ActualityAll(),
     const Actuality(),
     const CreatePug(),
-    const ChatList(),
+    ChatList(),
     Profile(),
   ];
 
-  void _onItemTapped(int index) {
-    fetchData();
+  updateBadge() {
+    log("$notificationNumber");
+    setState(() {});
+  }
+
+  Future<void> _onItemTapped(int index) async {
+    await fetchData();
     setState(() {
       _selectedIndex = index;
     });
   }
 
   fetchData() async {
-    notification = 0;
+    notificationNumber = 0;
     _response = getUserConversations();
     var username = await getCurrentUsername();
     _response.then((value) => {
           value.conversations.forEach((element) {
             if (!element.seen.contains(username)) {
-              notification += 1;
+              notificationNumber += 1;
             }
-            ;
           }),
           setState(() {})
         });
@@ -64,15 +70,22 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
     _selectedIndex = widget.initialIndex;
   }
 
+  getItem() {
+    if (_selectedIndex == 3) {
+      return ChatList(
+        onChatlistEvent: updateBadge,
+      );
+    }
+    return _widgetOptions.elementAt(_selectedIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isSmallDevice = MediaQuery.of(context).size.width < 370 ||
         MediaQuery.of(context).devicePixelRatio < 2.7;
     return Scaffold(
       extendBody: true,
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: Center(child: getItem()),
       bottomNavigationBar: DotNavigationBar(
         itemPadding: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
@@ -101,10 +114,11 @@ class _TabViewState extends State<TabView> with WidgetsBindingObserver {
             icon: const Icon(Icons.add),
           ),
           DotNavigationBarItem(
-            icon: (notification > 0)
+            icon: (notificationNumber > 0)
                 ? Badge(
-                    badgeContent: Text(
-                        notification > 99 ? "99+" : notification.toString()),
+                    badgeContent: Text(notificationNumber > 99
+                        ? "99+"
+                        : notificationNumber.toString()),
                     badgeColor: APPCOLOR6,
                     child: const Icon(Icons.messenger),
                   )

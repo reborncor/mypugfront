@@ -19,10 +19,12 @@ import 'api.dart';
 class Chat extends StatefulWidget {
   final routeName = '/chat';
   UserFactory receiverUser = UserFactory.NullValue();
+  bool seen = true;
 
   Chat({Key? key}) : super(key: key);
 
-  Chat.withUsername({Key? key, required this.receiverUser}) : super(key: key);
+  Chat.withUsername({Key? key, required this.receiverUser, required this.seen})
+      : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -49,6 +51,7 @@ class _ChatState extends State<Chat> {
   late int startInd;
   late int endInd;
   late ThemeModel themeNotifier;
+  bool isSeen = false;
 
   scrollListener() {
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
@@ -158,7 +161,7 @@ class _ChatState extends State<Chat> {
   }
 
   sendMessage(String message) {
-    if(message.trim().isNotEmpty){
+    if (message.trim().isNotEmpty) {
       messageSent = MessageModel(
           time: "",
           content: message,
@@ -168,10 +171,10 @@ class _ChatState extends State<Chat> {
           id: "");
       socket.emit("message", messageSent.toJson());
     }
-
   }
 
   sendMessageSeen() {
+    isSeen = true;
     socket.emit("seenConversation", {
       "senderUsername": username,
       "conversationId": response.conversation.id
@@ -292,41 +295,55 @@ class _ChatState extends State<Chat> {
     return Consumer<ThemeModel>(
       builder: (context, ThemeModel notifier, child) {
         this.themeNotifier = notifier;
-        return Scaffold(
-            appBar: AppBar(
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-              title: Text(widget.receiverUser.username),
-            ),
-            body: Container(
-              child: StreamBuilder(
-                stream: streamController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(children: <Widget>[
-                      Expanded(
-                        child: ListView.builder(
-                          reverse: true,
-                          controller: scrollController,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            return itemMessage(messages[index]);
-                          },
-                        ),
-                      ),
-                      Expanded(flex: 0, child: messageEditor())
-                    ]);
-                  } else {
-                    return Center(
-                        child: CircularProgressIndicator(
-                      color: APPCOLOR,
-                    ));
-                  }
-                },
+        return WillPopScope(
+          onWillPop: () async {
+            if (isSeen &&
+                messages.first.senderUsername == widget.receiverUser.username &&
+                notificationNumber > 0) {
+              notificationNumber -= 1;
+              setState(() {
+                notificationNumber;
+              });
+            }
+            Navigator.pop(context, notificationNumber);
+            return true;
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+                title: Text(widget.receiverUser.username),
               ),
-              decoration: BoxCircular(themeNotifier),
-            ));
+              body: Container(
+                child: StreamBuilder(
+                  stream: streamController.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(children: <Widget>[
+                        Expanded(
+                          child: ListView.builder(
+                            reverse: true,
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: messages.length,
+                            itemBuilder: (context, index) {
+                              return itemMessage(messages[index]);
+                            },
+                          ),
+                        ),
+                        Expanded(flex: 0, child: messageEditor())
+                      ]);
+                    } else {
+                      return Center(
+                          child: CircularProgressIndicator(
+                        color: APPCOLOR,
+                      ));
+                    }
+                  },
+                ),
+                decoration: BoxCircular(themeNotifier),
+              )),
+        );
       },
     );
   }

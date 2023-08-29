@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,9 +14,17 @@ import '../service/socketservice.dart';
 int SUCCESS_CODE = 0;
 int ERROR_CODE = 1;
 int BLOCKED_CODE = 3;
+int notificationNumber = 0;
 
-navigateTo(context, view) {
+dynamic navigateTo(context, view) {
   Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => view),
+  );
+}
+
+navigateToReplacement(context, view) {
+  Navigator.pushReplacement(
     context,
     MaterialPageRoute(builder: (context) => view),
   );
@@ -29,6 +35,10 @@ navigateWithName(context, String name) {
 }
 
 navigateWithNamePop(context, String name) {
+  Navigator.popAndPushNamed(context, name);
+}
+
+navigateWithNameReplacement(context, String name) {
   Navigator.popAndPushNamed(context, name);
 }
 
@@ -64,7 +74,6 @@ Future<void> saveUserProfilePicture(String profilePicture) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
   sharedPreferences.setString("profilePicture", profilePicture);
-
 }
 
 Future<void> saveUserFirstUse() async {
@@ -227,7 +236,10 @@ showBottomSheetSignalReason(context, String username, String pugId) {
           height: MediaQuery.of(context).size.height * 0.40,
           child: ListView(
             children: <Widget>[
-              const SizedBox(height: 20,width: 0,),
+              const SizedBox(
+                height: 20,
+                width: 0,
+              ),
               ...getSignalReasons().map((reason) => InkWell(
                   onTap: () async {
                     var result;
@@ -320,21 +332,34 @@ _showToastSignal(context) {
       });
 }
 
-renderProfilePicture(String path, bool exist, double size ){
-  return exist ? ClipRRect(
-      child: ExtendedImage.network(
-        path,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        cache: true,
-      ),
-      borderRadius: BorderRadius.circular(100))
-  : Image(
-  image: AssetImage(
-      'asset/images/user.png',
-  ),
-  width: size,
-  height: size,
+renderProfilePicture(String path, bool exist, double size) {
+  return exist
+      ? ClipRRect(
+          child: ExtendedImage.network(
+            path,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+            cache: true,
+          ),
+          borderRadius: BorderRadius.circular(100))
+      : Image(
+          image: AssetImage(
+            'asset/images/user.png',
+          ),
+          width: size,
+          height: size,
+        );
+}
+
+loaderCircle() {
+  return Center(
+    child: CircularProgressIndicator(),
+  );
+}
+
+renderNoDataText() {
+  return Center(
+    child: Text("Aucune donnée"),
   );
 }

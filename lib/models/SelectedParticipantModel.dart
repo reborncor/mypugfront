@@ -27,11 +27,12 @@ class SelectedParticipant extends ParticipantModel {
 
   factory SelectedParticipant.fromJsonData(Map<String, dynamic> json) {
     return SelectedParticipant.jsonData(
+      username: json['username'],
       date: json['date'],
       sex: json['sex'],
-      pugId: json['pugId'],
-      username: json['username'],
       userId: json['userId'],
+      pugPicture: json['pugPicture'],
+      pugId: json['pugId'],
       vote: json['vote'],
     );
   }

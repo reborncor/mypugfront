@@ -56,10 +56,10 @@ class CompetitionModel {
       selectedParticipants: (json['selectedParticipants'] as List)
           .map((e) => SelectedParticipant.fromJsonData(e))
           .toList(),
-      winnerMan: json['winnerMan'] ?? "",
-      winnerWoman: json['winnerWoman'] ?? "",
-      pugWinnerWoman: json['pugWinnerWoman'] ?? "",
-      pugWinnerMan: json['pugWinnerMan'] ?? "",
+      winnerMan: json['winnerMan'],
+      winnerWoman: json['winnerWoman'],
+      pugWinnerWoman: json['pugWinnerWoman'],
+      pugWinnerMan: json['pugWinnerMan'],
     );
   }
 

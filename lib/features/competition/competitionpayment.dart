@@ -106,11 +106,6 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
                 "Ta selection est inscrite sur la liste !" "Bonne chance!"),
             const Text("Info:"
                 "Si tu ne figures pas parmis les 4 pugs selectionnés vendredi, tu n'auras malheurement pas été selectionné."),
-            OutlinedButton(
-                onPressed: () {
-                  makePayment(widget.amount);
-                },
-                child: Text("Payer ${widget.amount}€")),
           ],
         ));
   }

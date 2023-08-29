@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:mypug/response/baseresponse.dart';
@@ -11,7 +10,6 @@ Future<CompetitionReponse> findCompetiton() async {
   String token = await getCurrentUserToken();
   late http.Response response;
   const String path = "/competition/643c3c2d9fe950d2dcc07aa4";
-
   try {
     var url = Uri.parse(URL + path);
     response = await http.get(url, headers: {
@@ -19,6 +17,7 @@ Future<CompetitionReponse> findCompetiton() async {
       'Authorization': 'Bearer $token',
     });
   } catch (e) {
+    print("ERREUR");
     print(e.toString());
 
     return json.decode(response.body);
@@ -28,11 +27,11 @@ Future<CompetitionReponse> findCompetiton() async {
     try {
       CompetitionReponse data =
           CompetitionReponse.fromJsonData(json.decode(response.body));
-      log(data.toString());
+
       return data;
     } catch (e) {
       print("ERREUR");
-      print(e);
+      print(e.toString());
     }
     return CompetitionReponse(
         code: json.decode(response.body)['code'],

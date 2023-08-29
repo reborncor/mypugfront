@@ -199,13 +199,6 @@ class ProfileState extends State<Profile> {
                             ))
                       ],
                     ),
-                    Text(
-                      username,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: notifier.isDark ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
                   ]),
                   Container(
                     decoration: BoxDecoration(
@@ -230,9 +223,7 @@ class ProfileState extends State<Profile> {
                                   context,
                                   FollowersView.withName(
                                     isOwner: widget.username.isEmpty,
-
                                     userSearched: username,
-
                                   ));
                             },
                           ),
@@ -246,7 +237,7 @@ class ProfileState extends State<Profile> {
                               navigateTo(
                                   context,
                                   FollowingView.withName(
-                                    isOwner: widget.username.isEmpty,
+                                      isOwner: widget.username.isEmpty,
                                       userSearched: username));
                             },
                           ),
@@ -256,9 +247,23 @@ class ProfileState extends State<Profile> {
                   ),
                 ],
               ),
+              Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Flexible(
+                        child: Text(
+                      username,
+                      softWrap: true,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: notifier.isDark ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold),
+                    )),
+                  )),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 40, right: 40, top: 5, bottom: 5),
+                    left: 20, right: 40, top: 5, bottom: 5),
                 child: onUpdateMode
                     ? TextField(
                         decoration: InputDecoration(
@@ -370,6 +375,7 @@ class ProfileState extends State<Profile> {
                                   navigateTo(
                                       context,
                                       Chat.withUsername(
+                                          seen: true,
                                           receiverUser: UserFactory(
                                               username: username,
                                               profilePicture:
@@ -407,8 +413,6 @@ class ProfileState extends State<Profile> {
           cache: true,
           retries: 3,
           timeRetry: const Duration(milliseconds: 100),
-
-
         ),
       ),
       onTap: () {

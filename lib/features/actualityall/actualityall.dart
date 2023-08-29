@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
-import 'package:mypug/features/competition/competition.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/models/pugmodel.dart';
@@ -106,12 +105,12 @@ class ActualityAllState extends State<ActualityAll> {
               automaticallyImplyLeading: false,
               backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
               actions: [
-                IconButton(
-                  onPressed: () {
-                    navigateWithName(context, const Competition().routeName);
-                  },
-                  icon: Image.asset('asset/images/competition.png'),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     navigateWithName(context, const Competition().routeName);
+                //   },
+                //   icon: Image.asset('asset/images/competition.png'),
+                // ),
                 IconButton(
                     onPressed: () {
                       navigateWithName(context, const Search().routeName);

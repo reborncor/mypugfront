@@ -36,6 +36,7 @@ class CompetitionState extends State<Competition> {
   double selectedAmount = 0.0;
   List<PugModel> list = [];
   List<PugModel> selectedPugs = [];
+  late CompetitionModel? competition;
 
   late final Future<UserPugResponse> pugResponse = getAllPugsFromUser();
   late final Future<CompetitionReponse> competitionResponse = findCompetiton();
@@ -139,16 +140,19 @@ class CompetitionState extends State<Competition> {
         ));
   }
 
-  void setSelectedAmount(){
-    if(selectedPugs.length == 1){
+  void setSelectedAmount() {
+    if (selectedPugs.length == 1) {
       selectedAmount = 0.60;
-    }if(selectedPugs.length == 2){
+    }
+    if (selectedPugs.length == 2) {
       selectedAmount = 0.80;
-    }if(selectedPugs.length == 3){
+    }
+    if (selectedPugs.length == 3) {
       selectedAmount = 1.0;
     }
   }
-  Widget renderCompetition( CompetitionModel model) {
+
+  Widget renderCompetition(CompetitionModel model) {
     return Visibility(
         visible: step == 2,
         child: ListView(
@@ -275,7 +279,11 @@ class CompetitionState extends State<Competition> {
                     ElevatedButton(
                         onPressed: () {
                           navigateTo(
-                              context, CompetitionPayment(amount: selectedAmount, competitionModel: model ,));
+                              context,
+                              CompetitionPayment(
+                                amount: selectedAmount,
+                                competitionModel: model,
+                              ));
                         },
                         child: const Text("Oui"))
                   ],
@@ -302,13 +310,25 @@ class CompetitionState extends State<Competition> {
             future: competitionResponse,
             builder: (BuildContext context,
                 AsyncSnapshot<CompetitionReponse> snapshot) {
-              return Stack(
-                children: [
-                  FirstExplication(),
-                  SecondExplanation(),
-                  renderCompetition(snapshot.data!.competition)
-                ],
-              );
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return loaderCircle();
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  competition = snapshot.data!.competition;
+                  return Stack(
+                    children: [
+                      FirstExplication(),
+                      SecondExplanation(),
+                      renderCompetition(competition!)
+                    ],
+                  );
+                } else {
+                  return renderNoDataText();
+                }
+              } else {
+                return renderNoDataText();
+              }
             },
           ),
           decoration: BoxCircular(notifier),

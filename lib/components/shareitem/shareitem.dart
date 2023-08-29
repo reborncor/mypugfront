@@ -6,18 +6,20 @@ import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../features/profile/profile.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ShareItem extends StatefulWidget {
   final routeName = '/shareitem';
   final UserSearchModel user;
   final String currentUsername;
   final PugModel pugModel;
+  final BuildContext context;
 
   const ShareItem({
     Key? key,
+    required this.context,
     required this.user,
     required this.currentUsername,
     required this.pugModel,
@@ -50,10 +52,11 @@ class ShareItemState extends State<ShareItem> {
                   text = notSend ? "Envoyer" : "Envoyé",
                   if (this.mounted)
                     {
-                      setState(() {
-                        // Your state change code goes here
-                      })
+                      setState(() {}),
+                      Navigator.pop(context),
                     }
+                  else
+                    {},
                 }
             });
   }

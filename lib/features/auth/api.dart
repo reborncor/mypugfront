@@ -48,8 +48,8 @@ Future<SignInResponse> signinUser(String username, String password) async{
   }
 }
 
-Future<SignInResponse> signUpUSer(String username, String password,
-    String phoneNumber, String email, String phoneRegion) async {
+Future<SignInResponse> signUpUSer(
+    String username, String password, String email, String phoneRegion) async {
   http.Response response;
 
   const String path = "/user/signup";
@@ -57,7 +57,7 @@ Future<SignInResponse> signUpUSer(String username, String password,
   Map data = {
     'username': username.toLowerCase(),
     'password': password,
-    'phoneNumber': phoneNumber,
+    // 'phoneNumber': phoneNumber,
     'email': email,
     'phoneRegion': phoneRegion,
   };

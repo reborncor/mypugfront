@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math';
 import 'dart:ui';
 
@@ -236,7 +235,7 @@ class PugItemState extends State<PugItem> {
                   Container(
                     width: 30,
                     child: Text(
-                      imageLike.toString(),
+                      imageLike > 1000 ? "999+" : imageLike.toString(),
                       style: TextStyle(
                           color: APPCOLOR,
                           fontSize: 20,
@@ -297,37 +296,39 @@ class PugItemState extends State<PugItem> {
   }
 
   Widget imageCommentaire(List<CommentModel> list) {
-    return Padding(padding: EdgeInsets.only(left: widget.onShare ? 10 : 0),child:Column(
-
-
-      children: [
-        GestureDetector(
-            onTap: () {
-              navigateTo(
-                  context,
-                  PugComments.withData(
-                      pugId: widget.model.id,
-                      username: widget.model.author.username,
-                      description: widget.model.imageDescription));
-            },
-            child: Container(
-              padding:
-              EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.shade300.withOpacity(0.5)),
-              child: Text(
-                "commentaires",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 19,
-                    color: isDarkMode ? Colors.white : Colors.black),
-              ),
-            )),
-        SizedBox(height: widget.onShare ? 5 : 0,)
-      ],
-
-    ),);
+    return Padding(
+      padding: EdgeInsets.only(left: widget.onShare ? 10 : 0),
+      child: Column(
+        children: [
+          GestureDetector(
+              onTap: () {
+                navigateTo(
+                    context,
+                    PugComments.withData(
+                        pugId: widget.model.id,
+                        username: widget.model.author.username,
+                        description: widget.model.imageDescription));
+              },
+              child: Container(
+                padding:
+                    EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey.shade300.withOpacity(0.5)),
+                child: Text(
+                  "commentaires",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 19,
+                      color: isDarkMode ? Colors.white : Colors.black),
+                ),
+              )),
+          SizedBox(
+            height: widget.onShare ? 5 : 0,
+          )
+        ],
+      ),
+    );
   }
 
   Widget imageDetail(String detail) {
@@ -458,38 +459,38 @@ class PugItemState extends State<PugItem> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          children: [
-                            renderProfilePicture(
-                                widget.model.author.profilePicture,
-                                widget.model.author.profilePicture.isNotEmpty,
-                                40),
-                            const SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                navigateTo(
-                                    context,
-                                    Profile.fromUsername(
-                                        username:
-                                            widget.model.author.username));
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.grey.shade300
-                                          .withOpacity(0.6)),
-                                  child: Text(
-                                    widget.model.author.username,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: notifier.isDark
-                                            ? Colors.white
-                                            : Colors.black),
-                                  )),
-                            ),
-                          ],
-                        ),
+                        GestureDetector(
+                            onTap: () {
+                              navigateTo(
+                                  context,
+                                  Profile.fromUsername(
+                                      username: widget.model.author.username));
+                            },
+                            child: Row(
+                              children: [
+                                renderProfilePicture(
+                                    widget.model.author.profilePicture,
+                                    widget
+                                        .model.author.profilePicture.isNotEmpty,
+                                    40),
+                                const SizedBox(width: 10),
+                                Container(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.grey.shade300
+                                            .withOpacity(0.6)),
+                                    child: Text(
+                                      widget.model.author.username,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: notifier.isDark
+                                              ? Colors.white
+                                              : Colors.black),
+                                    )),
+                              ],
+                            )),
                         IconButton(
                             onPressed: () => showBottomSheetSignal(context,
                                 widget.model.author.username, widget.model.id),
@@ -571,6 +572,7 @@ class PugItemState extends State<PugItem> {
                     itemCount: snapshot.data!.users.length,
                     itemBuilder: (context, index) {
                       return ShareItem(
+                          context: context,
                           user: snapshot.data!.users[index],
                           currentUsername: widget.currentUsername,
                           pugModel: pugModel);

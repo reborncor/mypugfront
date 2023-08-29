@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
@@ -18,6 +20,7 @@ import 'package:mypug/features/splashscreen/splash_screen.dart';
 import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
+import 'package:mypug/util/config.dart';
 import 'package:provider/provider.dart';
 
 import 'components/pug/pug.dart';
@@ -25,13 +28,20 @@ import 'components/tab/tab.dart';
 import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 
-void main() {
+Future<void> main() async {
+  await setUpEnv();
   httpCheck();
   runApp(MyApp());
 }
 
 void httpCheck() {
   HttpOverrides.global = MyHttpOverrides();
+}
+
+setUpEnv() async {
+  await dotenv.load();
+  STRIPE_KEY = dotenv.get('STRIPE_KEY', fallback: 'STRIPE_KEY N/A');
+  Stripe.publishableKey = STRIPE_KEY;
 }
 
 class MyApp extends StatelessWidget {
@@ -60,7 +70,9 @@ class MyApp extends StatelessWidget {
                     '/signup': (context) => SignUp(),
                     '/pug': (context) => Pug(),
                     '/search': (context) => Search(),
-                    '/chatlist': (context) => ChatList(),
+                    '/chatlist': (context) => ChatList(
+                          onChatlistEvent: () {},
+                        ),
                     '/chat': (context) => Chat(),
                     '/pugscomments': (context) => PugComments(),
                     '/follower': (context) => FollowersView(),

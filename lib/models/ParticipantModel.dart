@@ -30,12 +30,12 @@ class ParticipantModel {
 
   factory ParticipantModel.fromJsonData(Map<String, dynamic> json) {
     return ParticipantModel.jsonData(
-      date: json['date'],
-      sex: json['sex'],
-      pugId: json['pugId'],
-      pugPicture: json['pugPicture'],
-      username: json['username'],
-      userId: json['userId'],
+      date: json['date'] ?? 0,
+      sex: json['sex'] ?? "",
+      pugId: json['pugId'] ?? "",
+      pugPicture: json['pugPicture'] ?? "",
+      username: json['username'] ?? "",
+      userId: json['userId'] ?? "",
     );
   }
 

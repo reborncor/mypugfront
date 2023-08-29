@@ -74,11 +74,6 @@ BoxCircular(ThemeModel notifier) {
       borderRadius: BorderRadius.circular(10));
 }
 
-loaderImage() {
-  return Center(
-    child: CircularProgressIndicator(),
-  );
-}
 
 errorImage() {
   return const Center(child: Icon(Icons.error));
