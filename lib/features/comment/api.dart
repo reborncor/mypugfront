@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:mypug/response/commentresponse.dart';
@@ -11,7 +10,6 @@ Future<CommentResponse> getPugComment(String pugId, String username) async {
   String token = await getCurrentUserToken();
   late http.Response response;
   const String path = "/pug/comment";
-  log(pugId + " " + username);
   try {
     final queryParameters = {
       'username': username,

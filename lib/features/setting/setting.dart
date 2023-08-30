@@ -22,7 +22,7 @@ class Setting extends StatefulWidget {
 
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
-  late Map data;
+  // late Map data;
 
   @override
   void initState() {
@@ -116,7 +116,9 @@ class SettingState extends State<Setting> {
                                 child: ElevatedButton(
                                     style: BaseButtonRoundedColor(
                                         60, 40, Colors.redAccent),
-                                    onPressed: () => showDeleteDialog(),
+                                    onPressed: () => showDeleteDialog(
+                                          snapshot.data!.profilePicture,
+                                        ),
                                     child: Text("Supprimer son compte")),
                               )
                             ],
@@ -141,7 +143,7 @@ class SettingState extends State<Setting> {
     );
   }
 
-  void showDeleteDialog() {
+  void showDeleteDialog(profilePicture) {
     showDialog(
         context: context,
         builder: (context) => Center(
@@ -154,7 +156,7 @@ class SettingState extends State<Setting> {
                 ElevatedButton(
                   style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                   onPressed: () async {
-                    final result = await deleteAccount(data['profilePicture']);
+                    final result = await deleteAccount(profilePicture);
                     if (result.code == SUCCESS_CODE) {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);

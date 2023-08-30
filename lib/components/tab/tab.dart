@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:badges/badges.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +38,6 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
   ];
 
   updateBadge() {
-    log("$notificationNumber");
     setState(() {});
   }
 

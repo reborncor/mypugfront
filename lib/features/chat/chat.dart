@@ -144,7 +144,6 @@ class _ChatState extends State<Chat> {
         (data) => {
               if (data == '0_${widget.receiverUser.username}')
                 {
-                  log(messageSent.content),
                   addMessageToList(messageSent),
                 }
             });

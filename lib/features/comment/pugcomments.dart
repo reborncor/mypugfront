@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +96,6 @@ class PugCommentsState extends State<PugComments> {
       future: getPugComment(widget.pugId, widget.username),
       builder: (context, AsyncSnapshot<CommentResponse> snapshot) {
         if (snapshot.hasData) {
-          log(snapshot.data!.comments.length.toString());
           comments = snapshot.data!.comments;
           return Column(
             children: [

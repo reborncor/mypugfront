@@ -132,7 +132,7 @@ getPhoneHeight(context) {
 
 SocketService socketService = SocketService();
 
-void showMyDialogBlock(String username, context) {
+void showMyDialogBlock(String username, context, VoidCallback refreshCb) {
   showDialog(
       context: context,
       builder: (context) => Center(
@@ -146,6 +146,7 @@ void showMyDialogBlock(String username, context) {
                   final result = await blockUser(username);
                   if (result.code == SUCCESS_CODE) {
                     showSnackBar(context, result.message);
+                    refreshCb();
                     Navigator.pop(context);
                     navigateWithNamePop(context, const Actuality().routeName);
                   }
@@ -160,7 +161,8 @@ void showMyDialogBlock(String username, context) {
           )));
 }
 
-showBottomSheetSignal(context, String username, String pugId) {
+showBottomSheetSignal(
+    context, String username, String pugId, VoidCallback? refreshCb) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
@@ -201,7 +203,7 @@ showBottomSheetSignal(context, String username, String pugId) {
                         ),
                       )),
               InkWell(
-                  onTap: () => showMyDialogBlock(username, context),
+                  onTap: () => showMyDialogBlock(username, context, refreshCb!),
                   child: Container(
                     width: double.infinity,
                     height: 50,

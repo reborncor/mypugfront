@@ -91,7 +91,15 @@ class ActualityAllState extends State<ActualityAll> {
   }
 
   Widget pugItem(PugModel model) {
-    return PugItem(model: model, currentUsername: _username);
+    return PugItem(
+      model: model,
+      currentUsername: _username,
+      refreshCb: updateData,
+    );
+  }
+
+  updateData() {
+    refreshData();
   }
 
   @override

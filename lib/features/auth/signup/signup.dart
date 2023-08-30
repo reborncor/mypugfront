@@ -60,11 +60,13 @@ class SignUpState extends State<SignUp> {
                       style: TextStyle(fontSize: 20),
                     )),
                 Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.only(
+                        top: 16, left: 16, right: 16, bottom: 0),
                     child: TextFormField(
                       onEditingComplete: () {
                         FocusScope.of(context).nextFocus();
                       },
+                      textCapitalization: TextCapitalization.none,
                       autofocus: true,
                       textInputAction: TextInputAction.next,
                       autofillHints: const <String>[AutofillHints.username],
@@ -75,6 +77,7 @@ class SignUpState extends State<SignUp> {
                         if (value == null || value.isEmpty) {
                           return "Entre votre nom d'utilisateur";
                         }
+
                         return null;
                       },
                       decoration: InputDecoration(
@@ -108,42 +111,42 @@ class SignUpState extends State<SignUp> {
                         hintText: "Adresse email *",
                       ),
                     )),
-                Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          border: Border.all(
-                              width: 1.5,
-                              color: Colors.indigo[300] ?? Colors.indigo)),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final code = await countryPicker.showPicker(
-                                  scrollToDeviceLocale: true, context: context);
-                              if (code != null) {
-                                dialCode = code.dialCode;
-                                phoneRegion = code.code;
-                              }
-                              ;
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0, vertical: 8.0),
-                              margin: const EdgeInsets.only(left: 8.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.indigo.shade300,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              child: Text(dialCode.toString(),
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                // Padding(
+                //     padding: const EdgeInsets.all(16),
+                //     child: Container(
+                //       height: 60,
+                //       decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(20.0),
+                //           border: Border.all(
+                //               width: 1.5,
+                //               color: Colors.indigo[300] ?? Colors.indigo)),
+                //       child: Row(
+                //         children: [
+                //           GestureDetector(
+                //             onTap: () async {
+                //               final code = await countryPicker.showPicker(
+                //                   scrollToDeviceLocale: true, context: context);
+                //               if (code != null) {
+                //                 dialCode = code.dialCode;
+                //                 phoneRegion = code.code;
+                //               }
+                //               ;
+                //             },
+                //             child: Container(
+                //               padding: const EdgeInsets.symmetric(
+                //                   horizontal: 12.0, vertical: 8.0),
+                //               margin: const EdgeInsets.only(left: 8.0),
+                //               decoration: BoxDecoration(
+                //                   color: Colors.indigo.shade300,
+                //                   borderRadius:
+                //                       BorderRadius.all(Radius.circular(10.0))),
+                //               child: Text(dialCode.toString(),
+                //                   style: TextStyle(color: Colors.white)),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     )),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(

@@ -27,32 +27,36 @@ class PugItem extends StatefulWidget {
   final bool fromProfile;
   final bool onShare;
   final bool profileView;
+  VoidCallback? refreshCb;
 
-  const PugItem(
+  PugItem(
       {Key? key,
       required this.model,
       required this.currentUsername,
       this.onShare = false,
       this.profileView = false,
-      this.fromProfile = false})
+      this.fromProfile = false,
+      this.refreshCb})
       : super(key: key);
 
-  const PugItem.fromProfile(
+  PugItem.fromProfile(
       {Key? key,
       required this.model,
       required this.currentUsername,
       this.fromProfile = true,
       this.profileView = false,
-      this.onShare = false})
+      this.onShare = false,
+      this.refreshCb})
       : super(key: key);
 
-  const PugItem.onShare(
+  PugItem.onShare(
       {Key? key,
       required this.model,
       required this.currentUsername,
       this.fromProfile = false,
       this.profileView = false,
-      this.onShare = true})
+      this.onShare = true,
+      this.refreshCb})
       : super(key: key);
 
   @override
@@ -408,10 +412,11 @@ class PugItemState extends State<PugItem> {
                                 height: 0,
                               )
                             : IconButton(
-                                onPressed: () => showBottomSheetSignal(
+                            onPressed: () => showBottomSheetSignal(
                                     context,
                                     widget.model.author.username,
-                                    widget.model.id),
+                                    widget.model.id,
+                                    widget.refreshCb),
                                 icon: Icon(
                                   Icons.more_vert,
                                   size: 30,
@@ -492,8 +497,11 @@ class PugItemState extends State<PugItem> {
                               ],
                             )),
                         IconButton(
-                            onPressed: () => showBottomSheetSignal(context,
-                                widget.model.author.username, widget.model.id),
+                            onPressed: () => showBottomSheetSignal(
+                                context,
+                                widget.model.author.username,
+                                widget.model.id,
+                                widget.refreshCb),
                             icon: Icon(
                               Icons.more_vert,
                               size: 30,

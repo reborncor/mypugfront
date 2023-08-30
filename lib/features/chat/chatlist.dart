@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +52,6 @@ class ChatListState extends State<ChatList> {
               builder: (context) =>
                   Chat.withUsername(receiverUser: receiverUser, seen: seen)),
         ).then((res) => {
-              log("DATA $notificationNumber"),
               widget.onChatlistEvent!(),
               onRefresh()
             });

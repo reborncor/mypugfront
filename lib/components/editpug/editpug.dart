@@ -350,7 +350,6 @@ class EditPugState extends State<EditPug> {
         ValueListenableBuilder(
           valueListenable: _isLoadingNotifier,
           builder: (context, _isLoading, _) {
-            log("INFOPUG ${_isLoading.toString()}");
             return Column(
               children: [
                 Visibility(

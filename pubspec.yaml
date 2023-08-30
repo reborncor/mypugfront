@@ -64,7 +64,6 @@ dependencies:
   flutter_stripe: ^2.1.0
   pay: ^1.0.7
   flutter_dotenv: ^5.0.2
-  get: ^4.6.5
 
 
 

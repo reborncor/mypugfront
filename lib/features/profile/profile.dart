@@ -249,10 +249,9 @@ class ProfileState extends State<Profile> {
               ),
               Align(
                   alignment: Alignment.bottomLeft,
-                  child: Padding(
+                child: Padding(
                     padding: const EdgeInsets.only(left: 20),
-                    child: Flexible(
-                        child: Text(
+                    child: Text(
                       username,
                       softWrap: true,
                       style: TextStyle(
@@ -260,7 +259,7 @@ class ProfileState extends State<Profile> {
                           color: notifier.isDark ? Colors.white : Colors.black,
                           fontWeight: FontWeight.bold),
                     )),
-                  )),
+              ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 40, top: 5, bottom: 5),
@@ -541,8 +540,8 @@ class ProfileState extends State<Profile> {
                       height: 0,
                     )
                   : IconButton(
-                      onPressed: () =>
-                          showBottomSheetSignal(context, widget.username, ""),
+                  onPressed: () => showBottomSheetSignal(
+                          context, widget.username, "", null),
                       icon: const Icon(Icons.more_vert)),
             ],
           ),
