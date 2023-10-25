@@ -4,9 +4,11 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/chat/chat.dart';
+import 'package:mypug/features/userblocked/api.dart';
 import 'package:mypug/models/ConversationModel.dart';
 import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/response/conversationsresponse.dart';
+import 'package:mypug/response/followerresponse.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
@@ -27,13 +29,19 @@ class ChatList extends StatefulWidget {
 class ChatListState extends State<ChatList> {
   TextEditingController searchController = TextEditingController();
   StreamController streamController = StreamController();
+  FollowerResponse blockedUsers = FollowerResponse(code: 1, message: "");
   late String _username;
   late ThemeModel notifier;
 
   @override
-  void initState() {
+  initState() {
     getCurrentUsername().then((value) => _username = value);
+    fetchData();
     super.initState();
+  }
+
+  fetchData() async {
+    blockedUsers = await getUserBlocked();
   }
 
   Future<void> onRefresh() async {
@@ -43,18 +51,19 @@ class ChatListState extends State<ChatList> {
   Widget itemChat(ConversationModel model) {
     UserFactory receiverUser = model.membersInfos
         .firstWhere((element) => element.username != _username);
+    bool blocked = blockedUsers.users
+        .any((element) => element.username == receiverUser.username);
     bool seen = model.seen.contains(_username);
     return InkWell(
       onTap: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  Chat.withUsername(receiverUser: receiverUser, seen: seen)),
-        ).then((res) => {
-              widget.onChatlistEvent!(),
-              onRefresh()
-            });
+        if (receiverUser.username != _username) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Chat.withUsername(receiverUser: receiverUser, seen: seen)),
+          ).then((res) => {widget.onChatlistEvent!(), onRefresh()});
+        }
       },
       child: ListTile(
         leading: renderProfilePicture(receiverUser.profilePicture,
@@ -74,8 +83,7 @@ class ChatListState extends State<ChatList> {
         title: Text(
           receiverUser.username,
           style: TextStyle(
-              fontSize: 17,
-              color: notifier.isDark ? Colors.black : Colors.black),
+              fontSize: 17, color: blocked ? Colors.redAccent : Colors.black),
         ),
         subtitle: Text(
           (model.chat.isEmpty

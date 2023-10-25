@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
@@ -105,12 +107,14 @@ class SignInState extends State<SignIn> {
                     var result = await signinUser(
                         usernameController.text.trim(),
                         passwordController.text);
-                    print(result);
+                    log("Connection");
                     if (result.code == SUCCESS_CODE) {
                       this.notifier.isDark = true;
                       navigateWithNamePop(context, const TabView().routeName);
                     } else {
                       // showSnackBar(context, result.message);
+                      log("Error");
+
                       setState(() {
                         _errorText = result.message;
                       });

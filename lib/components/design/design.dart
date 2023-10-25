@@ -39,6 +39,7 @@ final APPCOLOR = Colors.indigo.shade300;
 final APP_COMMENT_COLOR = Colors.black45.withOpacity(0.5);
 final APP_COLOR_SEARCH = APP_COMMENT_COLOR;
 final PUGSIZE = 600.0;
+final MAX_SCREEN_WIDTH = 600.0;
 
 BoxGradient() {
   return BoxDecoration(

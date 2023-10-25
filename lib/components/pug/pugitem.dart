@@ -77,15 +77,28 @@ class PugItemState extends State<PugItem> {
   bool isExpanded = false;
   bool isVisible = false;
   late bool isDarkMode;
+  late double screenWidth = 0;
+  late double screenWidthPadding = 0;
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      // screenWidthPadding = getPhoneWidth(context) > MAX_SCREEN_WIDTH ? (getPhoneWidth(context) - MAX_SCREEN_WIDTH)/2 : 0 ;
+      screenWidthPadding = 0;
+      print(
+          "SCREEN WIDTH : ${getPhoneWidth(context)} PADDING : $screenWidthPadding");
+
+      screenWidth = getPhoneWidth(context) > MAX_SCREEN_WIDTH
+          ? MAX_SCREEN_WIDTH
+          : getPhoneWidth(context);
+    });
     super.initState();
     imageURL = widget.model.imageURL;
     imageTitle = widget.model.imageTitle!;
     imageDescription = widget.model.imageDescription;
     imageLike = widget.model.like;
     isLiked = widget.model.isLiked;
+
     if (widget.model.comments.isNotEmpty) {
       comment = widget.model.comments.last;
     }
@@ -166,7 +179,9 @@ class PugItemState extends State<PugItem> {
                       .map((i, e) => MapEntry(
                           i,
                           Positioned(
-                            left: widget.onShare ? e.dx : e.dx,
+                            left: widget.onShare
+                                ? e.dx * screenWidth + screenWidthPadding
+                                : e.dx * screenWidth + screenWidthPadding,
                             top: widget.onShare
                                 ? (widget.model.height > 200)
                                     ? e.dy * 400 / widget.model.height
@@ -553,7 +568,7 @@ class PugItemState extends State<PugItem> {
                     if (result.code == SUCCESS_CODE) {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);
-                      navigateWithNamePop(context, Profile().routeName);
+                      navigatePopUntilName(context, Profile().routeName);
                     }
                   },
                   child: const Text("Confirmer"),

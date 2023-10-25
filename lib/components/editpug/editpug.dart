@@ -40,7 +40,7 @@ class EditPugState extends State<EditPug> {
   StreamController streamController = StreamController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dragController = DragController();
-  double width = 500;
+  double screenWidth = 500;
   double height = 500;
   late int imageHeight = PUGSIZE.toInt();
 
@@ -48,7 +48,7 @@ class EditPugState extends State<EditPug> {
   late String pugDetailText = "";
   String imageTitle = "";
   String imageDescription = "";
-  double x = 250.0;
+  double x = 200.0;
   double y = 500.0;
 
   double pugBasicPositionX = 200.0;
@@ -66,8 +66,11 @@ class EditPugState extends State<EditPug> {
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      width = getPhoneWidth(context);
+      screenWidth = getPhoneWidth(context) > MAX_SCREEN_WIDTH
+          ? MAX_SCREEN_WIDTH
+          : getPhoneWidth(context);
       height = getPhoneHeight(context);
+      x = MediaQuery.of(context).padding.top.toInt() / 2;
 
       tooltip = SuperTooltip(
         popupDirection: TooltipDirection.up,
@@ -118,9 +121,7 @@ class EditPugState extends State<EditPug> {
   addNewPugDetails(double positionX, double positionY, String text) {
     if (details.length <= 5) {
       PugDetailModel model = PugDetailModel(
-          positionX: positionX.toInt(),
-          positionY: positionY.toInt(),
-          text: text);
+          positionX: positionX, positionY: positionY, text: text);
       details.add(model);
     } else {
       showSnackBar(context, "Vous avez atteint la limite de référence");
@@ -133,33 +134,42 @@ class EditPugState extends State<EditPug> {
     return Stack(
         children: details
             .map((e) => Positioned(
-                  left: e.positionX.toDouble(),
+          left: e.positionX.toDouble() * screenWidth,
                   top: e.positionY.toDouble(),
                   child: Draggable(
+                      data: Badge(
+                        badgeContent: Text('X'),
+                        child: Center(
+                            child: InstagramMention(
+                                text: e.text, color: APP_COMMENT_COLOR)),
+                      ),
+                      onDragStarted: () {},
+                      onDragUpdate: (data) {},
                       onDragEnd: (detailsDrag) {
-                        e.positionX = detailsDrag.offset.dx.toInt();
-                        e.positionY = detailsDrag.offset.dy.toInt() -
-                            appBar.preferredSize.height.toInt() -
-                            MediaQuery.of(context).padding.top.toInt();
+                        log('final x :${detailsDrag.offset.dx} y :${detailsDrag.offset.dy.toInt()}');
+                        e.positionX = detailsDrag.offset.dx / screenWidth;
+                        e.positionY = detailsDrag.offset.dy -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top;
                         setState(() {});
                       },
                       childWhenDragging: const SizedBox(
                         width: 0,
                         height: 0,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          details.remove(e);
-                          setState(() {});
-                        },
-                        child: Badge(
-                          badgeContent: Text('X'),
-                          child: Center(
-                              child: InstagramMention(
-                                  text: e.text, color: APP_COMMENT_COLOR)),
-                        ),
-                      ),
-                      feedback: draggablePugDetailItem(e.text)),
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  details.remove(e);
+                  setState(() {});
+                },
+                child: Badge(
+                  badgeContent: Text('X'),
+                  child: Center(
+                      child: InstagramMention(
+                          text: e.text, color: APP_COMMENT_COLOR)),
+                ),
+              ),
+              feedback: draggablePugDetailItem(e.text)),
                 ))
             .toList());
   }
@@ -178,7 +188,6 @@ class EditPugState extends State<EditPug> {
   }
 
   Widget textPugEditor() {
-    log('$x ET $y');
     return Positioned(
         left: x,
         top: y -
@@ -206,7 +215,7 @@ class EditPugState extends State<EditPug> {
 
   Widget textEditorWidget() {
     return Visibility(
-      visible: isTextVisible,
+      visible: isVisible,
       child: Wrap(spacing: 1, direction: Axis.vertical, children: [
         Container(
             width: 140,
@@ -233,7 +242,7 @@ class EditPugState extends State<EditPug> {
                         onPressed: () {
                           if (textEditingController.text.isNotEmpty) {
                             addNewPugDetails(
-                                pugBasicPositionX,
+                                0.5,
                                 pugBasicPositionY -
                                     appBar.preferredSize.height -
                                     MediaQuery.of(context).padding.top,

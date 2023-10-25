@@ -160,7 +160,9 @@ class _ChatState extends State<Chat> {
   }
 
   sendMessage(String message) {
-    if (message.trim().isNotEmpty) {
+    if (message
+        .trim()
+        .isNotEmpty && username != widget.receiverUser.username) {
       messageSent = MessageModel(
           time: "",
           content: message,

@@ -36,7 +36,7 @@ class SignUpState extends State<SignUp> {
   }
 
   _launchURL() async {
-    Uri _url = Uri.parse('https://www.google.com');
+    Uri _url = Uri.parse('https://bloden.com/cgu.php');
     if (await launchUrl(_url)) {
       await launchUrl(_url);
     } else {
@@ -90,14 +90,13 @@ class SignUpState extends State<SignUp> {
                 Padding(
                     padding: const EdgeInsets.all(16),
                     child: TextFormField(
-                        onEditingComplete: (){
-                          FocusScope.of(context).nextFocus();
-                        },
+                      onEditingComplete: () {
+                        FocusScope.of(context).nextFocus();
+                      },
                       textInputAction: TextInputAction.next,
                       autofillHints: const <String>[AutofillHints.email],
                       textAlign: TextAlign.center,
                       controller: emailController,
-
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Entrez votre adresse email";
@@ -111,42 +110,6 @@ class SignUpState extends State<SignUp> {
                         hintText: "Adresse email *",
                       ),
                     )),
-                // Padding(
-                //     padding: const EdgeInsets.all(16),
-                //     child: Container(
-                //       height: 60,
-                //       decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(20.0),
-                //           border: Border.all(
-                //               width: 1.5,
-                //               color: Colors.indigo[300] ?? Colors.indigo)),
-                //       child: Row(
-                //         children: [
-                //           GestureDetector(
-                //             onTap: () async {
-                //               final code = await countryPicker.showPicker(
-                //                   scrollToDeviceLocale: true, context: context);
-                //               if (code != null) {
-                //                 dialCode = code.dialCode;
-                //                 phoneRegion = code.code;
-                //               }
-                //               ;
-                //             },
-                //             child: Container(
-                //               padding: const EdgeInsets.symmetric(
-                //                   horizontal: 12.0, vertical: 8.0),
-                //               margin: const EdgeInsets.only(left: 8.0),
-                //               decoration: BoxDecoration(
-                //                   color: Colors.indigo.shade300,
-                //                   borderRadius:
-                //                       BorderRadius.all(Radius.circular(10.0))),
-                //               child: Text(dialCode.toString(),
-                //                   style: TextStyle(color: Colors.white)),
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     )),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: TextFormField(
@@ -244,10 +207,8 @@ class SignUpState extends State<SignUp> {
                         var result = await signUpUSer(
                             usernameController.text.trim(),
                             passwordController.text,
-                            // phoneNumberController.text.trim(),
                             emailController.text.trim(),
                             phoneRegion);
-                        print(result);
                         if (result.code == SUCCESS_CODE) {
                           navigateWithName(context, const TabView().routeName);
                         } else {

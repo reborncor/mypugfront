@@ -5,39 +5,34 @@ import 'package:mypug/response/signinresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 
-Future<SignInResponse> signinUser(String username, String password) async{
+Future<SignInResponse> signinUser(String username, String password) async {
   http.Response response;
 
   const String path = "/user/signin";
 
-  Map data =  {
-    'username' : username.toLowerCase(),
-    'password' : password
-  };
+  Map data = {'username': username.toLowerCase(), 'password': password};
   try {
-
-    var url = Uri.parse(URL+path);
+    var url = Uri.parse(URL + path);
     response = await http.post(url,
         headers: {"Content-type": "application/json"}, body: json.encode(data));
-  }
-  catch (e) {
+  } catch (e) {
     print(e.toString());
     return SignInResponse(code: 1, message: "Erreur serveur");
   }
 
-  if(response.statusCode == 200) {
-    SignInResponse data = SignInResponse.fromJsonData(json.decode(response.body));
+  if (response.statusCode == 200) {
+    SignInResponse data =
+        SignInResponse.fromJsonData(json.decode(response.body));
     print(json.decode(response.body));
-    if(data != null) {
+    if (data != null) {
       saveUserData(data);
     }
-    return data ;
-  }
-  else{
+    return data;
+  } else {
     var message;
     int code = 1;
 
-    try{
+    try {
       print(response.body);
       message = json.decode(response.body)['message'];
       code = json.decode(response.body)['code'];
@@ -57,38 +52,34 @@ Future<SignInResponse> signUpUSer(
   Map data = {
     'username': username.toLowerCase(),
     'password': password,
-    // 'phoneNumber': phoneNumber,
     'email': email,
     'phoneRegion': phoneRegion,
   };
   try {
-
-    var url = Uri.parse(URL+path);
+    var url = Uri.parse(URL + path);
     response = await http.post(url,
         headers: {"Content-type": "application/json"}, body: json.encode(data));
-  }
-  catch (e) {
+  } catch (e) {
     print(e.toString());
     return SignInResponse(code: 1, message: "Erreur serveur");
   }
 
-  if(response.statusCode == 201) {
-    SignInResponse data = SignInResponse.fromJsonData(json.decode(response.body));
+  if (response.statusCode == 201) {
+    SignInResponse data =
+        SignInResponse.fromJsonData(json.decode(response.body));
     print(json.decode(response.body));
-    if(data != null) {
+    if (data != null) {
       saveUserData(data);
     }
-    return data ;
-  }
-  else{
+    return data;
+  } else {
     var message;
-    try{
+    try {
       message = json.decode(response.body)['message'];
-    }catch(e){
+    } catch (e) {
       message = "Une erreur est survenue";
     }
-    return SignInResponse(code: json.decode(response.body)['code'], message: message);
+    return SignInResponse(
+        code: json.decode(response.body)['code'], message: message);
   }
-
-
 }

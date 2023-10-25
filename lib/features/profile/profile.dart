@@ -41,9 +41,11 @@ class Profile extends StatefulWidget {
 class ProfileState extends State<Profile> {
   List<PugDetailModel> details = [];
   List<PugModel> list = [];
-  late Future<UserPugResponse> _response;
-  late Future<UserResponse> _userResponse;
+  Future<UserPugResponse>? _response;
+  Future<UserResponse>? _userResponse;
   late String username;
+  late String currentUsername;
+  late bool isOwnProfile = true;
   late bool isFollowing = false;
   late ThemeModel notifier;
   late String description = "";
@@ -64,21 +66,26 @@ class ProfileState extends State<Profile> {
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       isSmallDevice = MediaQuery.of(context).size.width < 355;
+      currentUsername = await getCurrentUsername();
+      if (widget.username != "") {
+        isOwnProfile = currentUsername == widget.username;
+        hasBackButton = true;
+      }
+      fetchData();
     });
-    fetchData();
     super.initState();
   }
 
   fetchData() {
-    if (widget.username == "") {
+    if (isOwnProfile) {
       _userResponse = getUserInfo();
       _response = getAllPugsFromUser();
     } else {
       _userResponse = getUserInfoFromUsername(widget.username);
       _response = getAllPugsFromUsername(widget.username);
       hasBackButton = true;
-      setState(() {});
     }
+    setState(() {});
   }
 
   _imgFromGallery() async {
@@ -126,7 +133,6 @@ class ProfileState extends State<Profile> {
               child: Text("Utilisateur introuvable"),
             );
           }
-
           username = snapshot.data!.username;
           formerProfilePicture = snapshot.data!.profilePicture;
           formerDescription = snapshot.data!.description!;
@@ -306,7 +312,7 @@ class ProfileState extends State<Profile> {
               SizedBox(
                 height: 10,
               ),
-              (widget.username == "")
+              (isOwnProfile)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -415,7 +421,7 @@ class ProfileState extends State<Profile> {
         ),
       ),
       onTap: () {
-        if (widget.username == "") {
+        if (isOwnProfile) {
           navigateTo(context, Pug.withPugModel(model: model));
         } else {
           navigateTo(
@@ -477,7 +483,7 @@ class ProfileState extends State<Profile> {
   }
 
   Future<void> refreshData() async {
-    if (widget.username == "") {
+    if (isOwnProfile) {
       refreshUserInfo();
       _response = getAllPugsFromUser();
       hasBackButton = false;
@@ -534,7 +540,7 @@ class ProfileState extends State<Profile> {
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
                   icon: const Icon(Icons.settings_rounded)),
-              (widget.username == "")
+              (isOwnProfile)
                   ? const SizedBox(
                       width: 0,
                       height: 0,

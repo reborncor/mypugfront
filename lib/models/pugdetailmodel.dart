@@ -1,8 +1,8 @@
 import 'dart:core';
 
 class PugDetailModel {
-  late int positionX;
-  late int positionY;
+  late double positionX;
+  late double positionY;
   late String text;
 
   PugDetailModel(
@@ -14,8 +14,8 @@ class PugDetailModel {
   factory PugDetailModel.fromJsonData(Map<String, dynamic> json) {
     return PugDetailModel.jsonData(
       text: json['text'],
-      positionX: json['positionX'],
-      positionY: json['positionY'],
+      positionX: double.parse(json['positionX'].toString()),
+      positionY: double.parse(json['positionY'].toString()),
     );
   }
 

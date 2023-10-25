@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
-import 'package:mypug/features/auth/signin/signin.dart';
 import 'package:mypug/features/profile/api.dart';
 import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../response/userresponse.dart';
 import 'api.dart';
@@ -22,6 +22,7 @@ class Setting extends StatefulWidget {
 
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
+
   // late Map data;
 
   @override
@@ -51,6 +52,15 @@ class SettingState extends State<Setting> {
         ),
       ),
     );
+  }
+
+  _launchURL() async {
+    Uri _url = Uri.parse('https://bloden.com/cgu.php');
+    if (await launchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw "Impossible d' ouvrir le lien $_url";
+    }
   }
 
   @override
@@ -102,6 +112,20 @@ class SettingState extends State<Setting> {
                                         context, UsersBlockedView().routeName),
                                     child: Text("Utilisateurs bloqués")),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: InkWell(
+                                  onTap: _launchURL,
+                                  child: Text(
+                                    "conditions d'utilisation",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      // color: APPCOLOR,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Expanded(
                                 child: Align(
                                     alignment: Alignment.center,
@@ -109,7 +133,7 @@ class SettingState extends State<Setting> {
                                         style: BaseButtonRoundedColor(
                                             60, 40, APPCOLOR),
                                         onPressed: () => disconnectUser(),
-                                        child: Text("Deconnexion"))),
+                                        child: Text("Déconnexion"))),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8),
@@ -160,7 +184,7 @@ class SettingState extends State<Setting> {
                     if (result.code == SUCCESS_CODE) {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);
-                      navigateWithNamePop(context, const SignIn().routeName);
+                      disconnectUser();
                     } else {
                       showSnackBar(context, result.message);
                       Navigator.pop(context);

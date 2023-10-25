@@ -1,13 +1,13 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/response/signinresponse.dart';
 import 'package:mypug/service/api/signalpug.dart';
 import 'package:mypug/service/api/signaluser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/design/design.dart';
-import '../features/actuality/actuality.dart';
 import '../service/api/blockuser.dart';
 import '../service/socketservice.dart';
 
@@ -31,15 +31,17 @@ navigateToReplacement(context, view) {
 }
 
 navigateWithName(context, String name) {
-  Navigator.pushNamed(context, name);
+  Navigator.pushNamed(context, name, arguments: RouteSettings(name: name));
 }
 
 navigateWithNamePop(context, String name) {
-  Navigator.popAndPushNamed(context, name);
+  Navigator.popAndPushNamed(context, name,
+      arguments: RouteSettings(name: name));
 }
 
-navigateWithNameReplacement(context, String name) {
-  Navigator.popAndPushNamed(context, name);
+navigatePopUntilName(context, String name) {
+  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+  Navigator.pushNamed(context, name);
 }
 
 showSnackBar(context, message) {
@@ -147,8 +149,8 @@ void showMyDialogBlock(String username, context, VoidCallback refreshCb) {
                   if (result.code == SUCCESS_CODE) {
                     showSnackBar(context, result.message);
                     refreshCb();
-                    Navigator.pop(context);
-                    navigateWithNamePop(context, const Actuality().routeName);
+                    navigatePopUntilName(
+                        context, const ActualityAll().routeName);
                   }
                 },
                 child: const Text("Confirmer"),
@@ -203,7 +205,8 @@ showBottomSheetSignal(
                         ),
                       )),
               InkWell(
-                  onTap: () => showMyDialogBlock(username, context, refreshCb!),
+                  onTap: () =>
+                      showMyDialogBlock(username, context, refreshCb ?? () {}),
                   child: Container(
                     width: double.infinity,
                     height: 50,

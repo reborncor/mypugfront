@@ -1,5 +1,7 @@
 import 'dart:io';
 
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -42,6 +44,35 @@ setUpEnv() async {
   await dotenv.load();
   STRIPE_KEY = dotenv.get('STRIPE_KEY', fallback: 'STRIPE_KEY N/A');
   Stripe.publishableKey = STRIPE_KEY;
+  // await Firebase.initializeApp();
+  // FirebaseMessaging _firebaseMessaging =FirebaseMessaging.instance;
+  // NOTIFICATION_TOKEN = (await _firebaseMessaging.getToken())!;
+  // FirebaseMessaging.instance.getInitialMessage().then((value) => {});
+  // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+  //   print("message received");
+  //
+  //   print(event.notification.title);
+  //   print(event.notification.body);
+  //   //
+  //   var eventType = event.data['eventType'];
+  //   if (eventType == "EVENT_GAME"){
+  //     var customKey = event.data['customToken'];
+  //     var gamble = event.data['gamble'];
+  //     var username = event.data['username'];
+  //     var gameName = event.data['gameName'];
+  //     showMyDialog(event.notification.title,event.notification.body,username, gamble, customKey, gameName );
+  //   }
+  //
+  //
+  // });
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
+  //   print("message clicked");
+  //
+  //   print(event.category);
+  //
+  //   print(event.notification?.title);
+  //   print(event.notification?.body);
+  // });
 }
 
 class MyApp extends StatelessWidget {
@@ -104,8 +135,8 @@ class MyApp extends StatelessWidget {
                   // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
                   themeMode: ThemeMode.dark,
-
                   title: 'MyPUG',
+
                   home: const SplashScreen(),
                 )),
           );
