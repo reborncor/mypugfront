@@ -15,6 +15,7 @@ int SUCCESS_CODE = 0;
 int ERROR_CODE = 1;
 int BLOCKED_CODE = 3;
 int notificationNumber = 0;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 dynamic navigateTo(context, view) {
   Navigator.push(
@@ -346,6 +347,10 @@ renderProfilePicture(String path, bool exist, double size) {
             height: size,
             fit: BoxFit.cover,
             cache: true,
+            cacheMaxAge: const Duration(days: 7),
+
+
+
           ),
           borderRadius: BorderRadius.circular(100))
       : Image(

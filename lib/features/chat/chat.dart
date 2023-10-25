@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pugitem.dart';
+import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:provider/provider.dart';
@@ -122,6 +123,7 @@ class _ChatState extends State<Chat> {
   fetchData() async {
     var data = await getUserConversation(widget.receiverUser.username);
     response = data;
+    log("TEST :"+response.conversation.toString());
     messages = response.conversation.chat;
     streamController.add(data);
     sendMessageSeen();
@@ -160,9 +162,7 @@ class _ChatState extends State<Chat> {
   }
 
   sendMessage(String message) {
-    if (message
-        .trim()
-        .isNotEmpty && username != widget.receiverUser.username) {
+    if (message.trim().isNotEmpty && username != widget.receiverUser.username) {
       messageSent = MessageModel(
           time: "",
           content: message,
@@ -233,8 +233,18 @@ class _ChatState extends State<Chat> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        renderProfilePicture(widget.receiverUser.profilePicture,
-                            widget.receiverUser.profilePicture.isNotEmpty, 40),
+                        GestureDetector(
+                          child: renderProfilePicture(
+                              widget.receiverUser.profilePicture,
+                              widget.receiverUser.profilePicture.isNotEmpty,
+                              40),
+                          onTap: () {
+                            navigateTo(
+                                context,
+                                Profile.fromUsername(
+                                    username: widget.receiverUser.username));
+                          },
+                        ),
                         Flexible(
                             child: messageModel.type == 'text'
                                 ? Card(
@@ -298,7 +308,7 @@ class _ChatState extends State<Chat> {
         this.themeNotifier = notifier;
         return WillPopScope(
           onWillPop: () async {
-            if (isSeen &&
+            if (isSeen && messages.isNotEmpty &&
                 messages.first.senderUsername == widget.receiverUser.username &&
                 notificationNumber > 0) {
               notificationNumber -= 1;

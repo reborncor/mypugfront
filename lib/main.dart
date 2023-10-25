@@ -23,6 +23,7 @@ import 'package:mypug/features/userblocked/userblocked.dart';
 import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/config.dart';
+import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
 import 'components/pug/pug.dart';
@@ -47,34 +48,30 @@ setUpEnv() async {
   Stripe.publishableKey = STRIPE_KEY;
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );  // FirebaseMessaging _firebaseMessaging =FirebaseMessaging.instance;
-  // NOTIFICATION_TOKEN = (await _firebaseMessaging.getToken())!;
-  // FirebaseMessaging.instance.getInitialMessage().then((value) => {});
-  // FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-  //   print("message received");
-  //
-  //   print(event.notification.title);
-  //   print(event.notification.body);
-  //   //
-  //   var eventType = event.data['eventType'];
-  //   if (eventType == "EVENT_GAME"){
-  //     var customKey = event.data['customToken'];
-  //     var gamble = event.data['gamble'];
-  //     var username = event.data['username'];
-  //     var gameName = event.data['gameName'];
-  //     showMyDialog(event.notification.title,event.notification.body,username, gamble, customKey, gameName );
-  //   }
-  //
-  //
-  // });
-  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
-  //   print("message clicked");
-  //
-  //   print(event.category);
-  //
-  //   print(event.notification?.title);
-  //   print(event.notification?.body);
-  // });
+  );
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  NOTIFICATION_TOKEN = (await _firebaseMessaging.getToken())!;
+  FirebaseMessaging.instance.getInitialMessage().then((value) => {});
+  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    print("message receveid");
+
+    print(event.category);
+
+    print(event.notification?.title);
+    print(event.notification?.body);
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
+    print("message clicked");
+
+    print(event.category);
+
+    print(event.notification?.title);
+    print(event.notification?.body);
+    navigatorKey.currentState?.pushNamed("/");
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (context) => ChatList()),
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -91,6 +88,7 @@ class MyApp extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
+                  navigatorKey: navigatorKey,
 
                   routes: {
                     '/actualityall': (context) => ActualityAll(),

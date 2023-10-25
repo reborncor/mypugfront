@@ -18,7 +18,9 @@ class SocketService {
     socket.onConnect((data) => {
           log("Connected"),
           socket.emit("credentials", username),
-        });
+          socket.emit("credentials_notification",{"username":username, "token" :NOTIFICATION_TOKEN}),
+
+    });
 
     socket.onDisconnect(
       (data) => socket.emit("disconnect_user", username),
