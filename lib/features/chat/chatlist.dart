@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/chat/chat.dart';
@@ -73,7 +73,7 @@ class ChatListState extends State<ChatList> {
                 Icons.send,
                 color: APPCOLOR,
               )
-            : Badge(
+            : badges.Badge(
                 badgeContent: Text("1"),
                 badgeColor: APPCOLOR6,
                 child: Icon(

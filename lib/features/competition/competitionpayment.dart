@@ -112,16 +112,14 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
 
   Future<void> makePayment(double amount) async {
     final result = await buyPlaceCompetition((amount * 100).toInt());
+    String? stringAmount = result.toString();
 
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: result.payload["paymentIntent"],
-          applePay: Stripe.instance.isApplePaySupported.value,
-          googlePay: true,
-          style: ThemeMode.dark,
-          testEnv: true,
-          merchantCountryCode: 'FR',
-          merchantDisplayName: 'MyPug',
+          applePay: const PaymentSheetApplePay(merchantCountryCode: "FR",),
+          googlePay: const PaymentSheetGooglePay(merchantCountryCode: "FR",  ),
+
         ));
     setState(() {});
     displayPaymentStripe(result.payload["paymentIntent"]);

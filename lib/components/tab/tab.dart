@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
@@ -112,7 +112,7 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
           ),
           DotNavigationBarItem(
             icon: (notificationNumber > 0)
-                ? Badge(
+                ? badges.Badge(
                     badgeContent: Text(notificationNumber > 99
                         ? "99+"
                         : notificationNumber.toString()),

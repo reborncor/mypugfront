@@ -158,13 +158,9 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
 
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
-      paymentIntentClientSecret: result.payload["paymentIntent"],
-      applePay: Stripe.instance.isApplePaySupported.value,
-      googlePay: true,
-      style: ThemeMode.dark,
-      testEnv: true,
-      merchantCountryCode: 'FR',
-      merchantDisplayName: 'MyPug',
+          paymentIntentClientSecret: result.payload["paymentIntent"],
+          applePay: const PaymentSheetApplePay(merchantCountryCode: "FR",),
+          googlePay: const PaymentSheetGooglePay(merchantCountryCode: "FR",),
     ));
     setState(() {});
     displayPaymentStripe(result.payload["paymentIntent"]);

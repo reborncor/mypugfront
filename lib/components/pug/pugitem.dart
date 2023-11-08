@@ -166,6 +166,7 @@ class PugItemState extends State<PugItem> {
                                         "asset/images/share-icon.png"),
                                     width: 40,
                                     height: 40,
+
                                   ),
                                 ),
                               )),

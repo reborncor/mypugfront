@@ -32,6 +32,7 @@ class SettingState extends State<Setting> {
 
   disconnectUser() async {
     await deleteData();
+    socketService.disconnect();
     Navigator.pushReplacementNamed(context, '/signin');
   }
 

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +137,7 @@ class EditPugState extends State<EditPug> {
           left: e.positionX.toDouble() * screenWidth,
                   top: e.positionY.toDouble(),
                   child: Draggable(
-                      data: Badge(
+                      data: badges.Badge(
                         badgeContent: Text('X'),
                         child: Center(
                             child: InstagramMention(
@@ -162,7 +162,7 @@ class EditPugState extends State<EditPug> {
                   details.remove(e);
                   setState(() {});
                 },
-                child: Badge(
+                child: badges.Badge(
                   badgeContent: Text('X'),
                   child: Center(
                       child: InstagramMention(

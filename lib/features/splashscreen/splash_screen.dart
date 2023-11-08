@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
 
+import '../../models/userfactory.dart';
 import '../../util/util.dart';
+import '../chat/chat.dart';
 
 class SplashScreen extends StatefulWidget {
   final routeName = '/splashscreen';

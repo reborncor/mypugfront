@@ -1,9 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
+import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/actualityall/actualityall.dart';
@@ -20,17 +24,26 @@ import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
 import 'package:mypug/features/userblocked/userblocked.dart';
+import 'package:mypug/models/userfactory.dart';
 import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 import 'components/pug/pug.dart';
 import 'components/tab/tab.dart';
 import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
+
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage event) async {
+  var vibrator = await Vibration.hasVibrator();
+  if (vibrator != null && vibrator && Platform.isIOS) {
+    Vibration.vibrate();
+  }
+}
 
 Future<void> main() async {
   await setUpEnv();
@@ -51,26 +64,46 @@ setUpEnv() async {
   );
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   NOTIFICATION_TOKEN = (await _firebaseMessaging.getToken())!;
-  FirebaseMessaging.instance.getInitialMessage().then((value) => {});
-  FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+
+  await FlutterNotificationChannel.registerNotificationChannel(
+    description: 'Basic notification',
+    id: 'vibratenow',
+    importance: NotificationImportance.IMPORTANCE_HIGH,
+    name: 'App notification',
+    enableSound: true,
+    enableVibration: true,
+    visibility: NotificationVisibility.VISIBILITY_PUBLIC,
+  );
+  FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
     print("message receveid");
-
-    print(event.category);
-
     print(event.notification?.title);
-    print(event.notification?.body);
   });
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
+
+  FirebaseMessaging.onBackgroundMessage((firebaseMessagingBackgroundHandler));
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) async {
     print("message clicked");
-
-    print(event.category);
-
     print(event.notification?.title);
-    print(event.notification?.body);
-    navigatorKey.currentState?.pushNamed("/");
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(builder: (context) => ChatList()),
-    );
+
+    if (event.data['type'] == "message") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => Chat.withUsername(
+          receiverUser: UserFactory(
+              id: "",
+              username: event.data['sender_username'],
+              profilePicture: event.data['sender_profilepicture']),
+          seen: false,
+        ),
+      ));
+    }
+    if (event.data['type'] == "comment") {
+      navigatorKey.currentState?.pushNamed("/").then((value) =>
+          navigatorKey.currentState?.push(MaterialPageRoute(
+              builder: (context) => PugComments.withData(
+                  pugId: event.data['pug_id'],
+                  username: event.data['username'],
+                  description: event.data['description']))));
+    }
   });
 }
 
@@ -79,6 +112,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(
@@ -118,7 +152,7 @@ class MyApp extends StatelessWidget {
                     primaryColorDark: Colors.black,
                     primaryColor: Colors.black54,
                     scaffoldBackgroundColor: Colors.black54,
-                    bottomSheetTheme: BottomSheetThemeData(
+                    bottomSheetTheme: const BottomSheetThemeData(
                       backgroundColor: Colors.black54,
                       modalBackgroundColor: Colors.black54,
                     ),
@@ -135,7 +169,7 @@ class MyApp extends StatelessWidget {
                   // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
                   themeMode: ThemeMode.dark,
-                  title: 'MyPUG',
+                  title: 'MyPug',
 
                   home: const SplashScreen(),
                 )),
