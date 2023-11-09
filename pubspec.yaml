@@ -57,7 +57,6 @@ dependencies:
   cached_network_image: ^3.2.0
   instagram_mention: ^1.0.0+3
   badges: ^2.0.3
-  simple_s3: ^0.3.2
   minio: ^3.5.0
   encrypt: ^5.0.1
   fl_country_code_picker: ^0.0.3
@@ -73,6 +72,8 @@ dependencies:
   firebase_analytics: any
   firebase_core_platform_interface: any
   flutter_notification_channel: ^2.0.0
+  simple_s3: ^0.3.2
+
 
 dependency_overrides:
   image_picker_android: 0.8.4+13

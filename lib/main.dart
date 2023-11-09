@@ -38,6 +38,7 @@ import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
 
+@pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage event) async {
   var vibrator = await Vibration.hasVibrator();
   if (vibrator != null && vibrator && Platform.isIOS) {

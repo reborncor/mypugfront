@@ -66,7 +66,10 @@ class PugCommentsState extends State<PugComments> {
           child: InkWell(
               child: Row(
             children: [
-              renderProfilePicture(model.author.profilePicture, false, 40),
+              renderProfilePicture(model.author.profilePicture, model.author.profilePicture.isNotEmpty, 40),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 model.author.username,
                 style: TextStyle(

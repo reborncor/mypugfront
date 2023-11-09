@@ -52,6 +52,9 @@ class ActualityAllState extends State<ActualityAll> {
 
   fetchData() async {
     final event = await FirebaseMessaging.instance.getInitialMessage();
+    print(event);
+    _username = await getCurrentUsername();
+    socketService.initialise(_username);
     if (event != null && event.data['type'] == "message") {
       navigatorKey.currentState?.push(MaterialPageRoute(
         builder: (context) => Chat.withUsername(
@@ -63,12 +66,10 @@ class ActualityAllState extends State<ActualityAll> {
         ),
       ));
     }
-    _username = await getCurrentUsername();
     _response = await getActualityPageable(startInd, 0);
     list = _response.pugs;
     streamController.add("event");
     streamController.done;
-    socketService.initialise(_username);
   }
 
   fetchOldActuality() async {
