@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
@@ -14,8 +13,10 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../components/tab/tab.dart';
 import '../../models/userfactory.dart';
 import '../chat/chat.dart';
+import '../comment/pugcomments.dart';
 import 'api.dart';
 
 class ActualityAll extends StatefulWidget {
@@ -44,7 +45,6 @@ class ActualityAllState extends State<ActualityAll> {
 
   @override
   void initState() {
-
     fetchData();
     scrollController.addListener(scrollListener);
     super.initState();
@@ -65,6 +65,19 @@ class ActualityAllState extends State<ActualityAll> {
           seen: false,
         ),
       ));
+    }
+    if (event != null && event.data['type'] == "comment") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => PugComments.withData(
+              pugId: event.data['pug_id'],
+              username: event.data['username'],
+              description: event.data['description'])));
+    }
+    if (event != null && event.data['type'] == "like") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => const TabView.withIndex(
+                initialIndex: 4,
+              )));
     }
     _response = await getActualityPageable(startInd, 0);
     list = _response.pugs;

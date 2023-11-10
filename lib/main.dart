@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -98,12 +97,16 @@ setUpEnv() async {
       ));
     }
     if (event.data['type'] == "comment") {
-      navigatorKey.currentState?.pushNamed("/").then((value) =>
           navigatorKey.currentState?.push(MaterialPageRoute(
               builder: (context) => PugComments.withData(
                   pugId: event.data['pug_id'],
                   username: event.data['username'],
-                  description: event.data['description']))));
+                  description: event.data['description'])));
+    }
+    if (event.data['type'] == "like") {
+       navigatorKey
+          .currentState
+          ?.push(MaterialPageRoute(builder: (context) => const TabView.withIndex(initialIndex: 4,)));
     }
   });
 }
@@ -113,7 +116,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider(
       create: (_) => ThemeModel(),
       child: Consumer<ThemeModel>(

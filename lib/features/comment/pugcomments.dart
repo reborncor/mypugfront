@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/models/CommentModel.dart';
 import 'package:mypug/models/userfactory.dart';
@@ -66,7 +65,8 @@ class PugCommentsState extends State<PugComments> {
           child: InkWell(
               child: Row(
             children: [
-              renderProfilePicture(model.author.profilePicture, model.author.profilePicture.isNotEmpty, 40),
+              renderProfilePicture(model.author.profilePicture,
+                  model.author.profilePicture.isNotEmpty, 40),
               SizedBox(
                 width: 5,
               ),
@@ -170,6 +170,8 @@ class PugCommentsState extends State<PugComments> {
                             comments.add(comment);
                             setState(() {});
                             textEditingController.clear();
+                          } else {
+                            showSnackBar(context, result.message);
                           }
                         }
                       },

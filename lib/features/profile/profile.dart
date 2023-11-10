@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/followeritem/api.dart';
@@ -254,7 +252,7 @@ class ProfileState extends State<Profile> {
                 ],
               ),
               Align(
-                  alignment: Alignment.bottomLeft,
+                alignment: Alignment.bottomLeft,
                 child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
@@ -371,24 +369,26 @@ class ProfileState extends State<Profile> {
                             },
                             child: Text(textButton,
                                 style: const TextStyle(color: Colors.white))),
-                        IgnorePointer(
-                            ignoring: (username == "lucie"),
-                            child: OutlinedButton(
-                                style:
-                                    BaseButtonSize(150, 30, Colors.transparent),
-                                onPressed: () {
-                                  navigateTo(
-                                      context,
-                                      Chat.withUsername(
-                                          seen: true,
-                                          receiverUser: UserFactory(
-                                              username: username,
-                                              profilePicture:
-                                                  snapshot.data!.profilePicture,
-                                              id: "")));
-                                },
-                                child: const Text("Message",
-                                    style: TextStyle(color: Colors.white)))),
+                        OutlinedButton(
+                            style: BaseButtonSize(150, 30, Colors.transparent),
+                            onPressed: () {
+                              if (username != "lucie") {
+                                navigateTo(
+                                    context,
+                                    Chat.withUsername(
+                                        seen: true,
+                                        receiverUser: UserFactory(
+                                            username: username,
+                                            profilePicture:
+                                                snapshot.data!.profilePicture,
+                                            id: "")));
+                              } else {
+                                showSnackBar(context,
+                                    "Vous ne pouvez pas envoyer de message à Lucie");
+                              }
+                            },
+                            child: const Text("Message",
+                                style: TextStyle(color: Colors.white))),
                       ],
                     )
             ],
@@ -546,7 +546,7 @@ class ProfileState extends State<Profile> {
                       height: 0,
                     )
                   : IconButton(
-                  onPressed: () => showBottomSheetSignal(
+                      onPressed: () => showBottomSheetSignal(
                           context, widget.username, "", null),
                       icon: const Icon(Icons.more_vert)),
             ],

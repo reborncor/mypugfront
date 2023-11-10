@@ -86,10 +86,10 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
       bottomNavigationBar: DotNavigationBar(
         itemPadding: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-            : const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            : const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         marginR: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
-            : const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+            : const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
         paddingR: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 2)
             : const EdgeInsets.only(bottom: 5, top: 10),
