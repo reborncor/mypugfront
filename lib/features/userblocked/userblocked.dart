@@ -9,6 +9,7 @@ import 'package:mypug/components/followeritem/followeritem.dart';
 import 'package:mypug/features/userblocked/api.dart';
 import 'package:mypug/models/usersearchmodel.dart';
 import 'package:mypug/response/followerresponse.dart';
+import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 
 import '../../service/themenotifier.dart';
@@ -59,8 +60,8 @@ class UsersBlockedViewState extends State<UsersBlockedView> {
           if (snapshot.connectionState == ConnectionState.done) {
             print(snapshot.data);
 
-            return const Center(
-              child: Text("Aucune donnée "),
+            return  Center(
+              child: Text(sentence_no_data),
             );
           } else {
             return const Center(child: CircularProgressIndicator());

@@ -168,7 +168,7 @@ class CompetitionState extends State<Competition> {
                   ));
                 }
                 if (snapshot.data!.code != SUCCESS_CODE) {
-                  return const Center(child: Text("Aucune donnée disponible"));
+                  return  Center(child: Text(sentence_no_data));
                 }
                 list = snapshot.data!.pugs;
                 return Container(

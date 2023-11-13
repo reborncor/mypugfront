@@ -120,6 +120,9 @@ class SignUpState extends State<SignUp> {
                       if (value == null || value.isEmpty) {
                         return "Entrer un mot de passe";
                       }
+                      if (value.length < 7) {
+                        return "Inserrez 8 caractères minimum";
+                      }
                       return null;
                     },
                     controller: passwordController,

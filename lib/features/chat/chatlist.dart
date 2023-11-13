@@ -133,16 +133,16 @@ class ChatListState extends State<ChatList> {
                   },
                 );
               } else {
-                return const Center(
-                  child: Text("Aucune Conversation"),
+                return  Center(
+                  child: Text(sentence_no_conversation),
                 );
               }
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return loaderCircle();
             }
-            return const Center(
-              child: Text("Aucune Conversation"),
+            return  Center(
+              child: Text(sentence_no_conversation),
             );
           },
         ));

@@ -338,8 +338,7 @@ class ProfileState extends State<Profile> {
                                         refreshUserInfo();
                                         saveUserProfilePicture(
                                             result.profilePicture);
-                                        showToast(context,
-                                            "modification utilisateur effectuée");
+                                        showSnackBar(context, "modification utilisateur effectuée");
                                         setState(() {});
                                       }
                                     },
@@ -372,7 +371,7 @@ class ProfileState extends State<Profile> {
                         OutlinedButton(
                             style: BaseButtonSize(150, 30, Colors.transparent),
                             onPressed: () {
-                              if (username != "lucie") {
+                              if (username != LUCIE) {
                                 navigateTo(
                                     context,
                                     Chat.withUsername(
@@ -384,7 +383,7 @@ class ProfileState extends State<Profile> {
                                             id: "")));
                               } else {
                                 showSnackBar(context,
-                                    "Vous ne pouvez pas envoyer de message à Lucie");
+                                    "Ceci est un compte d'exposition ne pouvez pas interargir avec");
                               }
                             },
                             child: const Text("Message",
@@ -395,8 +394,8 @@ class ProfileState extends State<Profile> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return const Center(
-            child: Text("Aucune donnée"),
+          return  Center(
+            child: Text(sentence_no_data),
           );
         } else {
           return Center(
@@ -521,7 +520,7 @@ class ProfileState extends State<Profile> {
                 ElevatedButton(
                     style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                     onPressed: () => Navigator.pop(context),
-                    child: Text("Annuler"))
+                    child: Text(sentence_cancel))
               ],
             )));
   }

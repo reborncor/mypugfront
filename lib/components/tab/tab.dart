@@ -83,10 +83,11 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
     return Scaffold(
       extendBody: true,
       body: Center(child: getItem()),
+      resizeToAvoidBottomInset: true,
       bottomNavigationBar: DotNavigationBar(
         itemPadding: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-            : const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            : const EdgeInsets.symmetric(vertical: 10),
         marginR: isSmallDevice
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
             : const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
@@ -112,12 +113,15 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
           ),
           DotNavigationBarItem(
             icon: (notificationNumber > 0)
-                ? badges.Badge(
-                    badgeContent: Text(notificationNumber > 99
-                        ? "99+"
-                        : notificationNumber.toString()),
-                    badgeColor: APPCOLOR6,
-                    child: const Icon(Icons.messenger),
+                ? Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: badges.Badge(
+                      badgeContent: Text(notificationNumber > 99
+                          ? "99+"
+                          : notificationNumber.toString()),
+                      badgeColor: APPCOLOR6,
+                      child: const Icon(Icons.messenger),
+                    ),
                   )
                 : const Icon(Icons.messenger),
           ),

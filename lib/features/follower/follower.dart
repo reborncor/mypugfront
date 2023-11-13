@@ -71,8 +71,8 @@ class FollowersViewState extends State<FollowersView> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return const Center(
-            child: Text("Aucune donnée"),
+          return  Center(
+            child: Text(sentence_no_data),
           );
         } else {
           return Center(

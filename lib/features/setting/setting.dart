@@ -150,8 +150,8 @@ class SettingState extends State<Setting> {
                           );
                         }
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return const Center(
-                            child: Text("Aucune donnée"),
+                          return  Center(
+                            child: Text(sentence_no_data),
                           );
                         } else {
                           return Center(
@@ -196,7 +196,7 @@ class SettingState extends State<Setting> {
                 ElevatedButton(
                     style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                     onPressed: () => Navigator.pop(context),
-                    child: Text("Annuler"))
+                    child: Text(sentence_cancel))
               ],
             )));
   }

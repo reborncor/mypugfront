@@ -211,8 +211,8 @@ class ActualityAllState extends State<ActualityAll> {
                 ]))
               ]));
         } else {
-          return const Center(
-            child: Text("Aucune publication"),
+          return  Center(
+            child: Text(sentence_no_pug),
           );
         }
       },
