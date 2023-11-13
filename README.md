@@ -4,13 +4,17 @@ MyPug social media
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+* For check Android config : app/src/main/AndroidManifest.xml
+* For check IOS config : ios/Runner/Info.plist
+* For API configuration : lib/util/config.dart
+* This version run actually on Flutter 3.7.9 Dart 2.19.6 Gradle 7.6.2
 
-A few resources to get you started if this is your first Flutter project:
+- Run "flutter pub get" "flutter run" for download library and run the project.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+models stand for Model Interface connected with API and Response Stand for the model adapted to the API calls
+*  feature/: each folder stand for a specific feature.
+*  components/: each folder stand for a specific used more than once in the project, or a isolated complex asset.
+*  service/: each file are used for a specific feature used anywhere in the app.
+*  util/: stand for extra static or dynamic data or function optimised for a better reading.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
