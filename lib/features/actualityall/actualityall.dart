@@ -33,6 +33,9 @@ class ActualityAllState extends State<ActualityAll> {
   List<PugModel> list = [];
   late ActualityResponse _response;
   late String _username;
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
   late ScrollController scrollController =
       ScrollController(initialScrollOffset: 150);
 
@@ -122,6 +125,7 @@ class ActualityAllState extends State<ActualityAll> {
 
   Widget pugItem(PugModel model) {
     return PugItem(
+      appBarHeight: appBar.preferredSize.height,
       model: model,
       currentUsername: _username,
       refreshCb: updateData,
@@ -138,7 +142,7 @@ class ActualityAllState extends State<ActualityAll> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-            appBar: AppBar(
+            appBar: appBar = AppBar(
               title: const Text("Actualité"),
               automaticallyImplyLeading: false,
               backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
@@ -180,38 +184,17 @@ class ActualityAllState extends State<ActualityAll> {
         }
 
         if (snapshot.hasData) {
-          return SmartRefresher(
-              controller: _refreshController,
-              onRefresh: refreshData,
-              child: CustomScrollView(controller: scrollController, slivers: [
-                SliverAppBar(
-                  expandedHeight: 150,
-                  automaticallyImplyLeading: false,
-                  backgroundColor:
-                      notifier.isDark ? Colors.black : Colors.transparent,
-                  pinned: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Image.asset(
-                      pathImage,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 20, bottom: 20),
-                      scrollDirection: Axis.vertical,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return pugItem(list[index]);
-                      })
-                ]))
-              ]));
+          return PageView.builder(
+              // shrinkWrap: true,
+              // padding: EdgeInsets.only(top: 20, bottom: 20),
+              controller: _controller,
+              scrollDirection: Axis.vertical,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return pugItem(list[index]);
+              });
         } else {
-          return  Center(
+          return Center(
             child: Text(sentence_no_pug),
           );
         }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/pug/pugitem.dart';
 import 'package:mypug/features/profile/profile.dart';
@@ -53,6 +52,7 @@ class _ChatState extends State<Chat> {
   late int endInd;
   late ThemeModel themeNotifier;
   bool isSeen = false;
+  late AppBar appBar;
 
   scrollListener() {
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
@@ -123,7 +123,7 @@ class _ChatState extends State<Chat> {
   fetchData() async {
     var data = await getUserConversation(widget.receiverUser.username);
     response = data;
-    log("TEST :"+response.conversation.toString());
+    log("TEST :" + response.conversation.toString());
     messages = response.conversation.chat;
     streamController.add(data);
     sendMessageSeen();
@@ -264,6 +264,7 @@ class _ChatState extends State<Chat> {
                                     ),
                                   )
                                 : PugItem.onShare(
+                                    appBarHeight: appBar.preferredSize.height,
                                     model: messageModel.content,
                                     currentUsername: username))
                       ],
@@ -291,6 +292,7 @@ class _ChatState extends State<Chat> {
                                   ),
                                 )
                               : PugItem.onShare(
+                                  appBarHeight: appBar.preferredSize.height,
                                   model: messageModel.content,
                                   currentUsername: username),
                         ),
@@ -308,7 +310,8 @@ class _ChatState extends State<Chat> {
         this.themeNotifier = notifier;
         return WillPopScope(
           onWillPop: () async {
-            if (isSeen && messages.isNotEmpty &&
+            if (isSeen &&
+                messages.isNotEmpty &&
                 messages.first.senderUsername == widget.receiverUser.username &&
                 notificationNumber > 0) {
               notificationNumber -= 1;
@@ -320,7 +323,7 @@ class _ChatState extends State<Chat> {
             return true;
           },
           child: Scaffold(
-              appBar: AppBar(
+              appBar: appBar = AppBar(
                 backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
                 title: Text(widget.receiverUser.username),
               ),

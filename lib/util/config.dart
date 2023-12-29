@@ -12,7 +12,7 @@ String NOTIFICATION_TOKEN = "";
 // CLIENT
 //WITH keymypug.pem
 // String URL = "http://ec2-13-38-227-100.eu-west-3.compute.amazonaws.com";
-// String AWS_URL = "https://mypugbucket.s3.eu-west-3.amazonaws.com";
+// String AWS_URL = "https://mypugbucket.s3.eu-west-3.amazonaws.d";
 // String AWS_BUCKETNAME = "mypugbucket";
 // String AWS_ACCESSKEY = "AKIASU46GDAJ5SYLMIF2";
 // String AWS_SECRETKEY = "vNZAgctET+15NziU/0lYJwjU2Uw84t1zIE9 4+SJU";

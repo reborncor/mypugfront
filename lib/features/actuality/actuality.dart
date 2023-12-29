@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
@@ -97,7 +96,11 @@ class ActualityState extends State<Actuality> {
   }
 
   Widget pugItem(PugModel model) {
-    return PugItem(model: model, currentUsername: _username);
+    return PugItem(
+      model: model,
+      currentUsername: _username,
+      appBarHeight: appBar.preferredSize.height,
+    );
   }
 
   @override
@@ -106,7 +109,7 @@ class ActualityState extends State<Actuality> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-            appBar: AppBar(
+            appBar: appBar = AppBar(
               title: const Text("Amis"),
               automaticallyImplyLeading: false,
               backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
@@ -179,7 +182,7 @@ class ActualityState extends State<Actuality> {
                 ]))
               ]));
         } else {
-          return  Center(
+          return Center(
             child: Text(sentence_no_pug),
           );
         }

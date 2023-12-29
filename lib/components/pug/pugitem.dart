@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
@@ -27,12 +25,14 @@ class PugItem extends StatefulWidget {
   final bool fromProfile;
   final bool onShare;
   final bool profileView;
+  final double appBarHeight;
   VoidCallback? refreshCb;
 
   PugItem(
       {Key? key,
       required this.model,
       required this.currentUsername,
+      required this.appBarHeight,
       this.onShare = false,
       this.profileView = false,
       this.fromProfile = false,
@@ -43,6 +43,7 @@ class PugItem extends StatefulWidget {
       {Key? key,
       required this.model,
       required this.currentUsername,
+      required this.appBarHeight,
       this.fromProfile = true,
       this.profileView = false,
       this.onShare = false,
@@ -53,6 +54,7 @@ class PugItem extends StatefulWidget {
       {Key? key,
       required this.model,
       required this.currentUsername,
+      required this.appBarHeight,
       this.fromProfile = false,
       this.profileView = false,
       this.onShare = true,
@@ -85,6 +87,7 @@ class PugItemState extends State<PugItem> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // screenWidthPadding = getPhoneWidth(context) > MAX_SCREEN_WIDTH ? (getPhoneWidth(context) - MAX_SCREEN_WIDTH)/2 : 0 ;
       screenWidthPadding = 0;
+      print("APP BAR ${widget.appBarHeight}");
       print(
           "SCREEN WIDTH : ${getPhoneWidth(context)} PADDING : $screenWidthPadding");
 
@@ -133,10 +136,11 @@ class PugItemState extends State<PugItem> {
             : null,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              minHeight: 200,
-              maxHeight: (widget.model.height > 200)
-                  ? widget.model.height.toDouble()
-                  : 300),
+              minHeight: 200, maxHeight: MediaQuery.of(context).size.height - 80
+              // maxHeight: (widget.model.height > 200)
+              //     ? widget.model.height.toDouble()
+              //     : 300
+              ),
           child: GestureDetector(
             child: Stack(
               fit: StackFit.expand,
@@ -147,34 +151,83 @@ class PugItemState extends State<PugItem> {
                   cache: true,
                   retries: 3,
                   timeRetry: const Duration(milliseconds: 100),
-
-                  //cancelToken: cancellationToken,
                 ),
+                Container(
+                  decoration:
+                      widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
+                  child: Column(children: [
+                    widget.fromProfile
+                        ? SizedBox(
+                            width: 0,
+                            height: 0,
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  !widget.onShare
+                                      ? renderProfilePicture(
+                                          widget.model.author.profilePicture,
+                                          widget.model.author.profilePicture
+                                              .isNotEmpty,
+                                          40)
+                                      : const SizedBox(width: 0),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      navigateTo(
+                                          context,
+                                          Profile.fromUsername(
+                                              username: widget
+                                                  .model.author.username));
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.grey.shade300
+                                              .withOpacity(0.6)),
+                                      child: Text(widget.model.author.username,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              widget.currentUsername ==
+                                      widget.model.author.username
+                                  ? SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  : IconButton(
+                                      onPressed: () => showBottomSheetSignal(
+                                          context,
+                                          widget.model.author.username,
+                                          widget.model.id,
+                                          widget.refreshCb),
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        size: 30,
+                                      ))
+                            ],
+                          )
+                  ]),
+                ),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 90, right: 10),
+                      child: imageInformationColumn(
+                          imageTitle, widget.model.comments),
+                    )),
                 Stack(children: [
-                  !widget.onShare
-                      ? Align(
-                          alignment: Alignment.bottomLeft,
-                          child: GestureDetector(
-                              onTap: () => showBottomSheetFollowing(context,
-                                  widget.currentUsername, widget.model),
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10, bottom: 10),
-                                child: Transform.rotate(
-                                  angle: -pi / 8,
-                                  child: const Image(
-                                    image: AssetImage(
-                                        "asset/images/share-icon.png"),
-                                    width: 40,
-                                    height: 40,
-
-                                  ),
-                                ),
-                              )),
-                        )
-                      : const SizedBox(
-                          width: 0,
-                          height: 0,
-                        ),
                   ...points
                       .asMap()
                       .map((i, e) => MapEntry(
@@ -218,6 +271,7 @@ class PugItemState extends State<PugItem> {
                 navigateTo(
                     context,
                     Pug.withPugModelFromOtherUser(
+                        appBarHeight: widget.appBarHeight,
                         model: widget.model,
                         username: widget.model.author.username));
               } else {
@@ -231,6 +285,7 @@ class PugItemState extends State<PugItem> {
 
   Widget imageInformation(String title, list) {
     return Container(
+      height: 75,
       decoration: widget.onShare ? BoxDecoration(color: APPCOLOR5) : null,
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         widget.onShare
@@ -315,6 +370,86 @@ class PugItemState extends State<PugItem> {
     );
   }
 
+  Future<bool> cancelDissmiss() {
+    return Future.value(false);
+  }
+
+  Widget imageInformationColumn(String title, list) {
+    return Container(
+      height: 150,
+      child: Column(children: [
+        Dismissible(
+          key: Key(widget.model.id),
+          background: Align(
+            alignment: Alignment.center,
+            child: Text(
+              textAlign: TextAlign.center,
+              imageLike > 1000 ? "999+" : imageLike.toString(),
+              style: TextStyle(
+                  color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          direction: DismissDirection.endToStart,
+          confirmDismiss: (direction) {
+            return cancelDissmiss();
+          },
+          child: IconButton(
+            onPressed: () async {
+              if (!isLiked) {
+                final result = await likeOrUnlikePug(
+                    widget.model.id, widget.model.author.username, true);
+                if (result.code == SUCCESS_CODE) {
+                  imageLike += 1;
+                  isLiked = !isLiked;
+                }
+              } else {
+                final result = await likeOrUnlikePug(
+                    widget.model.id, widget.model.author.username, false);
+                if (result.code == SUCCESS_CODE) {
+                  imageLike -= 1;
+                  isLiked = !isLiked;
+                }
+              }
+              setState(() {});
+            },
+            icon: Image.asset("asset/images/PositifCoeur.png",
+                color: isLiked ? Colors.red : APPCOLOR),
+          ),
+        ),
+        IconButton(
+            onPressed: () async {
+              navigateTo(
+                  context,
+                  PugComments.withData(
+                      pugId: widget.model.id,
+                      username: widget.model.author.username,
+                      description: widget.model.imageDescription));
+            },
+            icon: Image.asset("asset/images/PositifMessage.png",
+                width: 30, height: 30, color: APPCOLOR)),
+        !widget.onShare
+            ? GestureDetector(
+                onTap: () => showBottomSheetFollowing(
+                    context, widget.currentUsername, widget.model),
+                child: Transform.rotate(
+                  angle: -pi / 4,
+                  child: Image(
+                    color: APPCOLOR,
+                    image: AssetImage(
+                      "asset/images/PositifEtiquette.png",
+                    ),
+                    width: 40,
+                    height: 40,
+                  ),
+                ))
+            : const SizedBox(
+                width: 0,
+                height: 0,
+              ),
+      ]),
+    );
+  }
+
   Widget imageCommentaire(List<CommentModel> list) {
     return Padding(
       padding: EdgeInsets.only(left: widget.onShare ? 10 : 0),
@@ -375,94 +510,27 @@ class PugItemState extends State<PugItem> {
     if (!widget.profileView) {
       return Column(
         children: [
-          Container(
-            decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
-            child: Column(children: [
-              widget.fromProfile
-                  ? SizedBox(
-                      width: 0,
-                      height: 0,
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            !widget.onShare
-                                ? renderProfilePicture(
-                                    widget.model.author.profilePicture,
-                                    widget
-                                        .model.author.profilePicture.isNotEmpty,
-                                    40)
-                                : const SizedBox(width: 0),
-                            const SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                navigateTo(
-                                    context,
-                                    Profile.fromUsername(
-                                        username:
-                                            widget.model.author.username));
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.grey.shade300
-                                          .withOpacity(0.6)),
-                                  child: Text(
-                                    widget.model.author.username,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: notifier.isDark
-                                            ? Colors.white
-                                            : Colors.black),
-                                  )),
-                            ),
-                          ],
-                        ),
-                        widget.currentUsername == widget.model.author.username
-                            ? SizedBox(
-                                width: 0,
-                                height: 0,
-                              )
-                            : IconButton(
-                            onPressed: () => showBottomSheetSignal(
-                                    context,
-                                    widget.model.author.username,
-                                    widget.model.id,
-                                    widget.refreshCb),
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  size: 30,
-                                ))
-                      ],
-                    )
-            ]),
-          ),
           // ListView(children: [],),
           imageContent(),
-          imageInformation(imageTitle, widget.model.comments),
-          widget.fromProfile
-              ? Padding(
-                  padding: EdgeInsets.only(
-                    top: 20,
-                  ),
-                  child: Center(
-                    child: ElevatedButton(
-                        onPressed: () {
-                          showMyDialogDelete("Suppréssion",
-                              "Vous êtes sur le point de supprimer un pug");
-                        },
-                        child: Text("Supprimer"),
-                        style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
-                  ),
-                )
-              : SizedBox(
-                  width: 0,
-                  height: 0,
-                )
+          // widget.fromProfile
+          //     ? Padding(
+          //         padding: EdgeInsets.only(
+          //           top: 20,
+          //         ),
+          //         child: Center(
+          //           child: ElevatedButton(
+          //               onPressed: () {
+          //                 showMyDialogDelete("Suppréssion",
+          //                     "Vous êtes sur le point de supprimer un pug");
+          //               },
+          //               child: Text("Supprimer"),
+          //               style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
+          //         ),
+          //       )
+          //     : SizedBox(
+          //         width: 0,
+          //         height: 0,
+          //       )
         ],
       );
     } else {
@@ -604,8 +672,9 @@ class PugItemState extends State<PugItem> {
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return  Center(
-                    child: Text(sentence_no_data,
+                  return Center(
+                      child: Text(
+                    sentence_no_data,
                   ));
                 } else {
                   return const Center(child: CircularProgressIndicator());

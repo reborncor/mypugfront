@@ -15,19 +15,21 @@ class Pug extends StatefulWidget {
   final routeName = '/pug';
   final PugModel? model;
   final String? username;
+  final double? appBarHeight;
 
 
   final bool isOwner;
 
-  const Pug({Key? key, this.model, this.username,this.isOwner = false})
+  const Pug(
+      {Key? key, this.appBarHeight, this.model, this.username, this.isOwner = false})
       : super(key: key);
 
   const Pug.withPugModel(
-      {Key? key, required this.model, this.username, this.isOwner = true})
+      {Key? key, required this.model, required this.appBarHeight, this.username, this.isOwner = true})
       : super(key: key);
 
   const Pug.withPugModelFromOtherUser(
-      {Key? key, required this.model, this.username, this.isOwner = false})
+      {Key? key, required this.model, required this.appBarHeight, this.username, this.isOwner = false})
       : super(key: key);
 
   @override
@@ -102,6 +104,8 @@ class PugState extends State<Pug> {
             decoration: BoxGradient(),
             child: Container(
               child: PugItem.fromProfile(
+                appBarHeight: widget.appBarHeight!,
+
                 currentUsername: widget.model!.author.username,
                 model: widget.model!,
                 fromProfile: widget.isOwner,

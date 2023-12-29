@@ -59,6 +59,7 @@ class ProfileState extends State<Profile> {
   File? imageFile;
   bool onUpdateMode = false;
   late bool isSmallDevice = false;
+  late AppBar appBar;
 
   @override
   void initState() {
@@ -421,11 +422,12 @@ class ProfileState extends State<Profile> {
       ),
       onTap: () {
         if (isOwnProfile) {
-          navigateTo(context, Pug.withPugModel(model: model));
+          navigateTo(context, Pug.withPugModel(appBarHeight : appBar.preferredSize.height, model: model));
         } else {
           navigateTo(
               context,
               Pug.withPugModelFromOtherUser(
+                  appBarHeight: appBar.preferredSize.height,
                   model: model, username: widget.username));
         }
       },
@@ -531,7 +533,7 @@ class ProfileState extends State<Profile> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-          appBar: AppBar(
+          appBar: appBar = AppBar(
             automaticallyImplyLeading: hasBackButton,
             title: const Text("Profile"),
             backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,

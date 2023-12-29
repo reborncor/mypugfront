@@ -96,38 +96,62 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
             : const EdgeInsets.only(bottom: 5, top: 10),
         items: <DotNavigationBarItem>[
           DotNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: Image.asset(
+              color: _selectedIndex == 0 ? Colors.black : Colors.white,
+              "asset/images/PositifMaison.png",
+              width: 30,
+              height: 30,
+            ),
           ),
           DotNavigationBarItem(
             icon: Image.asset(
-              "asset/images/acutalityall.png",
+              "asset/images/PositifAmis.png",
               width: 30,
               height: 30,
               fit: BoxFit.fitWidth,
               alignment: Alignment.bottomLeft,
-              color: Colors.white,
+              color: _selectedIndex == 1 ? Colors.black : Colors.white,
             ),
           ),
           DotNavigationBarItem(
-            icon: const Icon(Icons.add),
+            icon: Image.asset(
+              "asset/images/PositifPlus.png",
+              width: 30,
+              height: 30,
+              color: _selectedIndex == 2 ? Colors.black : Colors.white,
+            ),
           ),
           DotNavigationBarItem(
             icon: (notificationNumber > 0)
                 ? Padding(
                     padding: EdgeInsets.only(right: 15),
                     child: badges.Badge(
-                      badgeContent: Text(notificationNumber > 99
-                          ? "99+"
-                          : notificationNumber.toString()),
-                      badgeColor: APPCOLOR6,
-                      child: const Icon(Icons.messenger),
-                    ),
+                        badgeContent: Text(notificationNumber > 99
+                            ? "99+"
+                            : notificationNumber.toString()),
+                        badgeColor: APPCOLOR6,
+                        child: Image.asset(
+                          "asset/images/PositifDiscussion.png",
+                          width: 30,
+                          height: 30,
+                          color:
+                              _selectedIndex == 3 ? Colors.black : Colors.white,
+                        )),
                   )
-                : const Icon(Icons.messenger),
+                : Image.asset(
+                    "asset/images/PositifDiscussion.png",
+                    width: 30,
+                    height: 30,
+                    color: _selectedIndex == 3 ? Colors.black : Colors.white,
+                  ),
           ),
           DotNavigationBarItem(
-            icon: const Icon(Icons.account_circle),
-          ),
+              icon: Image.asset(
+            "asset/images/PositifProfil.png",
+            width: 30,
+            height: 30,
+            color: _selectedIndex == 4 ? Colors.black : Colors.white,
+          )),
         ],
         currentIndex: _selectedIndex,
         backgroundColor: APPCOLOR,
