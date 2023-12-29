@@ -154,33 +154,32 @@ class ActualityState extends State<Actuality> {
           return SmartRefresher(
               controller: _refreshController,
               onRefresh: refreshData,
-              child: CustomScrollView(controller: scrollController, slivers: [
-                SliverAppBar(
-                  expandedHeight: 150,
-                  automaticallyImplyLeading: false,
-                  backgroundColor:
-                      notifier.isDark ? Colors.black : Colors.transparent,
-                  pinned: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Image.asset(
-                      pathImage,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 20, bottom: 20),
-                      scrollDirection: Axis.vertical,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return pugItem(list[index]);
-                      }),
-                ]))
-              ]));
+              child: NestedScrollView(
+                controller: scrollController,
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: 150,
+                      automaticallyImplyLeading: false,
+                      backgroundColor:
+                          notifier.isDark ? Colors.black : Colors.transparent,
+                      pinned: false,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Image.asset(
+                          pathImage,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    )
+                  ];
+                },
+                body: PageView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return pugItem(list[index]);
+                    }),
+              ));
         } else {
           return Center(
             child: Text(sentence_no_pug),

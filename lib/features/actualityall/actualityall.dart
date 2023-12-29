@@ -185,8 +185,6 @@ class ActualityAllState extends State<ActualityAll> {
 
         if (snapshot.hasData) {
           return PageView.builder(
-              // shrinkWrap: true,
-              // padding: EdgeInsets.only(top: 20, bottom: 20),
               controller: _controller,
               scrollDirection: Axis.vertical,
               itemCount: list.length,

@@ -87,9 +87,6 @@ class PugItemState extends State<PugItem> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // screenWidthPadding = getPhoneWidth(context) > MAX_SCREEN_WIDTH ? (getPhoneWidth(context) - MAX_SCREEN_WIDTH)/2 : 0 ;
       screenWidthPadding = 0;
-      print("APP BAR ${widget.appBarHeight}");
-      print(
-          "SCREEN WIDTH : ${getPhoneWidth(context)} PADDING : $screenWidthPadding");
 
       screenWidth = getPhoneWidth(context) > MAX_SCREEN_WIDTH
           ? MAX_SCREEN_WIDTH
