@@ -79,9 +79,9 @@ class SettingState extends State<Setting> {
                         ? Icons.nightlight_round
                         : Icons.wb_sunny),
                     onPressed: () {
-                      themeNotifier.isDark
-                          ? themeNotifier.isDark = false
-                          : themeNotifier.isDark = true;
+                      // themeNotifier.isDark
+                      //     ? themeNotifier.isDark = false
+                      //     : themeNotifier.isDark = true;
                     })
               ],
             ),

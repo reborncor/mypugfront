@@ -73,8 +73,8 @@ dependencies:
   firebase_core_platform_interface: any
   flutter_notification_channel: ^2.0.0
   simple_s3: ^0.3.2
-  flutter_slidable: ^3.0.1
   simple_shadow: ^0.3.1
+  google_fonts: ^4.0.4
 
 
 dependency_overrides:

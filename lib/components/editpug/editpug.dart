@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:draggable_widget/draggable_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
+import 'package:mypug/components/editpug/editpugsecond.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/create/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
@@ -43,11 +42,10 @@ class EditPugState extends State<EditPug> {
   double screenWidth = 500;
   double height = 500;
   late int imageHeight = PUGSIZE.toInt();
+  ScrollController scrollController = ScrollController();
 
   List<PugDetailModel> details = [];
   late String pugDetailText = "";
-  String imageTitle = "";
-  String imageDescription = "";
   double x = 200.0;
   double y = 500.0;
 
@@ -134,7 +132,7 @@ class EditPugState extends State<EditPug> {
     return Stack(
         children: details
             .map((e) => Positioned(
-          left: e.positionX.toDouble() * screenWidth,
+                  left: e.positionX.toDouble() * screenWidth,
                   top: e.positionY.toDouble(),
                   child: Draggable(
                       data: badges.Badge(
@@ -150,26 +148,27 @@ class EditPugState extends State<EditPug> {
                         e.positionX = detailsDrag.offset.dx / screenWidth;
                         e.positionY = detailsDrag.offset.dy -
                             appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top;
+                            MediaQuery.of(context).padding.top +
+                            scrollController.offset.toDouble();
                         setState(() {});
                       },
                       childWhenDragging: const SizedBox(
                         width: 0,
                         height: 0,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  details.remove(e);
-                  setState(() {});
-                },
-                child: badges.Badge(
-                  badgeContent: Text('X'),
-                  child: Center(
-                      child: InstagramMention(
-                          text: e.text, color: APP_COMMENT_COLOR)),
-                ),
-              ),
-              feedback: draggablePugDetailItem(e.text)),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          details.remove(e);
+                          setState(() {});
+                        },
+                        child: badges.Badge(
+                          badgeContent: Text('X'),
+                          child: Center(
+                              child: InstagramMention(
+                                  text: e.text, color: APP_COMMENT_COLOR)),
+                        ),
+                      ),
+                      feedback: draggablePugDetailItem(e.text)),
                 ))
             .toList());
   }
@@ -190,9 +189,7 @@ class EditPugState extends State<EditPug> {
   Widget textPugEditor() {
     return Positioned(
         left: x,
-        top: y -
-            appBar.preferredSize.height -
-            MediaQuery.of(context).padding.top,
+        top: y ,
         child: Draggable(
             onDragStarted: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -207,7 +204,10 @@ class EditPugState extends State<EditPug> {
             ),
             onDragEnd: (details) {
               x = details.offset.dx;
-              y = details.offset.dy;
+              y = details.offset.dy -
+                  appBar.preferredSize.height -
+                  MediaQuery.of(context).padding.top +
+                  scrollController.offset.toDouble();
               setState(() {});
             },
             child: textEditorWidget()));
@@ -308,16 +308,17 @@ class EditPugState extends State<EditPug> {
     );
   }
 
-  Widget imageInformation(String title) {
+  Widget imageConfiguration() {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-              style: BaseButtonRoundedColor(40, 60, APPCOLOR),
+              style: BaseButtonRoundedColor(40, 40, APPCOLOR),
               onPressed: () {
                 setState(() {
                   isVisible = !isVisible;
+                  log("Scroll controller : ${scrollController.offset.toString()}");
                 });
               },
               child: Text('Afficher/Masquer'))
@@ -326,60 +327,42 @@ class EditPugState extends State<EditPug> {
     );
   }
 
-  Widget imageDetail(String detail) {
+  Widget imageDetail() {
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(
           width: 0,
-          height: 20,
+          height: 30,
         ),
-        Container(
-          width: 600,
-          child: TextField(
-            style:
-                TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
-            controller: textDescriptionController,
-            keyboardType: TextInputType.multiline,
-            textInputAction: TextInputAction.newline,
-            minLines: 1,
-            maxLines: 4,
-            decoration: InputDecoration(
-              hintText: "Description",
-              hintStyle: TextStyle(
-                  color: notifier.isDark ? Colors.white : Colors.black),
-              focusedBorder: setOutlineBorder(3.0, 3.0),
-              enabledBorder: setOutlineBorder(3.0, 3.0),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 0,
-          height: 20,
-        ),
-        ValueListenableBuilder(
-          valueListenable: _isLoadingNotifier,
-          builder: (context, _isLoading, _) {
-            return Column(
-              children: [
-                Visibility(
-                    visible: (_isLoading as bool),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 4),
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          color: APPCOLOR,
-                        ),
-                      ),
-                    )),
-                ElevatedButton(
-                    style: BaseButtonRoundedColor(40, 40, APPCOLOR),
-                    onPressed: !(_isLoading) ? functionCreate : null,
-                    child: Text("Envoyer")),
-              ],
-            );
-          },
+        Column(
+          children: [
+            Visibility(
+                visible: false,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 4),
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      color: APPCOLOR,
+                    ),
+                  ),
+                )),
+            ElevatedButton(
+                style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+                // onPressed: !(_isLoading) ? functionCreate : null,
+                onPressed: () {
+                  navigateTo(
+                      context,
+                      EditPugSecond(
+                        file: widget.file,
+                        isCrop: widget.isCrop,
+                        imageHeight: imageHeight,
+                        details: details,
+                      ));
+                },
+                child: Text("Etape suivante")),
+          ],
         )
       ],
     );
@@ -427,10 +410,11 @@ class EditPugState extends State<EditPug> {
 
   Widget content() {
     return ListView(
+      controller: scrollController,
       children: [
         imageContent(file),
-        imageInformation(imageTitle),
-        imageDetail(imageDescription),
+        imageConfiguration(),
+        imageDetail(),
       ],
     );
   }

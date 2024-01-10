@@ -422,12 +422,11 @@ class ProfileState extends State<Profile> {
       ),
       onTap: () {
         if (isOwnProfile) {
-          navigateTo(context, Pug.withPugModel(appBarHeight : appBar.preferredSize.height, model: model));
+          navigateTo(context, Pug.withPugModel( model: model));
         } else {
           navigateTo(
               context,
               Pug.withPugModelFromOtherUser(
-                  appBarHeight: appBar.preferredSize.height,
                   model: model, username: widget.username));
         }
       },

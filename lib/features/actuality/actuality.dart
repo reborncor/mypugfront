@@ -99,7 +99,6 @@ class ActualityState extends State<Actuality> {
     return PugItem(
       model: model,
       currentUsername: _username,
-      appBarHeight: appBar.preferredSize.height,
     );
   }
 

@@ -264,7 +264,6 @@ class _ChatState extends State<Chat> {
                                     ),
                                   )
                                 : PugItem.onShare(
-                                    appBarHeight: appBar.preferredSize.height,
                                     model: messageModel.content,
                                     currentUsername: username))
                       ],
@@ -292,7 +291,6 @@ class _ChatState extends State<Chat> {
                                   ),
                                 )
                               : PugItem.onShare(
-                                  appBarHeight: appBar.preferredSize.height,
                                   model: messageModel.content,
                                   currentUsername: username),
                         ),

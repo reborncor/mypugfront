@@ -125,7 +125,6 @@ class ActualityAllState extends State<ActualityAll> {
 
   Widget pugItem(PugModel model) {
     return PugItem(
-      appBarHeight: appBar.preferredSize.height,
       model: model,
       currentUsername: _username,
       refreshCb: updateData,

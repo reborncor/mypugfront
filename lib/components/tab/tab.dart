@@ -77,36 +77,26 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    bool isSmallDevice = MediaQuery.of(context).size.width < 370 ||
-        MediaQuery.of(context).devicePixelRatio < 2.7;
     return Scaffold(
       extendBody: true,
       body: Center(child: getItem()),
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        // itemPadding: isSmallDevice
-        //     ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-        //     : const EdgeInsets.symmetric(vertical: 10),
-        // marginR: isSmallDevice
-        //     ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
-        //     : const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-        // paddingR: isSmallDevice
-        //     ? const EdgeInsets.symmetric(vertical: 2)
-        //     : const EdgeInsets.only(bottom: 5, top: 10),
+
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Colors.white70,
+            backgroundColor: Colors.black87,
             label: "",
             icon: Image.asset(
-              color: _selectedIndex == 0 ? Colors.black : Colors.white,
+              color: _selectedIndex == 0 ? APPCOLOR : Colors.white,
               "asset/images/PositifMaison.png",
               width: 30,
               height: 30,
             ),
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.white70,
+            backgroundColor: Colors.black87,
 
             label: "",
             icon: Image.asset(
@@ -115,22 +105,22 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
               height: 30,
               fit: BoxFit.fitWidth,
               alignment: Alignment.bottomLeft,
-              color: _selectedIndex == 1 ? Colors.black : Colors.white,
+              color: _selectedIndex == 1 ? APPCOLOR : Colors.white,
             ),
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.white70,
+            backgroundColor: Colors.black87,
 
             label: "",
             icon: Image.asset(
               "asset/images/PositifPlus.png",
               width: 30,
               height: 30,
-              color: _selectedIndex == 2 ? Colors.black : Colors.white,
+              color: _selectedIndex == 2 ? APPCOLOR : Colors.white,
             ),
           ),
           BottomNavigationBarItem(
-            backgroundColor: Colors.white70,
+            backgroundColor: Colors.black87,
             label: "",
             icon: (notificationNumber > 0)
                 ? Padding(
@@ -145,29 +135,29 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
                           width: 30,
                           height: 30,
                           color:
-                              _selectedIndex == 3 ? Colors.black : Colors.white,
+                              _selectedIndex == 3 ? APPCOLOR : Colors.white,
                         )),
                   )
                 : Image.asset(
                     "asset/images/PositifDiscussion.png",
                     width: 30,
                     height: 30,
-                    color: _selectedIndex == 3 ? Colors.black : Colors.white,
+                    color: _selectedIndex == 3 ? APPCOLOR : Colors.white,
                   ),
           ),
           BottomNavigationBarItem(
-              backgroundColor: Colors.white70,
+              backgroundColor: Colors.black87,
               label: "",
               icon: Image.asset(
                 "asset/images/PositifProfil.png",
                 width: 30,
                 height: 30,
-                color: _selectedIndex == 4 ? Colors.black : Colors.white,
+                color: _selectedIndex == 4 ? APPCOLOR : Colors.white,
               )),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: Colors.white70,
+        backgroundColor: Colors.black87,
 
       ),
     );

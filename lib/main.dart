@@ -8,6 +8,9 @@ import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mypug/components/editpug/editpug.dart';
+import 'package:mypug/components/editpug/editpugsecond.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
@@ -36,6 +39,7 @@ import 'components/tab/tab.dart';
 import 'features/chat/chat.dart';
 import 'features/profile/profile.dart';
 import 'firebase_options.dart';
+
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage event) async {
@@ -148,9 +152,12 @@ class MyApp extends StatelessWidget {
                     '/usersblocked': (context) => UsersBlockedView(),
                     '/competition': (context) => Competition(),
                     '/competitionPayment': (context) => CompetitionPayment(),
+                    '/editpug': (context) => EditPug(),
+                    '/editpugsecond': (context) => EditPugSecond(),
                   },
 
                   darkTheme: ThemeData(
+                    textTheme: GoogleFonts.expletusSansTextTheme(),
                     brightness: Brightness.dark,
                     primaryColorDark: Colors.black,
                     primaryColor: Colors.black54,

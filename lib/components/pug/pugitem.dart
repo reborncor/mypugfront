@@ -26,14 +26,12 @@ class PugItem extends StatefulWidget {
   final bool fromProfile;
   final bool onShare;
   final bool profileView;
-  final double appBarHeight;
   VoidCallback? refreshCb;
 
   PugItem(
       {Key? key,
       required this.model,
       required this.currentUsername,
-      required this.appBarHeight,
       this.onShare = false,
       this.profileView = false,
       this.fromProfile = false,
@@ -44,7 +42,6 @@ class PugItem extends StatefulWidget {
       {Key? key,
       required this.model,
       required this.currentUsername,
-      required this.appBarHeight,
       this.fromProfile = true,
       this.profileView = false,
       this.onShare = false,
@@ -55,7 +52,6 @@ class PugItem extends StatefulWidget {
       {Key? key,
       required this.model,
       required this.currentUsername,
-      required this.appBarHeight,
       this.fromProfile = false,
       this.profileView = false,
       this.onShare = true,
@@ -219,13 +215,7 @@ class PugItemState extends State<PugItem> {
                           )
                   ]),
                 ),
-                Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 90, right: 10),
-                      child: imageInformationColumn(
-                          imageTitle, widget.model.comments),
-                    )),
+
                 Stack(children: [
                   ...points
                       .asMap()
@@ -250,7 +240,14 @@ class PugItemState extends State<PugItem> {
                           )))
                       .values
                       .toList()
-                ])
+                ]),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 90, right: 10),
+                      child: imageInformationColumn(
+                          imageTitle, widget.model.comments),
+                    )),
               ],
             ),
             onDoubleTap: () async {
@@ -270,7 +267,6 @@ class PugItemState extends State<PugItem> {
                 navigateTo(
                     context,
                     Pug.withPugModelFromOtherUser(
-                        appBarHeight: widget.appBarHeight,
                         model: widget.model,
                         username: widget.model.author.username));
               } else {
@@ -608,7 +604,6 @@ class PugItemState extends State<PugItem> {
           ),
           // ListView(children: [],),
           imageContent(),
-          imageInformation(imageTitle, widget.model.comments),
           widget.fromProfile
               ? Padding(
                   padding: EdgeInsets.only(
