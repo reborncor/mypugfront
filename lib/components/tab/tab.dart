@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart' as badges;
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
@@ -84,18 +83,21 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
       extendBody: true,
       body: Center(child: getItem()),
       resizeToAvoidBottomInset: true,
-      bottomNavigationBar: DotNavigationBar(
-        itemPadding: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-            : const EdgeInsets.symmetric(vertical: 10),
-        marginR: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
-            : const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-        paddingR: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 2)
-            : const EdgeInsets.only(bottom: 5, top: 10),
-        items: <DotNavigationBarItem>[
-          DotNavigationBarItem(
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        // itemPadding: isSmallDevice
+        //     ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
+        //     : const EdgeInsets.symmetric(vertical: 10),
+        // marginR: isSmallDevice
+        //     ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
+        //     : const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+        // paddingR: isSmallDevice
+        //     ? const EdgeInsets.symmetric(vertical: 2)
+        //     : const EdgeInsets.only(bottom: 5, top: 10),
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Colors.white70,
+            label: "",
             icon: Image.asset(
               color: _selectedIndex == 0 ? Colors.black : Colors.white,
               "asset/images/PositifMaison.png",
@@ -103,7 +105,10 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
               height: 30,
             ),
           ),
-          DotNavigationBarItem(
+          BottomNavigationBarItem(
+            backgroundColor: Colors.white70,
+
+            label: "",
             icon: Image.asset(
               "asset/images/PositifAmis.png",
               width: 30,
@@ -113,7 +118,10 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
               color: _selectedIndex == 1 ? Colors.black : Colors.white,
             ),
           ),
-          DotNavigationBarItem(
+          BottomNavigationBarItem(
+            backgroundColor: Colors.white70,
+
+            label: "",
             icon: Image.asset(
               "asset/images/PositifPlus.png",
               width: 30,
@@ -121,7 +129,9 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
               color: _selectedIndex == 2 ? Colors.black : Colors.white,
             ),
           ),
-          DotNavigationBarItem(
+          BottomNavigationBarItem(
+            backgroundColor: Colors.white70,
+            label: "",
             icon: (notificationNumber > 0)
                 ? Padding(
                     padding: EdgeInsets.only(right: 15),
@@ -145,19 +155,20 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
                     color: _selectedIndex == 3 ? Colors.black : Colors.white,
                   ),
           ),
-          DotNavigationBarItem(
+          BottomNavigationBarItem(
+              backgroundColor: Colors.white70,
+              label: "",
               icon: Image.asset(
-            "asset/images/PositifProfil.png",
-            width: 30,
-            height: 30,
-            color: _selectedIndex == 4 ? Colors.black : Colors.white,
-          )),
+                "asset/images/PositifProfil.png",
+                width: 30,
+                height: 30,
+                color: _selectedIndex == 4 ? Colors.black : Colors.white,
+              )),
         ],
         currentIndex: _selectedIndex,
-        backgroundColor: APPCOLOR,
-        selectedItemColor: Colors.white70,
-        dotIndicatorColor: Colors.white,
         onTap: _onItemTapped,
+        backgroundColor: Colors.white70,
+
       ),
     );
   }

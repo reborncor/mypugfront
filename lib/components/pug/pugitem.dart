@@ -12,6 +12,7 @@ import 'package:mypug/features/profile/profile.dart';
 import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 
 import '../../features/following/api.dart';
 import '../../models/CommentModel.dart';
@@ -81,11 +82,13 @@ class PugItemState extends State<PugItem> {
   late bool isDarkMode;
   late double screenWidth = 0;
   late double screenWidthPadding = 0;
+  late double screenHeightPadding = 0;
 
   @override
   void initState() {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // screenWidthPadding = getPhoneWidth(context) > MAX_SCREEN_WIDTH ? (getPhoneWidth(context) - MAX_SCREEN_WIDTH)/2 : 0 ;
+
       screenWidthPadding = 0;
 
       screenWidth = getPhoneWidth(context) > MAX_SCREEN_WIDTH
@@ -133,11 +136,10 @@ class PugItemState extends State<PugItem> {
             : null,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              minHeight: 200, maxHeight: MediaQuery.of(context).size.height - 80
-              // maxHeight: (widget.model.height > 200)
-              //     ? widget.model.height.toDouble()
-              //     : 300
-              ),
+              minHeight: 200,
+              maxHeight: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.bottom -
+                  Scaffold.of(context).appBarMaxHeight!.toDouble()),
           child: GestureDetector(
             child: Stack(
               fit: StackFit.expand,
@@ -376,69 +378,102 @@ class PugItemState extends State<PugItem> {
       height: 150,
       child: Column(children: [
         Dismissible(
-          key: Key(widget.model.id),
+            key: Key(widget.model.id),
+            background: Align(
+              alignment: Alignment.center,
+              child: Text(
+                textAlign: TextAlign.center,
+                imageLike > 1000 ? "999+" : imageLike.toString(),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            direction: DismissDirection.endToStart,
+            confirmDismiss: (direction) {
+              return cancelDissmiss();
+            },
+            child: SimpleShadow(
+              color: Colors.black,
+              offset: Offset(5, 7), // Default: Offset(2, 2)
+              sigma: 2,
+              child: IconButton(
+                onPressed: () async {
+                  if (!isLiked) {
+                    final result = await likeOrUnlikePug(
+                        widget.model.id, widget.model.author.username, true);
+                    if (result.code == SUCCESS_CODE) {
+                      imageLike += 1;
+                      isLiked = !isLiked;
+                    }
+                  } else {
+                    final result = await likeOrUnlikePug(
+                        widget.model.id, widget.model.author.username, false);
+                    if (result.code == SUCCESS_CODE) {
+                      imageLike -= 1;
+                      isLiked = !isLiked;
+                    }
+                  }
+                  setState(() {});
+                },
+                icon: Image.asset("asset/images/PositifCoeur.png",
+                    color: isLiked ? Colors.red : Colors.white),
+              ),
+            )),
+        Dismissible(
+          key: Key(widget.model.imageURL),
+          confirmDismiss: (direction) {
+            return cancelDissmiss();
+          },
           background: Align(
             alignment: Alignment.center,
             child: Text(
               textAlign: TextAlign.center,
-              imageLike > 1000 ? "999+" : imageLike.toString(),
+              widget.model.numberOfComments.toString(),
               style: TextStyle(
-                  color: APPCOLOR, fontSize: 20, fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          direction: DismissDirection.endToStart,
-          confirmDismiss: (direction) {
-            return cancelDissmiss();
-          },
-          child: IconButton(
-            onPressed: () async {
-              if (!isLiked) {
-                final result = await likeOrUnlikePug(
-                    widget.model.id, widget.model.author.username, true);
-                if (result.code == SUCCESS_CODE) {
-                  imageLike += 1;
-                  isLiked = !isLiked;
-                }
-              } else {
-                final result = await likeOrUnlikePug(
-                    widget.model.id, widget.model.author.username, false);
-                if (result.code == SUCCESS_CODE) {
-                  imageLike -= 1;
-                  isLiked = !isLiked;
-                }
-              }
-              setState(() {});
-            },
-            icon: Image.asset("asset/images/PositifCoeur.png",
-                color: isLiked ? Colors.red : APPCOLOR),
+          child: SimpleShadow(
+            color: Colors.black,
+            offset: Offset(5, 7), // Default: Offset(2, 2)
+            sigma: 2,
+            child: IconButton(
+                onPressed: () async {
+                  navigateTo(
+                      context,
+                      PugComments.withData(
+                          pugId: widget.model.id,
+                          username: widget.model.author.username,
+                          description: widget.model.imageDescription));
+                },
+                icon: Image.asset("asset/images/PositifMessage.png",
+                    width: 30, height: 30, color: Colors.white)),
           ),
         ),
-        IconButton(
-            onPressed: () async {
-              navigateTo(
-                  context,
-                  PugComments.withData(
-                      pugId: widget.model.id,
-                      username: widget.model.author.username,
-                      description: widget.model.imageDescription));
-            },
-            icon: Image.asset("asset/images/PositifMessage.png",
-                width: 30, height: 30, color: APPCOLOR)),
         !widget.onShare
-            ? GestureDetector(
-                onTap: () => showBottomSheetFollowing(
-                    context, widget.currentUsername, widget.model),
-                child: Transform.rotate(
-                  angle: -pi / 4,
-                  child: Image(
-                    color: APPCOLOR,
-                    image: AssetImage(
-                      "asset/images/PositifEtiquette.png",
-                    ),
-                    width: 40,
-                    height: 40,
-                  ),
-                ))
+            ? SimpleShadow(
+                color: Colors.black,
+                offset: Offset(5, 7), // Default: Offset(2, 2)
+                sigma: 2,
+                child: GestureDetector(
+                    onTap: () => showBottomSheetFollowing(
+                        context, widget.currentUsername, widget.model),
+                    child: Transform.rotate(
+                      angle: -pi / 4,
+                      child: const Image(
+                        color: Colors.white,
+                        image: AssetImage(
+                          "asset/images/PositifEtiquette.png",
+                        ),
+                        width: 40,
+                        height: 40,
+                      ),
+                    )),
+              )
             : const SizedBox(
                 width: 0,
                 height: 0,
@@ -507,27 +542,7 @@ class PugItemState extends State<PugItem> {
     if (!widget.profileView) {
       return Column(
         children: [
-          // ListView(children: [],),
           imageContent(),
-          // widget.fromProfile
-          //     ? Padding(
-          //         padding: EdgeInsets.only(
-          //           top: 20,
-          //         ),
-          //         child: Center(
-          //           child: ElevatedButton(
-          //               onPressed: () {
-          //                 showMyDialogDelete("Suppréssion",
-          //                     "Vous êtes sur le point de supprimer un pug");
-          //               },
-          //               child: Text("Supprimer"),
-          //               style: BaseButtonRoundedColor(150, 40, APPCOLOR)),
-          //         ),
-          //       )
-          //     : SizedBox(
-          //         width: 0,
-          //         height: 0,
-          //       )
         ],
       );
     } else {
