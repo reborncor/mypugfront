@@ -157,7 +157,7 @@ class ChatListState extends State<ChatList> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Text("Conversations"),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor:Colors.black ,
             ),
             body: Container(
               child: content(),

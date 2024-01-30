@@ -212,7 +212,7 @@ class CreatePugState extends State<CreatePug> {
             appBar: AppBar(
               title: Text("Créer"),
               automaticallyImplyLeading: false,
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor: Colors.black,
             ),
             body: Container(
               decoration: BoxDecoration(),

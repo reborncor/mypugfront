@@ -72,7 +72,7 @@ class SettingState extends State<Setting> {
         print(themeNotifier.isDark);
         return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeNotifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor:  Colors.black,
               actions: [
                 IconButton(
                     icon: Icon(themeNotifier.isDark

@@ -122,8 +122,7 @@ class SearchState extends State<Search> {
         return Scaffold(
             appBar: AppBar(
               title: const Text("Recherche"),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-            ),
+              backgroundColor:  Colors.black,            ),
             body: Container(
               child: Column(
                 children: [searchBar(), Expanded(child: resultComponent())],

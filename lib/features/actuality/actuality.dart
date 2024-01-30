@@ -37,7 +37,6 @@ class ActualityState extends State<Actuality> {
   final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
   bool scrollPagePhysique = false;
-  late AppBar appBar;
 
   @override
   void initState() {
@@ -108,17 +107,11 @@ class ActualityState extends State<Actuality> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-            appBar: appBar = AppBar(
+            appBar: AppBar(
               title: const Text("Amis"),
               automaticallyImplyLeading: false,
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor:  Colors.black,
               actions: [
-                // IconButton(
-                //   onPressed: () {
-                //     navigateWithName(context, const Competition().routeName);
-                //   },
-                //   icon: Image.asset('asset/images/competition.png'),
-                // ),
                 IconButton(
                     onPressed: () {
                       navigateWithName(context, const Search().routeName);

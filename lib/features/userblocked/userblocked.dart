@@ -84,8 +84,7 @@ class UsersBlockedViewState extends State<UsersBlockedView> {
             appBar: AppBar(
               title: const Text("Utilisateurs bloqués",
                   style: TextStyle(color: Colors.white)),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-            ),
+              backgroundColor:  Colors.black,            ),
             body: Container(
               child: content(),
               decoration: BoxCircular(notifier),

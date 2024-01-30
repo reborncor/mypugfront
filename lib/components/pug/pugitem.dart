@@ -217,6 +217,7 @@ class PugItemState extends State<PugItem> {
                 ),
 
                 Stack(children: [
+                  //TODO : Ajouter un rapport de proportion par rapport a la taille de l'ecran
                   ...points
                       .asMap()
                       .map((i, e) => MapEntry(

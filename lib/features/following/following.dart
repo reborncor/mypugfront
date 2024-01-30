@@ -102,8 +102,7 @@ class FollowingViewState extends State<FollowingView> {
             appBar: AppBar(
               title: const Text("Abonnement",
                   style: TextStyle(color: Colors.white)),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-            ),
+              backgroundColor:  Colors.black,            ),
             body: Container(
               child: content(),
               decoration: BoxCircular(notifier),

@@ -199,7 +199,7 @@ class PugCommentsState extends State<PugComments> {
       return Scaffold(
           appBar: AppBar(
             title: Text("Commentaires"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor: Colors.black,
           ),
           body: Container(
             child: Column(

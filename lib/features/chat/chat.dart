@@ -322,7 +322,7 @@ class _ChatState extends State<Chat> {
           },
           child: Scaffold(
               appBar: appBar = AppBar(
-                backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+                backgroundColor: Colors.black,
                 title: Text(widget.receiverUser.username),
               ),
               body: Container(

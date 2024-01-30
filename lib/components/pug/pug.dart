@@ -94,7 +94,7 @@ class PugState extends State<Pug> {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Profil"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor: Colors.black,
             actions: [
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),

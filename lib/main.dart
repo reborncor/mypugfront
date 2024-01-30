@@ -157,7 +157,8 @@ class MyApp extends StatelessWidget {
                   },
 
                   darkTheme: ThemeData(
-                    textTheme: GoogleFonts.expletusSansTextTheme(),
+                    fontFamily: GoogleFonts.expletusSans().fontFamily,
+                    appBarTheme: const AppBarTheme(backgroundColor: Colors.black54),
                     brightness: Brightness.dark,
                     primaryColorDark: Colors.black,
                     primaryColor: Colors.black54,
@@ -167,16 +168,6 @@ class MyApp extends StatelessWidget {
                       modalBackgroundColor: Colors.black54,
                     ),
                   ),
-
-                  // theme: ThemeData(
-                  //   bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black54,modalBackgroundColor: Colors.black54,),
-                  //   brightness: Brightness.dark,
-                  //   primaryColorDark: Colors.black,
-                  //   primaryColor: Colors.black54,
-                  //   scaffoldBackgroundColor: Colors.black54,
-                  // ),
-
-                  // themeMode: themeNotifier.isDark ?  ThemeMode.dark : ThemeMode.light,
 
                   themeMode: ThemeMode.dark,
                   title: 'MyPug',

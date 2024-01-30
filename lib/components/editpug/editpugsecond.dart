@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:badges/badges.dart' as badges;
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_mention/instagram_mention.dart';
 import 'package:mypug/components/design/design.dart';
-import 'package:mypug/components/editpug/editpugsecond.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/create/api.dart';
 import 'package:mypug/models/pugdetailmodel.dart';
@@ -16,21 +14,34 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
-class EditPug extends StatefulWidget {
-  final routeName = '/editpug';
+class EditPugSecond extends StatefulWidget {
+  final routeName = '/editpugsecond';
   final File? file;
   final bool isCrop;
+  final int imageHeight;
+  final List<PugDetailModel>? details;
 
-  const EditPug({Key? key, this.file, this.isCrop = false}) : super(key: key);
-
-  const EditPug.withFile({Key? key, required this.file, required this.isCrop})
+  const EditPugSecond(
+      {Key? key,
+      this.file,
+      this.isCrop = false,
+      this.imageHeight = 0,
+      this.details})
       : super(key: key);
 
+  const EditPugSecond.withData({
+    Key? key,
+    this.file,
+    required this.isCrop,
+    required this.imageHeight,
+    required this.details,
+  }) : super(key: key);
+
   @override
-  EditPugState createState() => EditPugState();
+  EditPugSecondState createState() => EditPugSecondState();
 }
 
-class EditPugState extends State<EditPug> {
+class EditPugSecondState extends State<EditPugSecond> {
   late AppBar appBar;
   late File file;
   TextEditingController textEditingController = TextEditingController();
@@ -40,12 +51,11 @@ class EditPugState extends State<EditPug> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final dragController = DragController();
   double screenWidth = 500;
-  double height = 500;
   late int imageHeight = PUGSIZE.toInt();
-  ScrollController scrollController = ScrollController();
 
   List<PugDetailModel> details = [];
   late String pugDetailText = "";
+  String imageTitle = "";
   double x = 200.0;
   double y = 500.0;
 
@@ -63,42 +73,6 @@ class EditPugState extends State<EditPug> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      screenWidth = getPhoneWidth(context) > MAX_SCREEN_WIDTH
-          ? MAX_SCREEN_WIDTH
-          : getPhoneWidth(context);
-      height = getPhoneHeight(context);
-      x = MediaQuery.of(context).padding.top.toInt() / 2;
-
-      tooltip = SuperTooltip(
-        popupDirection: TooltipDirection.up,
-        showCloseButton: ShowCloseButton.inside,
-        borderRadius: 30,
-        minWidth: 200,
-        maxWidth: 320,
-        maxHeight: 100,
-        minHeight: 100,
-        shadowColor: APPCOLOR,
-        content: const Material(
-            color: Colors.transparent,
-            child: Center(
-                child: Text(
-              "Indiquer au moins une référécence",
-              style: TextStyle(color: Colors.black),
-              textAlign: TextAlign.center,
-              softWrap: true,
-            ))),
-      );
-
-      getUserFirstUse().then((value) => {
-            if (value.isNotEmpty && value.length < 5)
-              {
-                tooltip.show(context),
-                saveUserFirstUse().then((value) => null),
-              }
-          });
-    });
-
     details.clear();
     file = widget.file!;
     Image image = Image.file(file);
@@ -111,6 +85,9 @@ class EditPugState extends State<EditPug> {
         },
       ),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showSnackBar(context, "éléments enregistré !");
+    });
 
     setState(() {});
     super.initState();
@@ -126,51 +103,6 @@ class EditPugState extends State<EditPug> {
     }
 
     setState(() {});
-  }
-
-  Widget dataTagDetails() {
-    return Stack(
-        children: details
-            .map((e) => Positioned(
-                  left: e.positionX.toDouble() * screenWidth,
-                  top: e.positionY.toDouble(),
-                  child: Draggable(
-                      data: badges.Badge(
-                        badgeContent: Text('X'),
-                        child: Center(
-                            child: InstagramMention(
-                                text: e.text, color: APP_COMMENT_COLOR)),
-                      ),
-                      onDragStarted: () {},
-                      onDragUpdate: (data) {},
-                      onDragEnd: (detailsDrag) {
-                        log('final x :${detailsDrag.offset.dx} y :${detailsDrag.offset.dy.toInt()}');
-                        e.positionX = detailsDrag.offset.dx / screenWidth;
-                        e.positionY = detailsDrag.offset.dy -
-                            appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top +
-                            scrollController.offset.toDouble();
-                        setState(() {});
-                      },
-                      childWhenDragging: const SizedBox(
-                        width: 0,
-                        height: 0,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          details.remove(e);
-                          setState(() {});
-                        },
-                        child: badges.Badge(
-                          badgeContent: Text('X'),
-                          child: Center(
-                              child: InstagramMention(
-                                  text: e.text, color: APP_COMMENT_COLOR)),
-                        ),
-                      ),
-                      feedback: draggablePugDetailItem(e.text)),
-                ))
-            .toList());
   }
 
   Widget draggablePugDetailItem(String text) {
@@ -189,7 +121,9 @@ class EditPugState extends State<EditPug> {
   Widget textPugEditor() {
     return Positioned(
         left: x,
-        top: y ,
+        top: y -
+            appBar.preferredSize.height -
+            MediaQuery.of(context).padding.top,
         child: Draggable(
             onDragStarted: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -204,10 +138,7 @@ class EditPugState extends State<EditPug> {
             ),
             onDragEnd: (details) {
               x = details.offset.dx;
-              y = details.offset.dy -
-                  appBar.preferredSize.height -
-                  MediaQuery.of(context).padding.top +
-                  scrollController.offset.toDouble();
+              y = details.offset.dy;
               setState(() {});
             },
             child: textEditorWidget()));
@@ -263,41 +194,9 @@ class EditPugState extends State<EditPug> {
   Widget imageContent(File image) {
     return Container(
       child: Container(
-        height: PUGSIZE,
-        child: Stack(
-          children: [
-            textPugEditor(),
-            Visibility(
-              visible: isVisible,
-              child: dataTagDetails(),
-            ),
-            Positioned(
-              child: ClipOval(
-                child: Material(
-                  color: APPCOLOR,
-                  child: InkWell(
-                    splashColor: Colors.red,
-                    onTap: () {
-                      isTextVisible = true;
-                      showEditor = true;
-                      x = 280.00;
-                      y = 550.00;
-                      setState(() {});
-                    },
-                    child:
-                        SizedBox(width: 50, height: 50, child: Icon(Icons.add)),
-                  ),
-                ),
-              ),
-              width: 50,
-              height: 50,
-              left: getPhoneWidth(context) - 75,
-              top: 550,
-            )
-          ],
-        ),
+        height: MediaQuery.of(context).size.height * 0.40,
       ),
-      height: PUGSIZE,
+      height: MediaQuery.of(context).size.height * 0.40,
       width: 100,
       decoration: BoxDecoration(
           color: Colors.transparent,
@@ -308,17 +207,16 @@ class EditPugState extends State<EditPug> {
     );
   }
 
-  Widget imageConfiguration() {
+  Widget imageInformation(String title) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-              style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+              style: BaseButtonRoundedColor(40, 60, APPCOLOR),
               onPressed: () {
                 setState(() {
                   isVisible = !isVisible;
-                  log("Scroll controller : ${scrollController.offset.toString()}");
                 });
               },
               child: Text('Afficher/Masquer'))
@@ -330,39 +228,57 @@ class EditPugState extends State<EditPug> {
   Widget imageDetail() {
     return Column(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 0,
-          height: 30,
+          height: 20,
         ),
-        Column(
-          children: [
-            Visibility(
-                visible: false,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: APPCOLOR,
-                    ),
-                  ),
-                )),
-            ElevatedButton(
-                style: BaseButtonRoundedColor(40, 40, APPCOLOR),
-                // onPressed: !(_isLoading) ? functionCreate : null,
-                onPressed: () {
-                  navigateTo(
-                      context,
-                      EditPugSecond(
-                        file: widget.file,
-                        isCrop: widget.isCrop,
-                        imageHeight: imageHeight,
-                        details: details,
-                      ));
-                },
-                child: Text("Etape suivante")),
-          ],
+        Container(
+          width: 600,
+          child: TextField(
+            style:
+                TextStyle(color: notifier.isDark ? Colors.white : Colors.black),
+            controller: textDescriptionController,
+            keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            minLines: 1,
+            maxLines: 4,
+            decoration: InputDecoration(
+              hintText: "Description",
+              hintStyle: TextStyle(
+                  color: notifier.isDark ? Colors.white : Colors.black),
+              focusedBorder: setOutlineBorder(3.0, 3.0),
+              enabledBorder: setOutlineBorder(3.0, 3.0),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 0,
+          height: 20,
+        ),
+        ValueListenableBuilder(
+          valueListenable: _isLoadingNotifier,
+          builder: (context, _isLoading, _) {
+            return Column(
+              children: [
+                Visibility(
+                    visible: (_isLoading as bool),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: APPCOLOR,
+                        ),
+                      ),
+                    )),
+                ElevatedButton(
+                    style: BaseButtonRoundedColor(40, 40, APPCOLOR),
+                    onPressed: !(_isLoading) ? functionCreate : null,
+                    child: Text("Publier")),
+              ],
+            );
+          },
         )
       ],
     );
@@ -371,9 +287,14 @@ class EditPugState extends State<EditPug> {
   void functionCreate() async {
     _isLoadingNotifier.value = true;
 
-    if (details.length >= 1) {
-      var result = await createPug(file, textTitleController.text,
-          textDescriptionController.text, details, widget.isCrop, imageHeight);
+    if (widget.details!.isNotEmpty) {
+      var result = await createPug(
+          file,
+          textTitleController.text,
+          textDescriptionController.text,
+          widget.details!,
+          widget.isCrop,
+          widget.imageHeight);
 
       log(result.code.toString() + " " + result.message);
       if (result.code == SUCCESS_CODE) {
@@ -400,8 +321,7 @@ class EditPugState extends State<EditPug> {
                 : Color.fromRGBO(245, 245, 245, 0.95),
             key: _scaffoldKey,
             appBar: appBar = AppBar(
-              backgroundColor:  Colors.black,
-              title: Text("Edition"),
+              backgroundColor:  Colors.black,              title: Text("Détail"),
             ),
             body: content());
       },
@@ -410,10 +330,8 @@ class EditPugState extends State<EditPug> {
 
   Widget content() {
     return ListView(
-      controller: scrollController,
       children: [
         imageContent(file),
-        imageConfiguration(),
         imageDetail(),
       ],
     );

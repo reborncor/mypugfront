@@ -535,7 +535,7 @@ class ProfileState extends State<Profile> {
           appBar: appBar = AppBar(
             automaticallyImplyLeading: hasBackButton,
             title: const Text("Profile"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor:  Colors.black,
             actions: [
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
