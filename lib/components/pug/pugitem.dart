@@ -195,8 +195,7 @@ class PugItemState extends State<PugItem> {
                                   )
                                 ],
                               ),
-                              widget.currentUsername ==
-                                      widget.model.author.username
+                              widget.fromProfile
                                   ? SizedBox(
                                       width: 0,
                                       height: 0,
@@ -545,64 +544,6 @@ class PugItemState extends State<PugItem> {
     } else {
       return ListView(
         children: [
-          Container(
-            decoration: widget.onShare ? BoxDecoration(color: APPCOLOR) : null,
-            child: Column(children: [
-              widget.fromProfile
-                  ? SizedBox(
-                      width: 0,
-                      height: 0,
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              navigateTo(
-                                  context,
-                                  Profile.fromUsername(
-                                      username: widget.model.author.username));
-                            },
-                            child: Row(
-                              children: [
-                                renderProfilePicture(
-                                    widget.model.author.profilePicture,
-                                    widget
-                                        .model.author.profilePicture.isNotEmpty,
-                                    40),
-                                const SizedBox(width: 10),
-                                Container(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.shade300
-                                            .withOpacity(0.6)),
-                                    child: Text(
-                                      widget.model.author.username,
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: notifier.isDark
-                                              ? Colors.white
-                                              : Colors.black),
-                                    )),
-                              ],
-                            )),
-                        IconButton(
-                            onPressed: () => showBottomSheetSignal(
-                                context,
-                                widget.model.author.username,
-                                widget.model.id,
-                                widget.refreshCb),
-                            icon: Icon(
-                              Icons.more_vert,
-                              size: 30,
-                            ))
-                      ],
-                    )
-            ]),
-          ),
           // ListView(children: [],),
           imageContent(),
           widget.fromProfile

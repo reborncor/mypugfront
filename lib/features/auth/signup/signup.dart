@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/auth/api.dart';
-import 'package:mypug/util/libs/fl_country_code_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +22,6 @@ class SignUpState extends State<SignUp> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  final countryPicker = const FlCountryCodePicker();
   late String dialCode = '+33';
   late String phoneRegion = 'FR';
   bool userCondition = false;

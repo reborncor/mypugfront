@@ -12,7 +12,7 @@ import '../../response/userresponse.dart';
 import 'api.dart';
 
 class Setting extends StatefulWidget {
-  final routeName = 'setting';
+  final routeName = '/setting';
 
   const Setting({Key? key}) : super(key: key);
 
@@ -22,8 +22,6 @@ class Setting extends StatefulWidget {
 
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
-
-  // late Map data;
 
   @override
   void initState() {
@@ -79,9 +77,6 @@ class SettingState extends State<Setting> {
                         ? Icons.nightlight_round
                         : Icons.wb_sunny),
                     onPressed: () {
-                      // themeNotifier.isDark
-                      //     ? themeNotifier.isDark = false
-                      //     : themeNotifier.isDark = true;
                     })
               ],
             ),

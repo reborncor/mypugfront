@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
@@ -48,7 +49,6 @@ class ProfileState extends State<Profile> {
   late ThemeModel notifier;
   late String description = "";
   late TextEditingController descriptionController = TextEditingController();
-  late String formerDescription;
   bool isModificated = false;
   late String formerProfilePicture;
   final RefreshController _refreshController = RefreshController();
@@ -133,8 +133,8 @@ class ProfileState extends State<Profile> {
             );
           }
           username = snapshot.data!.username;
-          formerProfilePicture = snapshot.data!.profilePicture;
-          formerDescription = snapshot.data!.description!;
+          formerProfilePicture  = snapshot.data!.profilePicture;
+          descriptionController.text = snapshot.data!.description!;
           isFollowing = snapshot.data!.isFollowing ?? false;
           String textButton = isFollowing ? "Se désabonner" : "S'abonner";
           return Column(
@@ -271,23 +271,12 @@ class ProfileState extends State<Profile> {
                 child: onUpdateMode
                     ? TextField(
                         decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              description = descriptionController.text;
-                              isModificated = true;
-                              onUpdateMode = !onUpdateMode;
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              setState(() {});
-                            },
-                            iconSize: 20,
-                            color: APPCOLOR,
-                            icon: Icon(Icons.check),
-                          ),
                           focusedBorder: setOutlineBorder(0.0, 20.0),
                           enabledBorder: setOutlineBorder(0.0, 20.0),
                           border: setOutlineBorder(1.5, 20.0),
                         ),
                         controller: descriptionController,
+
                         textInputAction: TextInputAction.newline,
                         keyboardType: TextInputType.multiline,
                         maxLines: 2,
@@ -295,10 +284,7 @@ class ProfileState extends State<Profile> {
                       )
                     : Align(
                         alignment: Alignment.bottomLeft,
-                        child: Text(
-                          description != ""
-                              ? description
-                              : snapshot.data!.description!,
+                        child: Text( snapshot.data!.description!,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 16,
@@ -316,21 +302,21 @@ class ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OutlinedButton(
-                          style: BaseButtonSize(250, 30, APPCOLOR),
+                          style: BaseButtonSize(onUpdateMode ? 150 : 250, 30, APPCOLOR),
                           onPressed: () {
                             onUpdateMode = !onUpdateMode;
                             setState(() {});
                           },
-                          child: Text(onUpdateMode ? "Fermer" : "Modifier",
+                          child: Text(onUpdateMode ? "Annuler" : "Modifier",
                               style: const TextStyle(color: Colors.white)),
                         ),
-                        (isModificated)
+                        (onUpdateMode)
                             ? Padding(
                                 padding: EdgeInsets.only(left: 8),
-                                child: IconButton(
+                                child: OutlinedButton(
                                     onPressed: () async {
                                       final result = await updateUserInfo(
-                                          description,
+                                          descriptionController.text,
                                           snapshot.data!.profilePicture,
                                           imageFile != null,
                                           imageFile,
@@ -340,12 +326,13 @@ class ProfileState extends State<Profile> {
                                         saveUserProfilePicture(
                                             result.profilePicture);
                                         showSnackBar(context, "modification utilisateur effectuée");
+                                        onUpdateMode = !onUpdateMode;
                                         setState(() {});
                                       }
                                     },
-                                    iconSize: 30,
-                                    color: APPCOLOR,
-                                    icon: Icon(Icons.check)),
+                                  style: BaseButtonSize(150, 30, APPCOLOR),
+                                  child: const Text("Confirmer",
+                                      style: TextStyle(color: Colors.white)),),
                               )
                             : const SizedBox(
                                 width: 0,

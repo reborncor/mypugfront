@@ -303,7 +303,7 @@ class EditPugState extends State<EditPug> {
           color: Colors.transparent,
           image: DecorationImage(
             image: FileImage(image),
-            fit: widget.isCrop ? BoxFit.cover : BoxFit.contain,
+            fit: BoxFit.contain,
           )),
     );
   }
