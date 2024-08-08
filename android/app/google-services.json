@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "125058206108",
+    "project_id": "reborn-4ddb8",
+    "storage_bucket": "reborn-4ddb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125058206108:android:c81b90730d055220916059",
+        "android_client_info": {
+          "package_name": "com.example.socialgamblingfront"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125058206108-l70bn1io26h2vs726e7lc659u8prti04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwaABiWWH8oijxaPxq2ZOCKNEb2J8T854"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125058206108-l70bn1io26h2vs726e7lc659u8prti04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125058206108:android:a9b7ee17e8c3cda6916059",
+        "android_client_info": {
+          "package_name": "com.net.mypug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125058206108-l70bn1io26h2vs726e7lc659u8prti04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwaABiWWH8oijxaPxq2ZOCKNEb2J8T854"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125058206108-l70bn1io26h2vs726e7lc659u8prti04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

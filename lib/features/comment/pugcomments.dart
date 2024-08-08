@@ -1,0 +1,225 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:mypug/models/CommentModel.dart';
+import 'package:mypug/models/userfactory.dart';
+import 'package:mypug/response/commentresponse.dart';
+import 'package:mypug/util/util.dart';
+import 'package:provider/provider.dart';
+
+import '../../components/design/design.dart';
+import '../../components/pug/api.dart';
+import '../../service/themenotifier.dart';
+import 'api.dart';
+
+class PugComments extends StatefulWidget {
+  final routeName = '/pugcomments';
+  final String pugId;
+  final String username;
+  String description;
+
+  PugComments(
+      {Key? key, this.pugId = "", this.username = "", this.description = ""})
+      : super(key: key);
+
+  PugComments.withData(
+      {Key? key,
+      required this.pugId,
+      required this.username,
+      required this.description});
+
+  @override
+  PugCommentsState createState() => PugCommentsState();
+}
+
+class PugCommentsState extends State<PugComments> {
+  TextEditingController searchController = TextEditingController();
+  StreamController streamController = StreamController();
+  late String _username;
+  late String _profilePicture;
+  late String _id;
+  late CommentModel comment;
+  TextEditingController textEditingController = TextEditingController();
+  late List<CommentModel> comments = [];
+  late ThemeModel notifier;
+  bool _commentLoading = false;
+
+  @override
+  void initState() {
+    getUserData().then((value) {
+      _username = value["username"];
+      _id = value["id"];
+      _profilePicture = value["profilePicture"];
+    });
+    super.initState();
+  }
+
+  Widget itemComment(CommentModel model) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 3, top: 3),
+      child: Container(
+          padding: const EdgeInsets.only(bottom: 3.0, top: 3),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.shade100.withOpacity(0.6),
+          ),
+          child: InkWell(
+              child: Row(
+            children: [
+              renderProfilePicture(model.author.profilePicture,
+                  model.author.profilePicture.isNotEmpty, 40),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                model.author.username,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: notifier.isDark ? Colors.black : Colors.black),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Flexible(
+                child: Text(
+                  model.content,
+                  overflow: TextOverflow.visible,
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: notifier.isDark ? Colors.black : Colors.black),
+                ),
+              )
+            ],
+          ))),
+    );
+  }
+
+  Widget content() {
+    return FutureBuilder(
+      future: getPugComment(widget.pugId, widget.username),
+      builder: (context, AsyncSnapshot<CommentResponse> snapshot) {
+        if (snapshot.hasData) {
+          comments = snapshot.data!.comments;
+          return Column(
+            children: [
+              (widget.description.isEmpty)
+                  ? SizedBox(
+                      width: 0,
+                      height: 0,
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Text(widget.description,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17)),
+                    ),
+              Expanded(
+                  child: ListView.builder(
+                itemCount: comments.length,
+                itemBuilder: (context, index) {
+                  return itemComment(comments[index]);
+                },
+              ))
+            ],
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Center(
+            child: Text(sentence_no_data),
+          );
+        } else {
+          return Center(
+              child: CircularProgressIndicator(
+            color: APPCOLOR,
+          ));
+        }
+      },
+    );
+  }
+
+  Widget imageAddComment(String author, String pugId) {
+    return Padding(
+      padding: EdgeInsets.all(0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                style: TextStyle(
+                    color: notifier.isDark ? Colors.white : Colors.black),
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  suffixIcon: sendButton(pugId, author),
+                  hintText: "Ajouter un commentaire",
+                  hintStyle: TextStyle(
+                      color: notifier.isDark ? Colors.white : Colors.black),
+                  focusedBorder: setOutlineBorder(1.5, 20.0),
+                  enabledBorder: setOutlineBorder(1.5, 20.0),
+                  border: setOutlineBorder(1.5, 20.0),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconButton sendButton(String pugId, String author) {
+    return IconButton(
+        onPressed: () async {
+          if (textEditingController.text.isNotEmpty) {
+            if (_commentLoading) return;
+            _commentLoading = true;
+            setState(() {});
+            final result =
+                await sendComment(pugId, author, textEditingController.text);
+            if (result.code == SUCCESS_CODE) {
+              comment = CommentModel(
+                  id: "",
+                  author: UserFactory(
+                      username: _username,
+                      profilePicture: _profilePicture,
+                      id: _id),
+                  content: textEditingController.text,
+                  date: "");
+              comments.add(comment);
+              setState(() {});
+              textEditingController.clear();
+            } else {
+              showSnackBar(context, result.message);
+            }
+            _commentLoading = false;
+            setState(() {});
+          }
+        },
+        icon: Icon(
+          Icons.send,
+          color: _commentLoading ? Colors.grey[600] : APPCOLOR,
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
+      this.notifier = notifier;
+      return Scaffold(
+          appBar: AppBar(
+            title: Text("Commentaires"),
+            backgroundColor: Colors.black,
+          ),
+          body: Container(
+            child: Column(
+              children: [
+                Expanded(child: content()),
+                imageAddComment(widget.username, widget.pugId)
+              ],
+            ),
+            decoration: BoxCircular(notifier),
+          ));
+    });
+  }
+}
