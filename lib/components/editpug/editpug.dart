@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:draggable_widget/draggable_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram_mention/instagram_mention.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_cropper/image_cropper.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/editpug/editpugsecond.dart';
 import 'package:mypug/components/editpug/get_image_size_widget.dart';
@@ -22,8 +21,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image/image.dart' as img;
 
 class EditPug extends StatefulWidget {
   final routeName = '/editpug';

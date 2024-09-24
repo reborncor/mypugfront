@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+7
 
 environment:
-  sdk: ">=2.18.0 <4.0.0"
+  sdk: ">=2.19.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -70,7 +70,6 @@ dependencies:
   flutter_notification_channel: ^2.0.0
   flutter_local_notifications: ^9.1.0
 
-  simple_s3: ^0.3.2
   simple_shadow: ^0.3.1
   google_fonts: ^4.0.4
   path_provider: ^2.1.1
@@ -84,7 +83,7 @@ dependencies:
 
 dependency_overrides:
   image_picker_android: 0.8.4+13
-  intl: any
+  intl: 0.18.1
 
 flutter_icons:
   android: "launcher_icon"

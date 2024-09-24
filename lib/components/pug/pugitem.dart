@@ -15,7 +15,6 @@ import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-
 import '../../features/following/api.dart';
 import '../../models/CommentModel.dart';
 import '../../response/followerresponse.dart';
@@ -123,7 +122,6 @@ class PugItemState extends State<PugItem> {
               child: InkWell(
                   onTap: () {
                     if (!isValidUrl(text)) {
-                      showSnackBar(context, "URL invalide");
                       return;
                     }
                     Navigator.of(context).push(MaterialPageRoute(
