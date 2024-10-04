@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/models/CommentModel.dart';
 import 'package:mypug/models/userfactory.dart';
@@ -43,6 +42,7 @@ class PugCommentsState extends State<PugComments> {
   TextEditingController textEditingController = TextEditingController();
   late List<CommentModel> comments = [];
   late ThemeModel notifier;
+  bool _commentLoading = false;
 
   @override
   void initState() {
@@ -66,7 +66,11 @@ class PugCommentsState extends State<PugComments> {
           child: InkWell(
               child: Row(
             children: [
-              renderProfilePicture(model.author.profilePicture, false, 40),
+              renderProfilePicture(model.author.profilePicture,
+                  model.author.profilePicture.isNotEmpty, 40),
+              SizedBox(
+                width: 5,
+              ),
               Text(
                 model.author.username,
                 style: TextStyle(
@@ -123,8 +127,8 @@ class PugCommentsState extends State<PugComments> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return const Center(
-            child: Text("Aucune donnée"),
+          return Center(
+            child: Text(sentence_no_data),
           );
         } else {
           return Center(
@@ -150,30 +154,7 @@ class PugCommentsState extends State<PugComments> {
                     color: notifier.isDark ? Colors.white : Colors.black),
                 controller: textEditingController,
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: () async {
-                        if (textEditingController.text.isNotEmpty) {
-                          final result = await sendComment(
-                              pugId, author, textEditingController.text);
-                          if (result.code == SUCCESS_CODE) {
-                            comment = CommentModel(
-                                id: "",
-                                author: UserFactory(
-                                    username: _username,
-                                    profilePicture: _profilePicture,
-                                    id: _id),
-                                content: textEditingController.text,
-                                date: "");
-                            comments.add(comment);
-                            setState(() {});
-                            textEditingController.clear();
-                          }
-                        }
-                      },
-                      icon: Icon(
-                        Icons.send,
-                        color: APPCOLOR,
-                      )),
+                  suffixIcon: sendButton(pugId, author),
                   hintText: "Ajouter un commentaire",
                   hintStyle: TextStyle(
                       color: notifier.isDark ? Colors.white : Colors.black),
@@ -187,6 +168,40 @@ class PugCommentsState extends State<PugComments> {
     );
   }
 
+  IconButton sendButton(String pugId, String author) {
+    return IconButton(
+        onPressed: () async {
+          if (textEditingController.text.isNotEmpty) {
+            if (_commentLoading) return;
+            _commentLoading = true;
+            setState(() {});
+            final result =
+                await sendComment(pugId, author, textEditingController.text);
+            if (result.code == SUCCESS_CODE) {
+              comment = CommentModel(
+                  id: "",
+                  author: UserFactory(
+                      username: _username,
+                      profilePicture: _profilePicture,
+                      id: _id),
+                  content: textEditingController.text,
+                  date: "");
+              comments.add(comment);
+              setState(() {});
+              textEditingController.clear();
+            } else {
+              showSnackBar(context, result.message);
+            }
+            _commentLoading = false;
+            setState(() {});
+          }
+        },
+        icon: Icon(
+          Icons.send,
+          color: _commentLoading ? Colors.grey[600] : APPCOLOR,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(builder: (context, ThemeModel notifier, child) {
@@ -194,7 +209,7 @@ class PugCommentsState extends State<PugComments> {
       return Scaffold(
           appBar: AppBar(
             title: Text("Commentaires"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor: Colors.black,
           ),
           body: Container(
             child: Column(

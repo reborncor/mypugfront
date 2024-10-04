@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
@@ -14,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'api.dart';
+
+String currentUserName = "";
 
 class Actuality extends StatefulWidget {
   final routeName = '/actuality';
@@ -38,7 +39,6 @@ class ActualityState extends State<Actuality> {
   final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
   bool scrollPagePhysique = false;
-  late AppBar appBar;
 
   @override
   void initState() {
@@ -50,6 +50,7 @@ class ActualityState extends State<Actuality> {
   fetchData() async {
     _username = await getCurrentUsername();
     _response = await getActualityPageable(startInd, 0);
+    currentUserName = await getCurrentUsername();
     list = _response.pugs;
     if (list.isNotEmpty) {
       streamController.add("event");
@@ -97,7 +98,10 @@ class ActualityState extends State<Actuality> {
   }
 
   Widget pugItem(PugModel model) {
-    return PugItem(model: model, currentUsername: _username);
+    return PugItem(
+      model: model,
+      currentUsername: _username,
+    );
   }
 
   @override
@@ -109,14 +113,8 @@ class ActualityState extends State<Actuality> {
             appBar: AppBar(
               title: const Text("Amis"),
               automaticallyImplyLeading: false,
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor: Colors.black,
               actions: [
-                // IconButton(
-                //   onPressed: () {
-                //     navigateWithName(context, const Competition().routeName);
-                //   },
-                //   icon: Image.asset('asset/images/competition.png'),
-                // ),
                 IconButton(
                     onPressed: () {
                       navigateWithName(context, const Search().routeName);
@@ -151,36 +149,35 @@ class ActualityState extends State<Actuality> {
           return SmartRefresher(
               controller: _refreshController,
               onRefresh: refreshData,
-              child: CustomScrollView(controller: scrollController, slivers: [
-                SliverAppBar(
-                  expandedHeight: 150,
-                  automaticallyImplyLeading: false,
-                  backgroundColor:
-                      notifier.isDark ? Colors.black : Colors.transparent,
-                  pinned: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Image.asset(
-                      pathImage,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 20, bottom: 20),
-                      scrollDirection: Axis.vertical,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return pugItem(list[index]);
-                      }),
-                ]))
-              ]));
+              child: NestedScrollView(
+                controller: scrollController,
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: 150,
+                      automaticallyImplyLeading: false,
+                      backgroundColor:
+                          notifier.isDark ? Colors.black : Colors.transparent,
+                      pinned: false,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Image.asset(
+                          pathImage,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    )
+                  ];
+                },
+                body: PageView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return pugItem(list[index]);
+                    }),
+              ));
         } else {
-          return const Center(
-            child: Text("Aucune publication"),
+          return Center(
+            child: Text(sentence_no_pug),
           );
         }
       },

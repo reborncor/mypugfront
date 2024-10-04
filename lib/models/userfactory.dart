@@ -28,7 +28,7 @@ class UserFactory {
   factory UserFactory.fromJsonData(Map<String, dynamic> json) {
     return UserFactory.jsonData(
       username: json['username'],
-      profilePicture: json['profilePicture'],
+      profilePicture: json['profilePicture'] ?? "",
       id: json['_id'] ?? "",
     );
   }

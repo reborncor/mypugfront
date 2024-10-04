@@ -9,7 +9,6 @@ import 'package:mypug/models/pugdetailmodel.dart';
 import 'package:mypug/response/baseresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-import 'package:simple_s3/simple_s3.dart';
 
 Future<BasicResponse> createPug(
     File file,
@@ -29,7 +28,7 @@ Future<BasicResponse> createPug(
       endPoint: 's3.amazonaws.com',
       accessKey: AWS_ACCESSKEY,
       secretKey: AWS_SECRETKEY,
-      region: AWSRegions.euWest3.region,
+      region: "eu-west-3",
     );
 
     final encryptedFileName = utf8.fuse(base64).encode(username + file.path);

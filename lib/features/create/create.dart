@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/assetthumbnail/assetthumbnail.dart';
 import 'package:mypug/components/design/design.dart';
-import 'package:mypug/components/editpug/editpug.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:super_tooltip/super_tooltip.dart';
+
+import '../../components/editpug/editpug.dart';
 
 class CreatePug extends StatefulWidget {
   final routeName = '/create';
@@ -32,13 +33,12 @@ class CreatePugState extends State<CreatePug> {
   List<AssetEntity> assets = [];
   late ThemeModel notifier;
   late SuperTooltip tooltip;
-  late bool isCrop = true;
-  var varImagesGallery = null;
+  var varImagesGallery;
   late String isNotFirstUse;
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       tooltip = SuperTooltip(
         popupDirection: TooltipDirection.up,
         showCloseButton: ShowCloseButton.inside,
@@ -60,12 +60,21 @@ class CreatePugState extends State<CreatePug> {
             ))),
       );
 
-      getUserFirstUse().then((value) => {
-            if (value.isNotEmpty && value.length < 5) {tooltip.show(context)}
+      getUserFirstUse().then((value) async => {
+            if (value.isNotEmpty && value.length < 5)
+              {
+                tooltip.show(context),
+              }
           });
     });
     super.initState();
     getGalleryImages();
+  }
+
+  requestAccess() async {
+    PermissionStatus status;
+    status = await Permission.storage.status;
+    if (status.isDenied) {}
   }
 
   getGalleryImages() async {
@@ -122,6 +131,50 @@ class CreatePugState extends State<CreatePug> {
         });
   }
 
+  bool fitImage = true;
+  double? pugWidth;
+  bool constrained = true;
+  basicRender() {
+    return Stack(children: [
+      InteractiveViewer(
+          constrained: constrained,
+          maxScale: 5,
+          minScale: 0.01,
+          boundaryMargin: const EdgeInsets.only(
+            bottom: 50,
+            left: 62,
+            right: 62,
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.46,
+            child: Image.file(
+              imageFile!,
+              fit: fitImage ? BoxFit.fitWidth : BoxFit.fitHeight,
+            ),
+          )),
+    ]);
+  }
+
+  Future<String> createFolderInAppDocDir() async {
+    //Get this App Document Directory
+    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    // print(_appDocDir);
+    //App Document Directory + folder name
+    final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/images_tmp');
+
+    if (await _appDocDirFolder.exists()) {
+      //if folder already exists return path
+      return _appDocDirFolder.path;
+    } else {
+      //if folder not exists create folder and then return its path
+      final Directory _appDocDirNewFolder =
+          await _appDocDirFolder.create(recursive: true);
+      return _appDocDirNewFolder.path;
+    }
+  }
+
   Widget imageView() {
     return Container(
       color: Colors.black,
@@ -132,19 +185,32 @@ class CreatePugState extends State<CreatePug> {
           if (imageFile == null) {
             return Container();
           } else {
-            return SizedBox(
-              width: 500,
-              height: 45 * MediaQuery.of(context).size.height / 100,
-              child: AspectRatio(
-                aspectRatio: 4 / 5,
-                child: Image.file(imageFile!,
-                    fit: isCrop ? BoxFit.cover : BoxFit.contain),
-              ),
-            );
+            return basicRender();
           }
         },
       ),
     );
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/tmp_image.png');
+  }
+
+  Future<File?> writeData() async {
+    final file = await _localFile;
+    if (!file.existsSync()) {
+      final newFile = await _localFile;
+      return newFile.writeAsString("test", mode: FileMode.write);
+    }
+    ;
+    return null;
   }
 
   Widget imageButtonOption() {
@@ -158,28 +224,28 @@ class CreatePugState extends State<CreatePug> {
               onPressed: () {
                 _imgFromGallery();
               },
-              child: Text('Galerie'),
+              child: const Text('Galerie'),
             ),
             ElevatedButton(
               style: BaseButtonRoundedColor(60, 40, Colors.indigo[300]),
               onPressed: () {
                 _imgFromCamera();
               },
-              child: Text('Photo'),
+              child: const Text('Photo'),
             ),
-            IconButton(
-                onPressed: () {
-                  isCrop = !isCrop;
-                  setState(() {});
-                },
-                icon: const Icon(Icons.crop))
           ],
         ),
         ElevatedButton(
             style: BaseButtonRoundedColor(60, 40, Colors.indigo[300]),
-            onPressed: () {
+            onPressed: () async {
+              var decodedImage =
+                  await decodeImageFromList(imageFile!.readAsBytesSync());
               navigateTo(
-                  context, EditPug.withFile(file: imageFile, isCrop: isCrop));
+                  context,
+                  EditPug.withFile(
+                    file: imageFile,
+                    decodedImage: decodedImage,
+                  ));
             },
             child: const Text('Valider'))
       ],
@@ -210,27 +276,60 @@ class CreatePugState extends State<CreatePug> {
         return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text("Créer"),
+              title: const Text("Créer"),
               automaticallyImplyLeading: false,
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor: Colors.black,
             ),
             body: Container(
-              decoration: BoxDecoration(),
+              decoration: const BoxDecoration(),
               child: Padding(
                 padding: const EdgeInsets.all(3),
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      imageView(),
-                      imageButtonOption(),
-                      varImagesGallery ??
-                          const SizedBox(
-                            width: 0,
-                          ),
-                    ],
+                child: Stack(children: [
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [imageView()]),
+                  Positioned(
+                    bottom: MediaQuery.of(context).size.height * 0.46,
+                    left: 10,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      alignment: Alignment.topCenter,
+                      decoration: BoxDecoration(
+                          color: APP_COMMENT_COLOR,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: RotationTransition(
+                        turns: const AlwaysStoppedAnimation(45 / 360),
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: const Icon(Icons.unfold_more),
+                          onPressed: () {
+                            fitImage = !fitImage;
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ),
                   ),
-                  decoration: BoxCircular(notifier),
-                ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    top: 45 * MediaQuery.of(context).size.height / 100,
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          imageButtonOption(),
+                          varImagesGallery ??
+                              const SizedBox(
+                                width: 0,
+                              ),
+                        ],
+                      ),
+                      decoration: BoxCircular(notifier),
+                    ),
+                  ),
+                ]),
               ),
             ));
       },

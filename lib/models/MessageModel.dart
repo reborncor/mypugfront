@@ -27,7 +27,7 @@ class MessageModel {
 
   factory MessageModel.fromJsonData(Map<String, dynamic> json) {
     return MessageModel.jsonData(
-      id: json['id'],
+      id: json['id'] ?? "",
       senderUsername: json['senderUsername'],
       receiverUsername: json['receiverUsername'],
       content: json['type'] == "text" ? json['content'] : PugModel

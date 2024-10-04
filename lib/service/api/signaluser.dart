@@ -1,8 +1,5 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-import 'package:mypug/models/signalenum.dart';
-
 import '../../response/BaseResponse.dart';
 import '../../util/config.dart';
 import '../../util/util.dart';

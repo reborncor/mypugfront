@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../features/profile/profile.dart';
+import '../design/design.dart';
 
 class ShareItem extends StatefulWidget {
   final routeName = '/shareitem';
@@ -32,6 +33,7 @@ class ShareItem extends StatefulWidget {
 class ShareItemState extends State<ShareItem> {
   String text = "Envoyer";
   bool notSend = true;
+  bool isLoading = false;
   late ThemeModel notfier;
   late IO.Socket socket;
 
@@ -50,10 +52,13 @@ class ShareItemState extends State<ShareItem> {
                 {
                   notSend = false,
                   text = notSend ? "Envoyer" : "Envoyé",
-                  if (this.mounted)
+                  if (mounted)
                     {
+                      isLoading = false,
                       setState(() {}),
                       Navigator.pop(context),
+                      if (widget.user.username == LUCIE)
+                        {_showMyDialog(widget.context)}
                     }
                   else
                     {},
@@ -62,6 +67,8 @@ class ShareItemState extends State<ShareItem> {
   }
 
   sharePug() {
+    isLoading = true;
+    setState(() {});
     final messageSent = MessageModel(
         time: "",
         content: widget.pugModel.toJson(),
@@ -70,6 +77,29 @@ class ShareItemState extends State<ShareItem> {
         type: 'pug',
         id: "");
     socket.emit("message", messageSent.toJson());
+  }
+
+  Future<void> _showMyDialog(context) async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Center(child: Text('Done')),
+            backgroundColor: APP_COMMENT_COLOR,
+            content: const SingleChildScrollView(
+              child: Text('Vous ne pouvez pas envoyer de pug à Lucie'),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Fait'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -88,12 +118,17 @@ class ShareItemState extends State<ShareItem> {
                 style: TextStyle(
                     color: this.notfier.isDark ? Colors.white : Colors.black),
               ),
-              trailing: OutlinedButton(
-                child: Text(text, style: const TextStyle(color: Colors.white)),
-                onPressed: () {
-                  sharePug();
-                },
-              )),
+              trailing: isLoading
+                  ? const CircularProgressIndicator()
+                  : OutlinedButton(
+                      child: Text(text,
+                          style: const TextStyle(color: Colors.white)),
+                      onPressed: () {
+                        widget.user.username == LUCIE
+                            ? _showMyDialog(context)
+                            : sharePug();
+                      },
+                    )),
         );
       },
     );

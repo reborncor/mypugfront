@@ -83,8 +83,8 @@ class FollowingViewState extends State<FollowingView> {
         if (snapshot.connectionState == ConnectionState.done) {
           print(snapshot.data);
 
-          return const Center(
-            child: Text("Aucune donnée"),
+          return  Center(
+            child: Text(sentence_no_data),
           );
         } else {
           return const Center(child: CircularProgressIndicator());
@@ -102,8 +102,7 @@ class FollowingViewState extends State<FollowingView> {
             appBar: AppBar(
               title: const Text("Abonnement",
                   style: TextStyle(color: Colors.white)),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
-            ),
+              backgroundColor:  Colors.black,            ),
             body: Container(
               child: content(),
               decoration: BoxCircular(notifier),

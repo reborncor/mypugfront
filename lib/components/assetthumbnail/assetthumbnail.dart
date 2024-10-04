@@ -19,7 +19,7 @@ class AssetThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Uint8List?>(
-      future: asset.thumbData,
+      future: asset.thumbnailData,
       builder: (_, snapshot) {
         final bytes = snapshot.data;
 

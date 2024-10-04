@@ -18,6 +18,8 @@ class SocketService {
     socket.onConnect((data) => {
           log("Connected"),
           socket.emit("credentials", username),
+          socket.emit("credentials_notification",
+              {"username": username, "token": NOTIFICATION_TOKEN}),
         });
 
     socket.onDisconnect(
@@ -25,15 +27,17 @@ class SocketService {
     );
 
     socket.onReconnect(
-      (data) => {log("Reconnected !"), socket.emit("credentials", username)},
+      (data) => {
+        log("Reconnected !"),
+        socket.emit("credentials", username),
+        socket.emit("credentials_notification",
+            {"username": username, "token": NOTIFICATION_TOKEN}),
+      },
     );
   }
 
-  onDisconnect(String user) {
-    // socket.onDisconnect((data) =>  socket.emit("disconnect_user_game", user),);
-  }
 
-  Disconnect() {
+  disconnect() {
     socket.disconnect();
   }
 

@@ -82,47 +82,38 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
     );
   }
 
-  Widget displayRowVote(List<SelectedParticipant> participants){
-
-
-    return Row(children: [
-      Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: ExtendedImage.network(
-          participants[0].pugPicture,
-          fit: BoxFit.cover,
-          cache: true,
-          retries: 3,
-          timeRetry: const Duration(milliseconds: 100),
-
+  Widget displayRowVote(List<SelectedParticipant> participants) {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          child: ExtendedImage.network(
+            participants[0].pugPicture,
+            fit: BoxFit.cover,
+            cache: true,
+            retries: 3,
+            timeRetry: const Duration(milliseconds: 100),
+          ),
         ),
-      ),
-      Image.asset(
-        "asset/images/vs.png",
-        width: 50,
-        height: 50,
-        fit: BoxFit.contain,
-      ),
-
-
-      Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: ExtendedImage.network(
-          participants[1].pugPicture,
-          fit: BoxFit.cover,
-          cache: true,
-          retries: 3,
-          timeRetry: const Duration(milliseconds: 100),
-
+        Image.asset(
+          "asset/images/vs.png",
+          width: 50,
+          height: 50,
+          fit: BoxFit.contain,
         ),
-      ),
-
-
-
-    ],);
-
+        Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+          child: ExtendedImage.network(
+            participants[1].pugPicture,
+            fit: BoxFit.cover,
+            cache: true,
+            retries: 3,
+            timeRetry: const Duration(milliseconds: 100),
+          ),
+        ),
+      ],
+    );
   }
-
 
   Widget DisplayParticipants() {
     return Visibility(
@@ -130,7 +121,6 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
         child: ListView(
           children: [
             const Text("Concours meilleur pug"),
-
           ],
         ));
   }
@@ -159,12 +149,12 @@ class CompetitionPaymentState extends State<CompetitionPayment> {
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
       paymentIntentClientSecret: result.payload["paymentIntent"],
-      applePay: Stripe.instance.isApplePaySupported.value,
-      googlePay: true,
-      style: ThemeMode.dark,
-      testEnv: true,
-      merchantCountryCode: 'FR',
-      merchantDisplayName: 'MyPug',
+      applePay: const PaymentSheetApplePay(
+        merchantCountryCode: "FR",
+      ),
+      googlePay: const PaymentSheetGooglePay(
+        merchantCountryCode: "FR",
+      ),
     ));
     setState(() {});
     displayPaymentStripe(result.payload["paymentIntent"]);

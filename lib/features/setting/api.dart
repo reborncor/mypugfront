@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:minio/minio.dart';
-import 'package:simple_s3/simple_s3.dart';
 
 
 import '../../response/BaseResponse.dart';
@@ -36,7 +35,7 @@ Future<BasicResponse> deleteAccount(String formerImage) async {
           endPoint: 's3.amazonaws.com',
           accessKey: AWS_ACCESSKEY,
           secretKey: AWS_SECRETKEY,
-          region: AWSRegions.euWest3.region,
+          region: "eu-west-3",
         );
         await minio.removeObject(AWS_BUCKETNAME, formerImage);
 

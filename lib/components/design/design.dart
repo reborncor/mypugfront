@@ -38,8 +38,9 @@ BaseButtonSize(double width, double height, color) {
 final APPCOLOR = Colors.indigo.shade300;
 final APP_COMMENT_COLOR = Colors.black45.withOpacity(0.5);
 final APP_COLOR_SEARCH = APP_COMMENT_COLOR;
-final PUGSIZE = 600.0;
-final MAX_SCREEN_WIDTH = 600.0;
+const PUGSIZE = 600.0;
+const MAX_SCREEN_WIDTH = 600.0;
+late double maxImgHeight = 600.0;
 
 BoxGradient() {
   return BoxDecoration(
@@ -74,7 +75,6 @@ BoxCircular(ThemeModel notifier) {
           notifier.isDark ? Colors.black : Color.fromRGBO(245, 245, 245, 0.95),
       borderRadius: BorderRadius.circular(10));
 }
-
 
 errorImage() {
   return const Center(child: Icon(Icons.error));

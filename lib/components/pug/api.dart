@@ -6,7 +6,6 @@ import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/response/baseresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-import 'package:simple_s3/simple_s3.dart';
 
 Future<BasicResponse> likeOrUnlikePug(
     String pugId, String userPug, bool like) async {
@@ -120,7 +119,7 @@ Future<BasicResponse> deletePug(
         endPoint: 's3.amazonaws.com',
         accessKey: AWS_ACCESSKEY,
         secretKey: AWS_SECRETKEY,
-        region: AWSRegions.euWest3.region);
+        region: "eu-west-3");
     try {
       await minio.removeObject(
           AWS_BUCKETNAME, imageUrl.replaceAll('$AWS_URL/', ''));

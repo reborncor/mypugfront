@@ -19,7 +19,8 @@ class Pug extends StatefulWidget {
 
   final bool isOwner;
 
-  const Pug({Key? key, this.model, this.username,this.isOwner = false})
+  const Pug(
+      {Key? key, this.model, this.username, this.isOwner = false})
       : super(key: key);
 
   const Pug.withPugModel(
@@ -58,6 +59,8 @@ class PugState extends State<Pug> {
           Offset(element.positionX.toDouble(), element.positionY.toDouble()));
     }
     ;
+
+
   }
 
   Widget imageInformation(String title, int like) {
@@ -91,7 +94,7 @@ class PugState extends State<Pug> {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Profil"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor: Colors.black,
             actions: [
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
@@ -102,6 +105,7 @@ class PugState extends State<Pug> {
             decoration: BoxGradient(),
             child: Container(
               child: PugItem.fromProfile(
+
                 currentUsername: widget.model!.author.username,
                 model: widget.model!,
                 fromProfile: widget.isOwner,

@@ -1,7 +1,7 @@
 //INTERN
 //WITH BLODENAPI.pem
-// String URL = "http://ec2-user@ec2-52-47-98-118.eu-west-3.compute.amazonaws.com";
-String URL = "https://f68c-194-230-158-230.ngrok-free.app";
+String URL = "http://ec2-user@ec2-13-38-71-167.eu-west-3.compute.amazonaws.com";
+// String URL = "https://5f60-2a02-1210-6ef8-f700-9ce7-8bdc-4989-fc4f.ngrok-free.app";
 String AWS_URL = "https://bucketmypug.s3.eu-west-3.amazonaws.com";
 String AWS_BUCKETNAME = "bucketmypug";
 String AWS_ACCESSKEY = "AKIAT7QFB2DP5XDKBBNS";
@@ -12,7 +12,7 @@ String NOTIFICATION_TOKEN = "";
 // CLIENT
 //WITH keymypug.pem
 // String URL = "http://ec2-13-38-227-100.eu-west-3.compute.amazonaws.com";
-// String AWS_URL = "https://mypugbucket.s3.eu-west-3.amazonaws.com";
+// String AWS_URL = "https://mypugbucket.s3.eu-west-3.amazonaws.d";
 // String AWS_BUCKETNAME = "mypugbucket";
 // String AWS_ACCESSKEY = "AKIASU46GDAJ5SYLMIF2";
 // String AWS_SECRETKEY = "vNZAgctET+15NziU/0lYJwjU2Uw84t1zIE9 4+SJU";

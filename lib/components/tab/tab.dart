@@ -1,5 +1,4 @@
-import 'package:badges/badges.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/features/actuality/actuality.dart';
@@ -78,58 +77,83 @@ class TabViewState extends State<TabView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    bool isSmallDevice = MediaQuery.of(context).size.width < 370 ||
-        MediaQuery.of(context).devicePixelRatio < 2.7;
     return Scaffold(
       extendBody: true,
       body: Center(child: getItem()),
-      bottomNavigationBar: DotNavigationBar(
-        itemPadding: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-            : const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        marginR: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 20)
-            : const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-        paddingR: isSmallDevice
-            ? const EdgeInsets.symmetric(vertical: 2)
-            : const EdgeInsets.only(bottom: 5, top: 10),
-        items: <DotNavigationBarItem>[
-          DotNavigationBarItem(
-            icon: const Icon(Icons.home),
-          ),
-          DotNavigationBarItem(
+      resizeToAvoidBottomInset: true,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Colors.black87,
+            label: "",
             icon: Image.asset(
-              "asset/images/acutalityall.png",
+              color: _selectedIndex == 0 ? APPCOLOR : Colors.white,
+              "asset/images/PositifMaison.png",
+              width: 30,
+              height: 30,
+            ),
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Colors.black87,
+            label: "",
+            icon: Image.asset(
+              "asset/images/PositifAmis.png",
               width: 30,
               height: 30,
               fit: BoxFit.fitWidth,
               alignment: Alignment.bottomLeft,
-              color: Colors.white,
+              color: _selectedIndex == 1 ? APPCOLOR : Colors.white,
             ),
           ),
-          DotNavigationBarItem(
-            icon: const Icon(Icons.add),
+          BottomNavigationBarItem(
+            backgroundColor: Colors.black87,
+            label: "",
+            icon: Image.asset(
+              "asset/images/PositifPlus.png",
+              width: 30,
+              height: 30,
+              color: _selectedIndex == 2 ? APPCOLOR : Colors.white,
+            ),
           ),
-          DotNavigationBarItem(
+          BottomNavigationBarItem(
+            backgroundColor: Colors.black87,
+            label: "",
             icon: (notificationNumber > 0)
-                ? Badge(
-                    badgeContent: Text(notificationNumber > 99
-                        ? "99+"
-                        : notificationNumber.toString()),
-                    badgeColor: APPCOLOR6,
-                    child: const Icon(Icons.messenger),
+                ? Padding(
+                    padding: EdgeInsets.only(right: 15),
+                    child: badges.Badge(
+                        badgeContent: Text(notificationNumber > 99
+                            ? "99+"
+                            : notificationNumber.toString()),
+                        badgeColor: APPCOLOR6,
+                        child: Image.asset(
+                          "asset/images/PositifDiscussion.png",
+                          width: 30,
+                          height: 30,
+                          color: _selectedIndex == 3 ? APPCOLOR : Colors.white,
+                        )),
                   )
-                : const Icon(Icons.messenger),
+                : Image.asset(
+                    "asset/images/PositifDiscussion.png",
+                    width: 30,
+                    height: 30,
+                    color: _selectedIndex == 3 ? APPCOLOR : Colors.white,
+                  ),
           ),
-          DotNavigationBarItem(
-            icon: const Icon(Icons.account_circle),
-          ),
+          BottomNavigationBarItem(
+              backgroundColor: Colors.black87,
+              label: "",
+              icon: Image.asset(
+                "asset/images/PositifProfil.png",
+                width: 30,
+                height: 30,
+                color: _selectedIndex == 4 ? APPCOLOR : Colors.white,
+              )),
         ],
         currentIndex: _selectedIndex,
-        backgroundColor: APPCOLOR,
-        selectedItemColor: Colors.white70,
-        dotIndicatorColor: Colors.white,
         onTap: _onItemTapped,
+        backgroundColor: Colors.black87,
       ),
     );
   }

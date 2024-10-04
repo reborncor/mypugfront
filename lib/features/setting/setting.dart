@@ -12,7 +12,7 @@ import '../../response/userresponse.dart';
 import 'api.dart';
 
 class Setting extends StatefulWidget {
-  final routeName = 'setting';
+  final routeName = '/setting';
 
   const Setting({Key? key}) : super(key: key);
 
@@ -23,8 +23,6 @@ class Setting extends StatefulWidget {
 class SettingState extends State<Setting> {
   late ThemeModel notifier;
 
-  // late Map data;
-
   @override
   void initState() {
     super.initState();
@@ -32,6 +30,7 @@ class SettingState extends State<Setting> {
 
   disconnectUser() async {
     await deleteData();
+    socketService.disconnect();
     Navigator.pushReplacementNamed(context, '/signin');
   }
 
@@ -71,16 +70,13 @@ class SettingState extends State<Setting> {
         print(themeNotifier.isDark);
         return Scaffold(
             appBar: AppBar(
-              backgroundColor: themeNotifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor:  Colors.black,
               actions: [
                 IconButton(
                     icon: Icon(themeNotifier.isDark
                         ? Icons.nightlight_round
                         : Icons.wb_sunny),
                     onPressed: () {
-                      themeNotifier.isDark
-                          ? themeNotifier.isDark = false
-                          : themeNotifier.isDark = true;
                     })
               ],
             ),
@@ -149,8 +145,8 @@ class SettingState extends State<Setting> {
                           );
                         }
                         if (snapshot.connectionState == ConnectionState.done) {
-                          return const Center(
-                            child: Text("Aucune donnée"),
+                          return  Center(
+                            child: Text(sentence_no_data),
                           );
                         } else {
                           return Center(
@@ -195,7 +191,7 @@ class SettingState extends State<Setting> {
                 ElevatedButton(
                     style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                     onPressed: () => Navigator.pop(context),
-                    child: Text("Annuler"))
+                    child: Text(sentence_cancel))
               ],
             )));
   }

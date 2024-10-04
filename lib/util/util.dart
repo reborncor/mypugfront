@@ -15,6 +15,15 @@ int SUCCESS_CODE = 0;
 int ERROR_CODE = 1;
 int BLOCKED_CODE = 3;
 int notificationNumber = 0;
+late double navBarHeight = 0;
+String LUCIE = "lucie";
+String sentence_cancel = "Annuler";
+String sentence_no_data = "Aucune donnée";
+String sentence_no_pug = "Aucune publication";
+String sentence_no_conversation = "Aucune publication";
+String sentence_no_user = "Utilisateur introuvable";
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 dynamic navigateTo(context, view) {
   Navigator.push(
@@ -49,17 +58,6 @@ showSnackBar(context, message) {
     SnackBar(
         duration: const Duration(milliseconds: 1500), content: Text(message)),
   );
-}
-
-showToast(context, message) {
-  Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0);
 }
 
 Future<void> saveUserData(SignInResponse data) async {
@@ -158,7 +156,7 @@ void showMyDialogBlock(String username, context, VoidCallback refreshCb) {
               ElevatedButton(
                   style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Annuler"))
+                  child: Text(sentence_cancel))
             ],
           )));
 }
@@ -346,6 +344,7 @@ renderProfilePicture(String path, bool exist, double size) {
             height: size,
             fit: BoxFit.cover,
             cache: true,
+            cacheMaxAge: const Duration(days: 7),
           ),
           borderRadius: BorderRadius.circular(100))
       : Image(

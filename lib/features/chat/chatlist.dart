@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/features/chat/chat.dart';
@@ -73,7 +73,7 @@ class ChatListState extends State<ChatList> {
                 Icons.send,
                 color: APPCOLOR,
               )
-            : Badge(
+            : badges.Badge(
                 badgeContent: Text("1"),
                 badgeColor: APPCOLOR6,
                 child: Icon(
@@ -133,16 +133,16 @@ class ChatListState extends State<ChatList> {
                   },
                 );
               } else {
-                return const Center(
-                  child: Text("Aucune Conversation"),
+                return  Center(
+                  child: Text(sentence_no_conversation),
                 );
               }
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return loaderCircle();
             }
-            return const Center(
-              child: Text("Aucune Conversation"),
+            return  Center(
+              child: Text(sentence_no_conversation),
             );
           },
         ));
@@ -157,7 +157,7 @@ class ChatListState extends State<ChatList> {
             appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Text("Conversations"),
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor:Colors.black ,
             ),
             body: Container(
               child: content(),

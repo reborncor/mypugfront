@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/followeritem/api.dart';
+import 'package:mypug/components/functions/crop_image.dart';
 import 'package:mypug/components/pug/pug.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/chat/chat.dart';
@@ -50,7 +51,6 @@ class ProfileState extends State<Profile> {
   late ThemeModel notifier;
   late String description = "";
   late TextEditingController descriptionController = TextEditingController();
-  late String formerDescription;
   bool isModificated = false;
   late String formerProfilePicture;
   final RefreshController _refreshController = RefreshController();
@@ -61,10 +61,11 @@ class ProfileState extends State<Profile> {
   File? imageFile;
   bool onUpdateMode = false;
   late bool isSmallDevice = false;
+  late AppBar appBar;
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       isSmallDevice = MediaQuery.of(context).size.width < 355;
       currentUsername = await getCurrentUsername();
       if (widget.username != "") {
@@ -91,10 +92,10 @@ class ProfileState extends State<Profile> {
   _imgFromGallery() async {
     XFile? image =
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    imageFile = File(image!.path);
+    imageFile != null ? imageFile = await cropImage(imageFile) : null;
 
-    setState(() {
-      imageFile = File(image!.path);
-    });
+    setState(() {});
   }
 
   Widget itemProfile(int data, String text) {
@@ -135,7 +136,7 @@ class ProfileState extends State<Profile> {
           }
           username = snapshot.data!.username;
           formerProfilePicture = snapshot.data!.profilePicture;
-          formerDescription = snapshot.data!.description!;
+          descriptionController.text = snapshot.data!.description!;
           isFollowing = snapshot.data!.isFollowing ?? false;
           String textButton = isFollowing ? "Se désabonner" : "S'abonner";
           return Column(
@@ -161,16 +162,16 @@ class ProfileState extends State<Profile> {
                                             snapshot.data!.profilePicture,
                                             height: isSmallDevice ? 75 : 100,
                                             width: isSmallDevice ? 75 : 100,
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.fill,
                                           )
                                         : Image.file(imageFile!,
                                             height: isSmallDevice ? 75 : 100,
                                             width: isSmallDevice ? 75 : 100,
-                                            fit: BoxFit.cover),
+                                            fit: BoxFit.fill),
                                     borderRadius: BorderRadius.circular(100))
                                 : imageFile == null
                                     ? const Image(
-                                        fit: BoxFit.contain,
+                                        fit: BoxFit.fill,
                                         image:
                                             AssetImage('asset/images/user.png'),
                                       )
@@ -180,7 +181,7 @@ class ProfileState extends State<Profile> {
                                         child: Image.file(imageFile!,
                                             height: isSmallDevice ? 75 : 100,
                                             width: isSmallDevice ? 75 : 100,
-                                            fit: BoxFit.cover),
+                                            fit: BoxFit.fill),
                                       ),
                           ),
                         ),
@@ -254,7 +255,7 @@ class ProfileState extends State<Profile> {
                 ],
               ),
               Align(
-                  alignment: Alignment.bottomLeft,
+                alignment: Alignment.bottomLeft,
                 child: Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
@@ -272,18 +273,6 @@ class ProfileState extends State<Profile> {
                 child: onUpdateMode
                     ? TextField(
                         decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              description = descriptionController.text;
-                              isModificated = true;
-                              onUpdateMode = !onUpdateMode;
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              setState(() {});
-                            },
-                            iconSize: 20,
-                            color: APPCOLOR,
-                            icon: Icon(Icons.check),
-                          ),
                           focusedBorder: setOutlineBorder(0.0, 20.0),
                           enabledBorder: setOutlineBorder(0.0, 20.0),
                           border: setOutlineBorder(1.5, 20.0),
@@ -297,9 +286,7 @@ class ProfileState extends State<Profile> {
                     : Align(
                         alignment: Alignment.bottomLeft,
                         child: Text(
-                          description != ""
-                              ? description
-                              : snapshot.data!.description!,
+                          snapshot.data!.description!,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 16,
@@ -317,37 +304,40 @@ class ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         OutlinedButton(
-                          style: BaseButtonSize(250, 30, APPCOLOR),
+                          style: BaseButtonSize(
+                              onUpdateMode ? 150 : 250, 30, APPCOLOR),
                           onPressed: () {
                             onUpdateMode = !onUpdateMode;
                             setState(() {});
                           },
-                          child: Text(onUpdateMode ? "Fermer" : "Modifier",
+                          child: Text(onUpdateMode ? "Annuler" : "Modifier",
                               style: const TextStyle(color: Colors.white)),
                         ),
-                        (isModificated)
+                        (onUpdateMode)
                             ? Padding(
                                 padding: EdgeInsets.only(left: 8),
-                                child: IconButton(
-                                    onPressed: () async {
-                                      final result = await updateUserInfo(
-                                          description,
-                                          snapshot.data!.profilePicture,
-                                          imageFile != null,
-                                          imageFile,
-                                          formerProfilePicture);
-                                      if (result.code == SUCCESS_CODE) {
-                                        refreshUserInfo();
-                                        saveUserProfilePicture(
-                                            result.profilePicture);
-                                        showToast(context,
-                                            "modification utilisateur effectuée");
-                                        setState(() {});
-                                      }
-                                    },
-                                    iconSize: 30,
-                                    color: APPCOLOR,
-                                    icon: Icon(Icons.check)),
+                                child: OutlinedButton(
+                                  onPressed: () async {
+                                    final result = await updateUserInfo(
+                                        descriptionController.text,
+                                        snapshot.data!.profilePicture,
+                                        imageFile != null,
+                                        imageFile,
+                                        formerProfilePicture);
+                                    if (result.code == SUCCESS_CODE) {
+                                      refreshUserInfo();
+                                      saveUserProfilePicture(
+                                          result.profilePicture);
+                                      showSnackBar(context,
+                                          "modification utilisateur effectuée");
+                                      onUpdateMode = !onUpdateMode;
+                                      setState(() {});
+                                    }
+                                  },
+                                  style: BaseButtonSize(150, 30, APPCOLOR),
+                                  child: const Text("Confirmer",
+                                      style: TextStyle(color: Colors.white)),
+                                ),
                               )
                             : const SizedBox(
                                 width: 0,
@@ -371,32 +361,34 @@ class ProfileState extends State<Profile> {
                             },
                             child: Text(textButton,
                                 style: const TextStyle(color: Colors.white))),
-                        IgnorePointer(
-                            ignoring: (username == "lucie"),
-                            child: OutlinedButton(
-                                style:
-                                    BaseButtonSize(150, 30, Colors.transparent),
-                                onPressed: () {
-                                  navigateTo(
-                                      context,
-                                      Chat.withUsername(
-                                          seen: true,
-                                          receiverUser: UserFactory(
-                                              username: username,
-                                              profilePicture:
-                                                  snapshot.data!.profilePicture,
-                                              id: "")));
-                                },
-                                child: const Text("Message",
-                                    style: TextStyle(color: Colors.white)))),
+                        OutlinedButton(
+                            style: BaseButtonSize(150, 30, Colors.transparent),
+                            onPressed: () {
+                              if (username != LUCIE) {
+                                navigateTo(
+                                    context,
+                                    Chat.withUsername(
+                                        seen: true,
+                                        receiverUser: UserFactory(
+                                            username: username,
+                                            profilePicture:
+                                                snapshot.data!.profilePicture,
+                                            id: "")));
+                              } else {
+                                showSnackBar(context,
+                                    "Ceci est un compte d'exposition ne pouvez pas interargir avec");
+                              }
+                            },
+                            child: const Text("Message",
+                                style: TextStyle(color: Colors.white))),
                       ],
                     )
             ],
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          return const Center(
-            child: Text("Aucune donnée"),
+          return Center(
+            child: Text(sentence_no_data),
           );
         } else {
           return Center(
@@ -442,18 +434,21 @@ class ProfileState extends State<Profile> {
             return Text("Utilisateur introuvable");
           list = snapshot.data!.pugs;
           return Container(
-            child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: list.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 2,
-                ),
-                itemBuilder: (context, index) {
-                  return imageItemBuffer(list[index]);
-                }),
+            child: list.isEmpty
+                ? const Text("aucun Pug(s)")
+                : GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: list.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 2,
+                      mainAxisSpacing: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      return imageItemBuffer(list[index]);
+                    }),
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
@@ -521,7 +516,7 @@ class ProfileState extends State<Profile> {
                 ElevatedButton(
                     style: BaseButtonRoundedColor(60, 40, APPCOLOR),
                     onPressed: () => Navigator.pop(context),
-                    child: Text("Annuler"))
+                    child: Text(sentence_cancel))
               ],
             )));
   }
@@ -532,10 +527,10 @@ class ProfileState extends State<Profile> {
       builder: (context, ThemeModel notifier, child) {
         this.notifier = notifier;
         return Scaffold(
-          appBar: AppBar(
+          appBar: appBar = AppBar(
             automaticallyImplyLeading: hasBackButton,
             title: const Text("Profile"),
-            backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+            backgroundColor: Colors.black,
             actions: [
               IconButton(
                   onPressed: () => navigateTo(context, const Setting()),
@@ -546,7 +541,7 @@ class ProfileState extends State<Profile> {
                       height: 0,
                     )
                   : IconButton(
-                  onPressed: () => showBottomSheetSignal(
+                      onPressed: () => showBottomSheetSignal(
                           context, widget.username, "", null),
                       icon: const Icon(Icons.more_vert)),
             ],

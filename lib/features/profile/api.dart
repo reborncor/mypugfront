@@ -9,7 +9,6 @@ import 'package:mypug/response/userpugresponse.dart';
 import 'package:mypug/response/userresponse.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
-import 'package:simple_s3/simple_s3.dart';
 
 Future<UserPugResponse> getAllPugsFromUser() async {
   String token = await getCurrentUserToken();
@@ -169,7 +168,7 @@ Future<UserResponse> updateUserInfo(
         endPoint: 's3.amazonaws.com',
         accessKey: AWS_ACCESSKEY,
         secretKey: AWS_SECRETKEY,
-        region: AWSRegions.euWest3.region,
+        region: "eu-west-3",
       );
       try {
         await minio.removeObject(AWS_BUCKETNAME,

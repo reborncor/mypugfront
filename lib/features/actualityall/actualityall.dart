@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/design/design.dart';
 import 'package:mypug/components/pug/pugitem.dart';
@@ -13,6 +13,10 @@ import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../components/tab/tab.dart';
+import '../../models/userfactory.dart';
+import '../chat/chat.dart';
+import '../comment/pugcomments.dart';
 import 'api.dart';
 
 class ActualityAll extends StatefulWidget {
@@ -29,6 +33,9 @@ class ActualityAllState extends State<ActualityAll> {
   List<PugModel> list = [];
   late ActualityResponse _response;
   late String _username;
+  PageController _controller = PageController(
+    initialPage: 0,
+  );
   late ScrollController scrollController =
       ScrollController(initialScrollOffset: 150);
 
@@ -37,22 +44,51 @@ class ActualityAllState extends State<ActualityAll> {
   final RefreshController _refreshController = RefreshController();
   StreamController streamController = StreamController();
   bool scrollPagePhysique = false;
-  late AppBar appBar;
 
   @override
   void initState() {
     fetchData();
     scrollController.addListener(scrollListener);
+    Future.delayed(const Duration(milliseconds: 100)).then((value) {
+      navBarHeight = MediaQuery.of(context).padding.bottom;
+      print("aaaaaaaaaaaaaaaaaaaaaaaaa:   55");
+    });
     super.initState();
   }
 
   fetchData() async {
+    final event = await FirebaseMessaging.instance.getInitialMessage();
+    print(event);
     _username = await getCurrentUsername();
+    socketService.initialise(_username);
+    if (event != null && event.data['type'] == "message") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+        builder: (context) => Chat.withUsername(
+          receiverUser: UserFactory(
+              id: "",
+              username: event.data['sender_username'],
+              profilePicture: event.data['sender_profilepicture']),
+          seen: false,
+        ),
+      ));
+    }
+    if (event != null && event.data['type'] == "comment") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => PugComments.withData(
+              pugId: event.data['pug_id'],
+              username: event.data['username'],
+              description: event.data['description'])));
+    }
+    if (event != null && event.data['type'] == "like") {
+      navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => const TabView.withIndex(
+                initialIndex: 4,
+              )));
+    }
     _response = await getActualityPageable(startInd, 0);
     list = _response.pugs;
     streamController.add("event");
     streamController.done;
-    socketService.initialise(_username);
   }
 
   fetchOldActuality() async {
@@ -111,14 +147,8 @@ class ActualityAllState extends State<ActualityAll> {
             appBar: AppBar(
               title: const Text("Actualité"),
               automaticallyImplyLeading: false,
-              backgroundColor: notifier.isDark ? Colors.black : APPCOLOR,
+              backgroundColor: Colors.black,
               actions: [
-                // IconButton(
-                //   onPressed: () {
-                //     navigateWithName(context, const Competition().routeName);
-                //   },
-                //   icon: Image.asset('asset/images/competition.png'),
-                // ),
                 IconButton(
                     onPressed: () {
                       navigateWithName(context, const Search().routeName);
@@ -135,10 +165,6 @@ class ActualityAllState extends State<ActualityAll> {
   }
 
   Widget newContent() {
-    String pathImage = notifier.isDark
-        ? "asset/images/logo-header-dark.png"
-        : "asset/images/logo-header-light.png";
-
     return StreamBuilder(
       stream: streamController.stream,
       builder: (context, snapshot) {
@@ -150,39 +176,16 @@ class ActualityAllState extends State<ActualityAll> {
         }
 
         if (snapshot.hasData) {
-          return SmartRefresher(
-              controller: _refreshController,
-              onRefresh: refreshData,
-              child: CustomScrollView(controller: scrollController, slivers: [
-                SliverAppBar(
-                  expandedHeight: 150,
-                  automaticallyImplyLeading: false,
-                  backgroundColor:
-                      notifier.isDark ? Colors.black : Colors.transparent,
-                  pinned: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Image.asset(
-                      pathImage,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 20, bottom: 20),
-                      scrollDirection: Axis.vertical,
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return pugItem(list[index]);
-                      })
-                ]))
-              ]));
+          return PageView.builder(
+              controller: _controller,
+              scrollDirection: Axis.vertical,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return pugItem(list[index]);
+              });
         } else {
-          return const Center(
-            child: Text("Aucune publication"),
+          return Center(
+            child: Text(sentence_no_pug),
           );
         }
       },

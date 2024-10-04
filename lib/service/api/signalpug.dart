@@ -1,18 +1,15 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-import 'package:mypug/models/signalenum.dart';
-
 import '../../response/BaseResponse.dart';
 import '../../util/config.dart';
 import '../../util/util.dart';
 
-
-Future<BasicResponse> signalPug(String username, String reason, String pugId) async {
+Future<BasicResponse> signalPug(
+    String username, String reason, String pugId) async {
   String token = await getCurrentUserToken();
   late http.Response response;
   String path = "/pug/signal";
-  Map data = {"username": username, "reason":reason, "pugId" : pugId};
+  Map data = {"username": username, "reason": reason, "pugId": pugId};
   try {
     var url = Uri.parse(URL + path);
     response = await http.post(url,
