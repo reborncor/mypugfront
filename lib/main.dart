@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -9,7 +10,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
-import 'package:flutter_notification_channel/notification_visibility.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mypug/components/editpug/editpug.dart';
@@ -25,6 +25,8 @@ import 'package:mypug/features/competition/competitionpayment.dart';
 import 'package:mypug/features/create/create.dart';
 import 'package:mypug/features/follower/follower.dart';
 import 'package:mypug/features/following/following.dart';
+import 'package:mypug/features/resetpassword/resetpassword.dart';
+import 'package:mypug/features/resetpassword/resetpasswordconfirmed.dart';
 import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
@@ -35,6 +37,7 @@ import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/config.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:vibration/vibration.dart';
 
 import 'components/pug/pug.dart';
@@ -51,11 +54,15 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage event) async {
   }
 }
 
+StreamSubscription? _sub;
+
 Future<void> main() async {
+
   await setUpEnv();
   httpCheck();
   runApp(const MyApp());
 }
+
 
 void httpCheck() {
   HttpOverrides.global = MyHttpOverrides();
@@ -130,7 +137,7 @@ gotoRouteOnTapNotification(Map data) {
 
 Future<void> _showNotification(RemoteMessage event) async {
   try {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       "channel_id_1",
       "channel_name_1",
       importance: Importance.max,
@@ -182,9 +189,47 @@ Future<void> _showNotification(RemoteMessage event) async {
   }
 }
 
-class MyApp extends StatelessWidget {
+void _handleIncomingLinks() {
+  _sub = uriLinkStream.listen((Uri? uri) {
+    if (uri != null) {
+      print('Received Deeplink: $uri');
+      if (uri.host == 'reset-password') {
+        final username = uri.queryParameters['username'];
+
+        // Si un nom d'utilisateur est fourni, naviguer vers l'écran avec le paramètre
+        print('mydata: $username');
+
+        navigatorKey.currentState?.push(MaterialPageRoute(
+          builder: (context) => ResetPasswordConfirmed(username: username),
+        ));
+      }
+    }
+  }, onError: (err) {
+    print('Erreur lors du traitement du deeplink: $err');
+  });
+}
+
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    _handleIncomingLinks();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -217,6 +262,8 @@ class MyApp extends StatelessWidget {
           '/competitionPayment': (context) => const CompetitionPayment(),
           '/editpug': (context) => const EditPug(),
           '/editpugsecond': (context) => const EditPugSecond(),
+          '/resetpassword': (context) => const ResetPassword(),
+          '/resetpasswordconfirmed': (context) => const ResetPasswordConfirmed(),
         },
         darkTheme: ThemeData(
           fontFamily: GoogleFonts.expletusSans().fontFamily,

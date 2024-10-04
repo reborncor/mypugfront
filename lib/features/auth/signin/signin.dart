@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mypug/components/tab/tab.dart';
 import 'package:mypug/features/auth/signup/signup.dart';
+import 'package:mypug/features/resetpassword/resetpassword.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/util.dart';
 import 'package:provider/provider.dart';
@@ -125,6 +126,15 @@ class SignInState extends State<SignIn> {
                   }
                 },
                 child: const Text('Se connecter'),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, const ResetPassword().routeName);
+              },
+              child: Text(
+                "Mot de passe oublié ?",
+                style: TextStyle(color: Colors.indigo.shade300),
               ),
             ),
             TextButton(
