@@ -158,16 +158,18 @@ Future<BasicResponse<PugModel?>> getPug(String pugId, String username) async {
   late http.Response response;
   const String path = "/pug/get";
 
-  Map data = {"pugId": pugId, "username": username};
 
   try {
-    var url = Uri.parse(URL + path);
-    response = await http.put(url,
+    final queryParameters = {
+      'username': username,
+      'pugId': pugId,
+    };
+    var url = Uri.parse(URL + path).replace(queryParameters: queryParameters);
+    response = await http.get(url,
         headers: {
           "Content-type": "application/json",
           'Authorization': 'Bearer ' + token
-        },
-        body: json.encode(data));
+        });
   } catch (e) {
     print(e.toString());
 
@@ -175,11 +177,11 @@ Future<BasicResponse<PugModel?>> getPug(String pugId, String username) async {
   }
 
   if (response.statusCode == 200) {
-    print(response.contentLength);
+    print(response.body);
 
     try {
       BasicResponse<PugModel> data =
-          BasicResponse.fromJsonData(json.decode(response.body));
+          BasicResponse.fromJsonData(json.decode(response.body),PugModel.fromJsonData);
       return data;
     } catch (e) {
       print("ERREUR");
