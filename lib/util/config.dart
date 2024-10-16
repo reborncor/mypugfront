@@ -1,7 +1,7 @@
 //INTERN
 //WITH BLODENAPI.pem
 String URL = "http://ec2-user@ec2-13-38-71-167.eu-west-3.compute.amazonaws.com";
-// String URL = "https://5f60-2a02-1210-6ef8-f700-9ce7-8bdc-4989-fc4f.ngrok-free.app";
+// String URL = "https://456b-2a02-1210-6ef8-f700-f4b5-a67d-dd09-10a9.ngrok-free.app";
 String AWS_URL = "https://bucketmypug.s3.eu-west-3.amazonaws.com";
 String AWS_BUCKETNAME = "bucketmypug";
 String AWS_ACCESSKEY = "AKIAT7QFB2DP5XDKBBNS";

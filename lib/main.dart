@@ -14,6 +14,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mypug/components/editpug/editpug.dart';
 import 'package:mypug/components/editpug/editpugsecond.dart';
+import 'package:mypug/components/pug/api.dart';
 import 'package:mypug/features/actuality/actuality.dart';
 import 'package:mypug/features/actualityall/actualityall.dart';
 import 'package:mypug/features/auth/signin/signin.dart';
@@ -31,7 +32,9 @@ import 'package:mypug/features/search/search.dart';
 import 'package:mypug/features/setting/setting.dart';
 import 'package:mypug/features/splashscreen/splash_screen.dart';
 import 'package:mypug/features/userblocked/userblocked.dart';
+import 'package:mypug/models/pugmodel.dart';
 import 'package:mypug/models/userfactory.dart';
+import 'package:mypug/response/BaseResponse.dart';
 import 'package:mypug/service/HttpService.dart';
 import 'package:mypug/service/themenotifier.dart';
 import 'package:mypug/util/config.dart';
@@ -57,12 +60,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage event) async {
 StreamSubscription? _sub;
 
 Future<void> main() async {
-
   await setUpEnv();
   httpCheck();
   runApp(const MyApp());
 }
-
 
 void httpCheck() {
   HttpOverrides.global = MyHttpOverrides();
@@ -80,7 +81,7 @@ Future<void> setUpEnv() async {
   );
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   NOTIFICATION_TOKEN = (await _firebaseMessaging.getToken())!;
-  log(NOTIFICATION_TOKEN.toString());
+
 
   await FlutterNotificationChannel.registerNotificationChannel(
     description: 'Basic notification',
@@ -108,7 +109,8 @@ Future<void> setUpEnv() async {
   });
 }
 
-gotoRouteOnTapNotification(Map data) {
+gotoRouteOnTapNotification(Map data) async {
+
   if (data['type'] == "message") {
     navigatorKey.currentState?.push(MaterialPageRoute(
       builder: (context) => Chat.withUsername(
@@ -121,17 +123,20 @@ gotoRouteOnTapNotification(Map data) {
     ));
   }
   if (data['type'] == "comment") {
-    navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => PugComments.withData(
-            pugId: data['pug_id'],
-            username: data['username'],
-            description: data['description'])));
+    var model = await getPug(data['pug_id'], data['username']);
+    navigatorKey.currentState
+        ?.push(MaterialPageRoute(
+            builder: (context) => PugComments.withData(
+                pugId: data['pug_id'],
+                username: data['username'],
+                description: data['description'])))
+        .then((value) => navigatorKey.currentState?.push(MaterialPageRoute(
+            builder: (context) => Pug.withPugModel(model: model.payload))));
   }
   if (data['type'] == "like") {
+    var model = await getPug(data['pug_id'], data['username']);
     navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => const TabView.withIndex(
-              initialIndex: 4,
-            )));
+        builder: (context) => Pug.withPugModel(model: model.payload)));
   }
 }
 
@@ -182,7 +187,6 @@ Future<void> _showNotification(RemoteMessage event) async {
         onSelectNotification: (message) async {
       gotoRouteOnTapNotification(jsonDecode(message!));
 
-      log("TAPPPPPPPPPPPP-${message}");
     });
   } catch (e) {
     log(e.toString());
@@ -209,7 +213,6 @@ void _handleIncomingLinks() {
   });
 }
 
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -218,7 +221,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -230,6 +232,7 @@ class _MyAppState extends State<MyApp> {
     _sub?.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -263,7 +266,8 @@ class _MyAppState extends State<MyApp> {
           '/editpug': (context) => const EditPug(),
           '/editpugsecond': (context) => const EditPugSecond(),
           '/resetpassword': (context) => const ResetPassword(),
-          '/resetpasswordconfirmed': (context) => const ResetPasswordConfirmed(),
+          '/resetpasswordconfirmed': (context) =>
+              const ResetPasswordConfirmed(),
         },
         darkTheme: ThemeData(
           fontFamily: GoogleFonts.expletusSans().fontFamily,
